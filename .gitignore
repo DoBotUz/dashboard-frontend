@@ -102,3 +102,20 @@ dist
 
 # TernJS port file
 .tern-port
+
+#vuexy
+.rej
+*.rej
+*.orig
+bin/
+dist/
+vuesax-laravel-starter/node_modules/
+temp/
+versions/
+*.zip
+/bin
+package-lock.json
+docs/.vuepress/dist/
+yarn.lock
+yarn-error.log
+vuexy-shell-scripts
