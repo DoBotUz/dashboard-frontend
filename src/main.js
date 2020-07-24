@@ -60,6 +60,11 @@ import 'prismjs/themes/prism-tomorrow.css'
 // Feather font icon
 require('./assets/css/iconfont.css')
 
+// acl
+import acl from './acl'
+
+// filters
+import  './filters';
 
 // Vue select css
 // Note: In latest version you have to add it separately
@@ -71,5 +76,6 @@ Vue.config.productionTip = false
 new Vue({
     router,
     store,
+    acl,
     render: h => h(App)
 }).$mount('#app')
