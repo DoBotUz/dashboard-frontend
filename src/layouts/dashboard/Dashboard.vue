@@ -117,7 +117,7 @@
 <script>
 import BackToTop           from 'vue-backtotop'
 import HNavMenu            from "@/layouts/components/horizontal-nav-menu/HorizontalNavMenu.vue"
-import navMenuItems        from "@/layouts/components/vertical-nav-menu/mainNavMenuItems.js"
+import navMenuItems        from "@/layouts/components/vertical-nav-menu/navMenuItems.js"
 import TheNavbarHorizontal from '@/layouts/components/navbar/TheNavbarHorizontal.vue'
 import TheNavbarVertical   from '@/layouts/components/navbar/TheNavbarVertical.vue'
 import TheFooter           from '@/layouts/components/TheFooter.vue'

@@ -66,6 +66,23 @@ import acl from './acl'
 // filters
 import  './filters';
 
+// VeeValidate
+import VeeValidate from 'vee-validate'
+import ruValidationMessages from 'vee-validate/dist/locale/ru'
+Vue.use(VeeValidate, {
+  locale: 'ru',
+  dictionary: {
+    ru: ruValidationMessages
+  }
+})
+
+// i18n
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n);
+const i18n = new VueI18n({
+  locale: 'ru',
+});
+
 // Vue select css
 // Note: In latest version you have to add it separately
 // import 'vue-select/dist/vue-select.css';
@@ -77,5 +94,6 @@ new Vue({
     router,
     store,
     acl,
+    i18n,
     render: h => h(App)
 }).$mount('#app')

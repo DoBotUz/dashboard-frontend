@@ -18,10 +18,18 @@ import actions from "./actions"
 
 Vue.use(Vuex)
 
+// modules
+import * as moduleAuth from './modules/auth';
+import * as moduleOrganizations from './modules/organizations';
+
 export default new Vuex.Store({
     getters,
     mutations,
     state,
     actions,
-    strict: process.env.NODE_ENV !== 'production'
+    strict: process.env.NODE_ENV !== 'production',
+    modules: {
+      auth: moduleAuth,
+      organizations: moduleOrganizations,
+    },
 })

@@ -10,8 +10,11 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store/store'
 
 Vue.use(Router)
+
+const defaultRole = 'editor';
 
 const router = new Router({
     mode: 'history',
@@ -20,26 +23,33 @@ const router = new Router({
         return { x: 0, y: 0 }
     },
     routes: [
-
         {
     // =============================================================================
     // MAIN LAYOUT ROUTES
     // =============================================================================
             path: '',
-            component: () => import('./layouts/main/Main.vue'),
+            component: () => import('@/layouts/main/Main.vue'),
             children: [
         // =============================================================================
         // Theme Routes
         // =============================================================================
               {
                 path: '/',
-                name: 'home',
-                component: () => import('./views/Home.vue')
+                name: 'organizations',
+                component: () => import('./views/organizations/Organizations.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: defaultRole,
+                },
               },
               {
-                path: '/page2',
-                name: 'page-2',
-                component: () => import('./views/Page2.vue')
+                path: '/settings',
+                name: 'settings',
+                component: () => import('./views/Page2.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: defaultRole,
+                },
               },
             ],
         },
@@ -56,12 +66,18 @@ const router = new Router({
               {
                 path: '/pages/login',
                 name: 'page-login',
-                component: () => import('@/views/pages/Login.vue')
+                component: () => import('@/views/pages/Login.vue'),
+                meta: {
+                  rule: defaultRole,
+                },
               },
               {
                 path: '/pages/error-404',
                 name: 'page-error-404',
-                component: () => import('@/views/pages/Error404.vue')
+                component: () => import('@/views/pages/Error404.vue'),
+                meta: {
+                  rule: defaultRole,
+                },
               },
             ]
         },
@@ -72,6 +88,13 @@ const router = new Router({
         }
     ],
 })
+
+router.beforeEach((to, from, next) => {
+  if (!to.meta.authRequired || (to.meta.authRequired && store.getters.isAuthenticated)) {
+    return next();
+  }
+  next('/pages/login');
+});
 
 router.afterEach(() => {
   // Remove initial loading
