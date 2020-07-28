@@ -6,7 +6,13 @@
       </div>
     </div>
     <div class="organizations">
-      <organization />
+      <organization
+				v-for="organization in organizations"
+				:key="organization.id"
+				:id="organization.id"
+				:title="organization.ru_title"
+				:description="organization.ru_description"
+			/>
       <vx-card class="cursor-pointer organizations__add" @click="addPopup = true">
         <h1 class="organizations__add__plus mb-5">➕</h1>
 				<h4>Добавить заведение</h4>
@@ -26,6 +32,7 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Organization from "./components/Organization";
 
 export default {
@@ -42,14 +49,29 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions('organizations', ['fetchOrganizations']),
 		addOrganization() {
 			this.$store.dispatch('organizations/addOrganization', {
 				name: this.organization_name,
 				description: this.organization_description,
 				token: this.organization_token
 			}).then(res => {
+				this.$vs.notify({
+          title: 'Отлично',
+          text: 'Вы успешно создали магазин',
+          color: 'success',
+          position: 'top-center'
+        });
 			})
 		}
+	},
+	mounted() {
+		this.fetchOrganizations();
+	},
+	computed: {
+		...mapGetters({
+			'organizations': 'organizations/organizations',
+		}),
 	}
 };
 </script>

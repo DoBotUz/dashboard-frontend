@@ -10,15 +10,84 @@
 
 export default [
   {
-    url: "/",
-    name: "Home",
-    slug: "home",
-    icon: "HomeIcon",
-  },
-  {
     url: "/page2",
-    name: "Page 2",
+    name: "Каталог / Меню",
     slug: "page2",
     icon: "FileIcon",
   },
+  {
+    url: "/page2",
+    name: "Заказы",
+    slug: "page2",
+    icon: "FileIcon",
+  },
+  {
+    url: "/page2",
+    name: "Промокоды",
+    slug: "page2",
+    icon: "FileIcon",
+  },
+  {
+    // url: null,
+    header: 'Клиенты',
+    items: [
+      {
+        url: "/page2",
+        name: "Отзывы",
+        tagColor: 'warning',
+        tag: '2',
+        slug: "page2",
+        icon: "FileIcon",
+      },
+      {
+        url: "/page2",
+        name: "Чат",
+        slug: "page2",
+        icon: "FileIcon",
+        tagColor: 'warning',
+        tag: '2',
+      },
+      {
+        url: "/page2",
+        name: "Подписчики",
+        slug: "page2",
+        icon: "FileIcon",
+      },
+      {
+        url: "/page2",
+        name: "Рассылки",
+        slug: "page2",
+        icon: "FileIcon",
+      },
+    ]
+  },
+  {
+    header: 'Настройки',
+    items: [
+      {
+        url: "/page2",
+        name: "Филиалы",
+        slug: "page2",
+        icon: "FileIcon",
+      },
+      {
+        url: "/page2",
+        name: "Доставка",
+        slug: "page2",
+        icon: "FileIcon",
+      },
+      {
+        url: "/page2",
+        name: "Способы оплаты",
+        slug: "page2",
+        icon: "FileIcon",
+      },
+      {
+        url: "/",
+        name: "Настройки",
+        slug: "home",
+        icon: "HomeIcon",
+      },
+    ]
+  }
 ]

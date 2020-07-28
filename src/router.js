@@ -53,6 +53,26 @@ const router = new Router({
               },
             ],
         },
+      // ==================================================================
+      // SHOP DASHBOARD ROUTES
+      // ===================================================================
+        {
+          path: '/shop/:id',
+          component: () => import('@/layouts/dashboard/Dashboard.vue'),
+          children: [
+            {
+              path: '/',
+              component: () => import('./views/Home.vue'),
+              meta: {
+                rule: defaultRole,
+              },
+            }
+          ],
+          meta: {
+            authRequired: true,
+            rule: defaultRole,
+          },
+        },
     // =============================================================================
     // FULL PAGE LAYOUTS
     // =============================================================================
