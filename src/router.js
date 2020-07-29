@@ -30,9 +30,6 @@ const router = new Router({
             path: '',
             component: () => import('@/layouts/main/Main.vue'),
             children: [
-        // =============================================================================
-        // Theme Routes
-        // =============================================================================
               {
                 path: '/',
                 name: 'organizations',
@@ -45,7 +42,7 @@ const router = new Router({
               {
                 path: '/settings',
                 name: 'settings',
-                component: () => import('./views/Page2.vue'),
+                component: () => import('./views/profile-settings/ProfileSettings.vue'),
                 meta: {
                   authRequired: true,
                   rule: defaultRole,
@@ -57,12 +54,26 @@ const router = new Router({
       // SHOP DASHBOARD ROUTES
       // ===================================================================
         {
-          path: '/shop/:id',
+          path: '/shop/:id/',
           component: () => import('@/layouts/dashboard/Dashboard.vue'),
+          props: (route) => ({
+            id: Number(route.params.id)
+          }),
+          redirect: {
+            name: 'DashboardMenu',
+          },
           children: [
             {
-              path: '/',
+              path: 'menu',
               component: () => import('./views/Home.vue'),
+              name: 'DashboardMenu',
+              meta: {
+                rule: defaultRole,
+              },
+            },
+            {
+              path: 'branches',
+              component: () => import('./views/dashboard/branches/Branches.vue'),
               meta: {
                 rule: defaultRole,
               },
@@ -80,9 +91,6 @@ const router = new Router({
             path: '',
             component: () => import('@/layouts/full-page/FullPage.vue'),
             children: [
-        // =============================================================================
-        // PAGES
-        // =============================================================================
               {
                 path: '/pages/login',
                 name: 'page-login',

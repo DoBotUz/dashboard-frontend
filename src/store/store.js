@@ -21,6 +21,7 @@ Vue.use(Vuex)
 // modules
 import * as moduleAuth from './modules/auth';
 import * as moduleOrganizations from './modules/organizations';
+import * as moduleBranches from './modules/branches';
 
 export default new Vuex.Store({
     getters,
@@ -31,5 +32,6 @@ export default new Vuex.Store({
     modules: {
       auth: moduleAuth,
       organizations: moduleOrganizations,
+      branches: moduleBranches,
     },
 })

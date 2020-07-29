@@ -56,6 +56,7 @@ export default {
 				description: this.organization_description,
 				token: this.organization_token
 			}).then(res => {
+				this.addPopup = false;
 				this.$vs.notify({
           title: 'Отлично',
           text: 'Вы успешно создали магазин',

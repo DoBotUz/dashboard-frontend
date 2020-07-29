@@ -65,7 +65,7 @@ export default [
     header: 'Настройки',
     items: [
       {
-        url: "/page2",
+        url: "branches",
         name: "Филиалы",
         slug: "page2",
         icon: "FileIcon",

@@ -48,3 +48,16 @@ vSelect.props.components.default = () => ({
 });
 
 Vue.component(vSelect)
+
+
+// yandex maps
+import YmapPlugin from 'vue-yandex-maps'
+
+const ymSettings = {
+  apiKey: '3f4428fd-e71e-463b-a02e-aae5569eef81',
+  lang: 'ru_RU',
+  coordorder: 'latlong',
+  version: '2.1'
+}
+
+Vue.use(YmapPlugin, ymSettings);

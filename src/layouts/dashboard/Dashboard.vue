@@ -125,6 +125,9 @@ import themeConfig         from '@/../themeConfig.js'
 import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
 
 export default {
+  props: {
+    id: Number,
+  },
   components: {
     BackToTop,
     HNavMenu,
@@ -147,7 +150,10 @@ export default {
   },
   watch: {
     "$route"() {
-      this.routeTitle = this.$route.meta.pageTitle
+      this.routeTitle = this.$route.meta.pageTitle;
+      this.$store.dispatch('setOrganization', {
+        id: this.id
+      });
     },
     isThemeDark(val) {
       const color = this.navbarColor == "#fff" && val ? "#10163a" : "#fff"
@@ -215,6 +221,9 @@ export default {
     const color = this.navbarColor == "#fff" && this.isThemeDark ? "#10163a" : this.navbarColor
     this.updateNavbarColor(color)
     this.setNavMenuVisibility(this.$store.state.mainLayoutType)
+    this.$store.dispatch('setOrganization', {
+      id: this.id
+    });
   }
 }
 

@@ -48,6 +48,11 @@ const actions = {
 
     updateUserInfo({ commit }, payload) {
       commit('UPDATE_USER_INFO', payload)
+    },
+    setOrganization({ commit }, payload) {
+      commit('SET_ORGANIZATION', {
+        id: payload.id
+      })
     }
 }
 

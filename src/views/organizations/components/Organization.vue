@@ -1,7 +1,7 @@
 <template>
   <div
     class="organization"
-    @click="$router.push(`/shop/${id}`)"
+    @click="$router.push(`/shop/${id}/`)"
   >
       <vx-card class="text-center cursor-pointer">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png" alt="graphic" width="180" class="mx-auto mb-4" />

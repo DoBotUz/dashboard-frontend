@@ -41,7 +41,7 @@ export const actions = {
       fixed_delivery_price: true,
     }).then(res => {
       commit('ADD_ORGANIZATION', {
-        organization: res.data.data,
+        organization: res.data.data.organization,
       });
     });
   }

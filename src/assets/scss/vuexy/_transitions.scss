@@ -13,7 +13,7 @@
 // ///////////////////////////////////////////////
 .zoom-fade-enter-active,
 .zoom-fade-leave-active {
-  transition: transform .35s, opacity .28s ease-in-out;
+  transition: transform .18s, opacity .14s ease-in-out;
 }
 .zoom-fade-enter {
     transform: scale(0.97);
