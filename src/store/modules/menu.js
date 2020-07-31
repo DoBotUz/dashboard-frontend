@@ -30,7 +30,7 @@ export const getters = {
 
 export const actions = {
   fetchCategories({ commit, rootState }) {
-    return axios.get(`/categories/${rootState.organization}/list`)  
+    return axios.get(`/categories/${rootState.organization}/list`)
       .then(res => {
         commit('SET_CATEGORIES', {
           categories: res.data.data
@@ -38,9 +38,11 @@ export const actions = {
       });
   },
   createCategory({ commit, rootState }, payload) {
-    return axios.post('/categories', {
-      ...payload,
-      bot_id: rootState.organization
+    payload.append('bot_id', rootState.organization);
+    return axios.post('/categories', payload, {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
     }).then(res => {
       commit('ADD_CATEGORY', {
         category: res.data.data
@@ -48,9 +50,11 @@ export const actions = {
     })
   },
   updateCategory({ commit, rootState }, payload) {
-    return axios.post('/categories/update', {
-      ...payload,
-      bot_id: rootState.organization
+    payload.append('bot_id', rootState.organization);
+    return axios.post('/categories/update', payload, {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
     }).then(res => {
       commit('UPDATE_CATEGORY', {
         category: res.data.data
@@ -75,8 +79,10 @@ export const actions = {
       });
   },
   createProduct({ commit, rootState }, payload) {
-    return axios.post('/items', {
-      ...payload
+    return axios.post('/items', payload, {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
     }).then(res => {
       commit('ADD_PRODUCT', {
         product: res.data.data
@@ -84,7 +90,11 @@ export const actions = {
     });
   },
   updateProduct({ commit, rootState }, payload) {
-    return axios.post('/items/update', payload)
+    return axios.post('/items/update', payload, {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
+    })
       .then(res => {
         commit('UPDATE_PRODUCT', {
           product: res.data.data

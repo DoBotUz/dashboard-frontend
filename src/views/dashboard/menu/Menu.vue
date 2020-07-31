@@ -251,8 +251,9 @@ export default {
         this.product_en_description = this.product_ru_description;
     },
     addOrUpdateCategory() {
-      let file = this.$refs.categoryFile.getFilesFilter[this.$refs.categoryFile.getFilesFilter.length - 1];
+      let file = this.$refs.categoryFile.filesx[this.$refs.categoryFile.filesx.length - 1];
       let payload = {
+        id: this.selectedCategory,
         thumbnail: file,
         ru_title: this.ru_title,
         uz_title: this.uz_title,
@@ -262,8 +263,13 @@ export default {
         uz_description: "placeholder",
         en_description: "placeholder",
       };
+      const formData = new FormData();
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] !== null && payload[key] !== undefined)
+          formData.append(key, payload[key]);
+      });
       if (!this.selectedCategory) {
-        return this.$store.dispatch("menu/createCategory", payload).then(() => {
+        return this.$store.dispatch("menu/createCategory", formData).then(() => {
           this.addCategoryPopup = false;
           this.$vs.notify({
             title: "Отлично",
@@ -274,10 +280,7 @@ export default {
         });
       }
       return this.$store
-        .dispatch("menu/updateCategory", {
-          id: this.selectedCategory,
-          ...payload,
-        })
+        .dispatch("menu/updateCategory", formData)
         .then(() => {
           this.addCategoryPopup = false;
           this.$vs.notify({
@@ -300,7 +303,10 @@ export default {
       });
     },
     addOrUpdateProduct() {
+      let file = this.$refs.categoryFile.filesx[this.$refs.categoryFile.filesx.length - 1];
       let payload = {
+        id: this.selectedProduct,
+        thumbnail: file,
         ru_title: this.product_ru_title,
         en_title: this.product_en_title,
         uz_title: this.product_uz_title,
@@ -311,8 +317,13 @@ export default {
         category_id: this.product_parent_category,
         amount: 1,
       };
+      const formData = new FormData();
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] !== null && payload[key] !== undefined)
+          formData.append(key, payload[key]);
+      });
       if (!this.selectedProduct) {
-        return this.$store.dispatch("menu/createProduct", payload).then(() => {
+        return this.$store.dispatch("menu/createProduct", formData).then(() => {
           this.addProductPopup = false;
           this.$vs.notify({
             title: "Отлично",
@@ -323,10 +334,7 @@ export default {
         });
       }
       return this.$store
-        .dispatch("menu/updateProduct", {
-          id: this.selectedProduct,
-          ...payload,
-        })
+        .dispatch("menu/updateProduct", formData)
         .then(() => {
           this.addProductPopup = false;
           this.$vs.notify({
