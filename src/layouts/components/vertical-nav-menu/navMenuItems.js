@@ -10,7 +10,9 @@
 
 export default [
   {
-    url: "/page2",
+    url: {
+      name: 'DashboardMenu'
+    },
     name: "Каталог / Меню",
     slug: "page2",
     icon: "FileIcon",
@@ -65,7 +67,9 @@ export default [
     header: 'Настройки',
     items: [
       {
-        url: "branches",
+        url: {
+          name: 'DashboardBranches'
+        },
         name: "Филиалы",
         slug: "page2",
         icon: "FileIcon",

@@ -64,18 +64,24 @@ const router = new Router({
           },
           children: [
             {
-              path: 'menu',
-              component: () => import('./views/Home.vue'),
+              path: 'menu/:parent?',
+              component: () => import('./views/dashboard/menu/Menu.vue'),
               name: 'DashboardMenu',
               meta: {
                 rule: defaultRole,
+                pageTitle: 'Меню',
               },
+              props: (route) => ({
+                parent: Number(route.params.parent) || null
+              })
             },
             {
               path: 'branches',
               component: () => import('./views/dashboard/branches/Branches.vue'),
+              name: 'DashboardBranches',
               meta: {
                 rule: defaultRole,
+                pageTitle: 'Филиалы',
               },
             }
           ],

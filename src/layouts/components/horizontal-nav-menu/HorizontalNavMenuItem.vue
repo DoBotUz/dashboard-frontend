@@ -15,14 +15,13 @@
     :class="[
       {'h-nav-active-item text-primary font-medium' : activeLink},
       {'disabled-item pointer-events-none' : isDisabled},
-    ]" >
-
+    ]">
       <router-link
         v-if="to"
         exact
         :class="[{'router-link-active': activeLink}, 'nav-link flex items-center']"
-        :to="to"
-        :target="target" >
+        :to="base + to"
+        :target="target">
           <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon" />
           <feather-icon v-else :class="iconClasses" :icon="icon" />
           <slot />
@@ -50,6 +49,7 @@ export default {
     featherIcon : { type: Boolean,                default: true             },
     target      : { type: String,                 default: '_self'          },
     isDisabled  : { type: Boolean,                default: false            },
+    base        : { type: String,                 default: ''               },
   },
   computed: {
     iconClasses() {
