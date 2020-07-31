@@ -160,12 +160,12 @@ export default {
       }
       this.$store.dispatch('login', {
         email: this.email,
-        password: this.password 
+        password: this.password
       })
-        .then(res => {
+        .then(() => {
           this.$router.push('/');
         })
-        .catch(err => {
+        .catch(() => {
           this.$vs.notify({
             title: 'Ошибка',
             text: 'Неверный логин или пароль!',
@@ -185,7 +185,7 @@ export default {
         email: this.email,
         password: this.password,
       })
-      .then(res => {
+      .then(() => {
         this.$vs.notify({
           title: 'Отлично',
           text: 'Вы успешно зарегистрировались',
@@ -193,7 +193,7 @@ export default {
           position: 'top-center'
         });
       })
-      .catch(err => {
+      .catch(() => {
         this.$vs.notify({
           title: 'Ошибка',
           text: 'Этот email уже используется!',

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from '@/axios';
 
 export const state = {
@@ -9,17 +10,17 @@ export const getters = {
 }
 
 export const mutations = {
-  
+
 }
 
 export const actions = {
-  fetchOrganizations({ commit }) {
+  fetchOrganizations() {
     return axios.get('/organizations')
       .then(res => {
         console.log(res.data);
       });
   },
-  addOrganization({ commit }, payload) {
+  addOrganization(_, payload) {
     const { name: title, description, token } = payload;
     return axios.post('/organizations', {
       ru_title: name,

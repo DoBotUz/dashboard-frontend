@@ -40,14 +40,14 @@ export const actions = {
         commit('SET_TOKEN', res.data.data);
       });
   },
-  signUp({ commit }, payload) {
+  signUp(_, payload) {
     const { first_name, last_name, email, password } = payload;
     return axios.post('/auth/signup', { first_name, last_name, email, password })
       .then(res => {
         return res.data.data;
       });
   },
-  logout({ commit }, payload) {
+  logout({ commit }) {
     commit('LOGOUT');
   }
 }

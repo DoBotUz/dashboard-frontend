@@ -47,7 +47,7 @@ export default {
 				name: this.organization_name,
 				description: this.organization_description,
 				token: this.organization_token
-			}).then(res => {
+			}).then(() => {
 			})
 		}
 	}

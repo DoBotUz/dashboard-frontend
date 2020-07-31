@@ -81,10 +81,10 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
 
     axios.interceptors.response.use(undefined, function (err) {
-      return new Promise(function (resolve, reject) {
+      return new Promise(function () {
         if (err.status === 401) {
           this.$store.dispatch('LOGOUT')
-            .then(_ => { this.$router.push('/pages/login'); })
+            .then(() => { this.$router.push('/pages/login'); })
         }
         throw err;
       });
