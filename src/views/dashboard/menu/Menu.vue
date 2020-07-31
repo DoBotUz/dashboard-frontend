@@ -33,7 +33,8 @@
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td class="img-container">
-              <img src="https://via.placeholder.com/150" class="product-img" />
+              <img src="https://via.placeholder.com/150" class="product-img" v-if="!tr.thumbnail"/>
+              <img :src="isProduct(tr) ? `http://localhost:3000/public/items/${tr.thumbnail}` : `http://localhost:3000/public/categories/${tr.thumbnail}`" class="product-img" v-else />
             </vs-td>
 
             <vs-td>
@@ -147,6 +148,15 @@
           v-for="(item,index) in childlessCategories"
         />
       </vs-select>
+
+      <div class="vx-col w-full">
+        <vs-upload
+          :limit="1"
+          :show-upload-button="false"
+          text="Загрузить файл"
+          ref="productFile"
+        />
+      </div>
 
       <vs-button
         class="mt-5 mb-3 float-right"
@@ -303,7 +313,7 @@ export default {
       });
     },
     addOrUpdateProduct() {
-      let file = this.$refs.categoryFile.filesx[this.$refs.categoryFile.filesx.length - 1];
+      let file = this.$refs.productFile.filesx[this.$refs.productFile.filesx.length - 1];
       let payload = {
         id: this.selectedProduct,
         thumbnail: file,
@@ -423,4 +433,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.product-img {
+  max-width: 150px;
+}
 </style>
