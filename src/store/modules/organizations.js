@@ -6,6 +6,7 @@ export const state = {
 
 export const getters = {
   organizations: (state) => state.organizations,
+  organization: (state, undefined, rootState) => state.organizations.find(org => org.id === rootState.organization)
 }
 
 export const mutations = {
@@ -14,6 +15,9 @@ export const mutations = {
   },
   SET_ORGANIZATIONS(state, payload) {
     state.organizations = payload.organizations;
+  },
+  UPDATE_ORGANIZATION(state, payload) {
+    state.organizations = state.organizations.map(org => org.id === payload.organization.id ? payload.organization : org);
   }
 }
 
@@ -44,7 +48,14 @@ export const actions = {
         organization: res.data.data.organization,
       });
     });
-  }
+  },
+  updateOrganization({ commit }, payload) {
+    return axios.post('/organizations/update', payload).then(res => {
+      commit('UPDATE_ORGANIZATION', {
+        organization: res.data.data
+      });
+    });
+  },
 }
 
 export const namespaced = true;

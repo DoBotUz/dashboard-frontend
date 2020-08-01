@@ -83,7 +83,16 @@ const router = new Router({
                 rule: defaultRole,
                 pageTitle: 'Филиалы',
               },
-            }
+            },
+            {
+              path: 'settings',
+              component: () => import('./views/dashboard/settings/Settings.vue'),
+              name: 'DashboardSettings',
+              meta: {
+                rule: defaultRole,
+                pageTitle: 'Настройки',
+              },
+            },
           ],
           meta: {
             authRequired: true,

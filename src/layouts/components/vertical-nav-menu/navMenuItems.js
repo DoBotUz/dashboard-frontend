@@ -87,7 +87,9 @@ export default [
         icon: "FileIcon",
       },
       {
-        url: "/",
+        url: {
+          name: 'DashboardSettings',
+        },
         name: "Настройки",
         slug: "home",
         icon: "HomeIcon",
