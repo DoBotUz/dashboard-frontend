@@ -36,7 +36,6 @@ export const actions = {
     const { email, password } = payload;
     return axios.post('/auth/login', { email, password })
       .then(res => {
-        console.log(res.data);
         commit('SET_TOKEN', res.data.data);
       });
   },
@@ -48,6 +47,8 @@ export const actions = {
       });
   },
   logout({ commit }, payload) {
-    commit('LOGOUT');
+    return Promise.resolve(() => {
+      commit('LOGOUT');
+    });
   }
 }
