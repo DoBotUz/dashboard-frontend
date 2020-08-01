@@ -425,7 +425,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchCategories().then((_) => {
+    this.fetchCategories().then(() => {
       this.$router.replace({ query: { temp: undefined } });
     });
     this.fetchProducts();

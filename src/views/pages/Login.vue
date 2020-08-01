@@ -20,12 +20,12 @@
             <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
               <div class="p-8 login-tabs-container">
                 <div>
-                  <vs-tabs>
+                  <vs-tabs v-model="activeTab">
                     <vs-tab label="Войти">
                       <vs-input
                         name="email"
                         icon-no-border
-                        icon="icon icon-user"
+                        icon="icon icon-mail"
                         icon-pack="feather"
                         label="Email"
                         data-vv-as="Email"
@@ -46,6 +46,7 @@
                         v-model="password"
                         class="w-full mt-6"
                         v-validate="'required|min:6'"
+                        @keyup.enter.native="signIn"
                       />
                       <span class="text-danger text-sm">{{ errors.first('password') }}</span>
 
@@ -82,7 +83,7 @@
                       <vs-input
                         name="email"
                         icon-no-border
-                        icon="icon icon-user"
+                        icon="icon icon-mail"
                         icon-pack="feather"
                         label="Email"
                         data-vv-as="Email"
@@ -118,6 +119,7 @@
                         v-model="password_confirmation"
                         class="w-full mt-6"
                         v-validate="'required|confirmed:password'"
+                        @keyup.enter.native="signUp"
                       />
                       <span class="text-danger text-sm">{{ errors.first('password_confirmation') }}</span>
                       <vs-button class="float-right mt-6" type="border" @click="signUp">Регистрация</vs-button>
@@ -136,6 +138,7 @@
 export default {
   data() {
     return {
+      activeTab: 0,
       first_name: "",
       last_name: "",
       email: "",
@@ -152,6 +155,14 @@ export default {
         this.errors.any();
     }
   },
+  watch: {
+    activeTab(val) {
+      if (val === 1) {
+        this.email = '';
+        this.password = '';
+      }
+    },
+  },
   methods: {
     async signIn() {
       await this.$validator.validateAll();
@@ -160,12 +171,14 @@ export default {
       }
       this.$store.dispatch('login', {
         email: this.email,
-        password: this.password 
+        password: this.password
       })
-        .then(res => {
+        .then((res) => {
+          console.log(res);
           this.$router.push('/');
         })
-        .catch(err => {
+        .catch((err) => {
+          console.log(err);
           this.$vs.notify({
             title: 'Ошибка',
             text: 'Неверный логин или пароль!',
@@ -185,15 +198,18 @@ export default {
         email: this.email,
         password: this.password,
       })
-      .then(res => {
+      .then((res) => {
+        console.log(res);
         this.$vs.notify({
           title: 'Отлично',
           text: 'Вы успешно зарегистрировались',
           color: 'success',
           position: 'top-center'
         });
+        this.activeTab = 0;
       })
-      .catch(err => {
+      .catch((err) => {
+        console.log(err);
         this.$vs.notify({
           title: 'Ошибка',
           text: 'Этот email уже используется!',
