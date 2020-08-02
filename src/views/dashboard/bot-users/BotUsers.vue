@@ -9,7 +9,6 @@
         <vs-th sort-key="phoneNumber">Телефон</vs-th>
         <vs-th sort-key="userName">@username</vs-th>
         <vs-th sort-key="lastSeen">Последний визит</vs-th>
-        <vs-th>Действия</vs-th>
       </template>
 
       <template slot-scope="{data}">
@@ -18,7 +17,7 @@
             <vs-td>
               <p class="font-medium">
                 <span class="avatar-wrap">
-                  <img v-if="tr.avatar" :src="`${$url}/public/bot-users/${tr.avatar}`" alt="">
+                  <img v-if="tr.avatar" :src="tr.avatar" alt="">
                   <span v-else class="initials-wrap">
                     <span>{{ getInitials(tr.first_name, tr.last_name) }}</span>
                   </span>
@@ -42,14 +41,6 @@
             </vs-td>
             <vs-td>
               <p class="font-medium">{{ tr.last_seen | date }}</p>
-            </vs-td>
-            <vs-td class="whitespace-no-wrap">
-              <feather-icon
-                icon="TrashIcon"
-                svgClasses="w-5 h-5 hover:text-danger stroke-current"
-                class="ml-2"
-                @click.stop="banBotUserAction(tr)"
-              />
             </vs-td>
           </vs-tr>
         </tbody>
