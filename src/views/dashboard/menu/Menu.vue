@@ -34,7 +34,7 @@
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td class="img-container">
               <img src="https://via.placeholder.com/150" class="product-img" v-if="!tr.thumbnail"/>
-              <img :src="isProduct(tr) ? `http://localhost:3000/public/items/${tr.thumbnail}` : `http://localhost:3000/public/categories/${tr.thumbnail}`" class="product-img" v-else />
+              <img :src="isProduct(tr) ? `${$url}/public/items/${tr.thumbnail}` : `${$url}/public/categories/${tr.thumbnail}`" class="product-img" v-else />
             </vs-td>
 
             <vs-td>
