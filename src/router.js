@@ -76,6 +76,15 @@ const router = new Router({
               })
             },
             {
+              path: 'bot-users',
+              component: () => import('./views/dashboard/bot-users/BotUsers.vue'),
+              name: 'DashBoardBotUsers',
+              meta: {
+                rule: defaultRole,
+                pageTitle: 'Пользователи',
+              },
+            },
+            {
               path: 'branches',
               component: () => import('./views/dashboard/branches/Branches.vue'),
               name: 'DashboardBranches',

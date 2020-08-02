@@ -47,6 +47,13 @@ Vue.filter('time', function (value, is24HrFormat = false) {
   }
 })
 
+Vue.filter('date', function (value) {
+  if (!value) return '';
+  return new Date(value).toLocaleString([], {
+    year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+})
+
 Vue.filter('csv', function (value) {
   return value.join(', ')
 })
