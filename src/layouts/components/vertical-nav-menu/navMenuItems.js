@@ -18,7 +18,9 @@ export default [
     icon: "FileIcon",
   },
   {
-    url: "/page2",
+    url: {
+      name: 'DashboardOrders',
+    },
     name: "Заказы",
     slug: "page2",
     icon: "FileIcon",

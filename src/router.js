@@ -102,6 +102,26 @@ const router = new Router({
                 pageTitle: 'Настройки',
               },
             },
+            {
+              path: 'orders',
+              component: () => import('./views/dashboard/orders/Orders.vue'),
+              name: 'DashboardOrders',
+              meta: {
+                rule: defaultRole,
+                pageTitle: 'Заказы'
+              }
+            },
+            {
+              path: 'order/:order_id',
+              component: () => import('./views/dashboard/orders/Order.vue'),
+              name: 'DashboardOrder',
+              meta: {
+                rule: defaultRole,
+              },
+              props: (route) => ({
+                order_id: Number(route.params.order_id) || null
+              }),
+            }
           ],
           meta: {
             authRequired: true,
