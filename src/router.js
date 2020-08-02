@@ -81,7 +81,7 @@ const router = new Router({
               name: 'DashBoardBotUsers',
               meta: {
                 rule: defaultRole,
-                pageTitle: 'Пользователи',
+                pageTitle: 'Подписчики',
               },
             },
             {

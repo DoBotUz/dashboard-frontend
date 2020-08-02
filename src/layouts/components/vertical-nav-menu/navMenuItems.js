@@ -18,14 +18,6 @@ export default [
     icon: "FileIcon",
   },
   {
-    url: {
-      name: 'DashBoardBotUsers'
-    },
-    name: "Пользователи",
-    slug: "bot-users",
-    icon: "UserIcon",
-  },
-  {
     url: "/page2",
     name: "Заказы",
     slug: "page2",
@@ -58,10 +50,12 @@ export default [
         tag: '2',
       },
       {
-        url: "/page2",
+        url: {
+          name: 'DashBoardBotUsers'
+        },
         name: "Подписчики",
-        slug: "page2",
-        icon: "FileIcon",
+        slug: "bot-users",
+        icon: "UserIcon",
       },
       {
         url: "/page2",
