@@ -113,8 +113,9 @@ export default {
     position: relative;
     span{
       position: absolute;
-      top: 17px;
-      left: 20px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       font-size: 20px;
       color: #fff;
     }
