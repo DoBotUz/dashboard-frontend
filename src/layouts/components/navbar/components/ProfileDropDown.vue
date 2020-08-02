@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     logout() {
-        this.$router.push('/pages/login').catch(() => {})
+      this.$store.dispatch('logout').then(() => { this.$router.push('/pages/login'); });
     },
   }
 }
