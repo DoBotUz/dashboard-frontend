@@ -153,7 +153,7 @@ export default {
       return !this.sign_up ?
         this.email && this.password :
         this.errors.any();
-    }
+    },
   },
   watch: {
     activeTab(val) {

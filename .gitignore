@@ -103,6 +103,10 @@ dist
 # TernJS port file
 .tern-port
 
+# local env files
+.env.local
+.env.*.local
+
 #vuexy
 .rej
 *.rej

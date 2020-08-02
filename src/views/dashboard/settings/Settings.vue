@@ -21,6 +21,14 @@ export default {
       token: '',
     };
   },
+  head: {
+    title() {
+      return {
+        inner: 'Настройки',
+        complement: 'DoBot'
+      }
+    },
+  },
   methods: {
     ...mapActions('organizations', ['fetchOrganizations']),
     updateOrganization() {

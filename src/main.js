@@ -23,6 +23,12 @@ import axios from "./axios.js"
 Vue.prototype.$http = axios
 
 
+// Head managing plugin
+import VueHead from 'vue-head'
+Vue.use(VueHead, {
+  inner: 'DoBot',
+  complement: 'DoBot'
+})
 // Theme Configurations
 import '../themeConfig.js'
 

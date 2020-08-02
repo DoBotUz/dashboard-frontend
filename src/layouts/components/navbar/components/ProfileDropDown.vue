@@ -45,6 +45,13 @@ export default {
       return this.$store.state.AppActiveUser
     }
   },
+  head: {
+    title() {
+      return {
+        inner: 'Заведения',
+      }
+    },
+  },
   methods: {
     logout() {
       this.$store.dispatch('logout').then(() => { this.$router.push('/pages/login'); });

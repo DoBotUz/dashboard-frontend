@@ -227,13 +227,21 @@ export default {
       selectedProduct: null,
     };
   },
+  head: {
+    title() {
+      return {
+        inner: 'Продукты и Категории',
+        complement: 'DoBot'
+      }
+    },
+  },
   computed: {
-    ...mapGetters({
-      categories: "menu/categories",
-      categoriesByParentId: "menu/categoriesByParentId",
-      childlessCategories: "menu/childlessCategories",
-      productsByParentId: "menu/productsByParentId",
-      statuses: "menu/statuses",
+    ...mapGetters('menu', {
+      categories: "categories",
+      categoriesByParentId: "categoriesByParentId",
+      childlessCategories: "childlessCategories",
+      productsByParentId: "productsByParentId",
+      statuses: "statuses",
     }),
     tableData() {
       if (this.categoriesByParentId(this.parent).length) {

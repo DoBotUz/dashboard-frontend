@@ -17,6 +17,13 @@ export default {
     title: String,
     description: String,
   },
+  head: {
+    title() {
+      return {
+        inner: this.title
+      }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

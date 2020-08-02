@@ -130,6 +130,13 @@ export default {
       },
     };
   },
+  head: {
+    title() {
+      return {
+        inner: 'Филиалы',
+      }
+    },
+  },
   methods: {
     ...mapActions("branches", ["fetchBranches"]),
     addBranch() {

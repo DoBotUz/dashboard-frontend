@@ -47,7 +47,14 @@ export default {
 			addPopup: false,
 			tokenPopup: false,
 		}
-	},
+  },
+  head: {
+    title() {
+      return {
+        inner: 'Ваши заведения',
+      }
+    },
+  },
 	methods: {
 		...mapActions('organizations', ['fetchOrganizations']),
 		addOrganization() {
