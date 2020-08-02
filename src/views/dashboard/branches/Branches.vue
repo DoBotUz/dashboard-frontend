@@ -189,8 +189,8 @@ export default {
     addOrUpdateBranch() {
       const payload = {
         title: this.title,
-        lat: this.branchCoords[0],
-        lng: this.branchCoords[1],
+        lat: Number(this.branchCoords[0]),
+        lng: Number(this.branchCoords[1]),
         is_all_day: Number(this.is_all_day),
         timetable: JSON.stringify({
           from: this.timetableFrom,
