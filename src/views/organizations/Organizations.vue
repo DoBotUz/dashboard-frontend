@@ -5,25 +5,25 @@
         <h1>Ваши заведения</h1>
       </div>
     </div>
-    <div class="organizations">
+    <div class="organizations" id="organizations-div">
       <organization
-				v-for="organization in organizations"
-				:key="organization.id"
-				:id="organization.id"
-				:title="organization.ru_title"
-				:description="organization.ru_description"
-			/>
+        v-for="organization in organizations"
+        :key="organization.id"
+        :id="organization.id"
+        :title="organization.ru_title"
+        :description="organization.ru_description"
+      />
       <vx-card class="cursor-pointer organizations__add" @click="addPopup = true">
         <h1 class="organizations__add__plus mb-5">➕</h1>
-				<h4>Добавить заведение</h4>
+        <h4>Добавить заведение</h4>
       </vx-card>
     </div>
-		<vs-popup title="Добавить новое заведение" :active.sync="addPopup">
+    <vs-popup title="Добавить новое заведение" :active.sync="addPopup">
       <vs-input class="w-full mb-3" label="Название заведения" v-model="organization_name" />
-			<vs-textarea class="w-full mb-3" label="Описание заведения" v-model="organization_description" />
-			<vs-input class="w-full mb-3" label="Токен бота" v-model="organization_token" />
+      <vs-textarea class="w-full mb-3" label="Описание заведения" v-model="organization_description" />
+      <vs-input class="w-full mb-3" label="Токен бота" v-model="organization_token" />
       <vs-button class="mb-3" @click="tokenPopup=true" color="primary" type="line">Как получить токен бота?</vs-button>
-      <vs-button class="w-full" @click="addOrganization" color="primary">Добавить</vs-button>
+      <vs-button class="w-full" @click="addNewOrg" color="primary">Добавить</vs-button>
 
       <vs-popup title="Как получить токен от бота?" :active.sync="tokenPopup">
         <p>Заходите в @botfather и без задней мысли получаете токен</p>
@@ -38,42 +38,48 @@ import Organization from "./components/Organization";
 export default {
   components: {
     Organization,
-	},
-	data() {
-		return {
-			organization_name: '',
-			organization_description: '',
-			organization_token: '',
-			addPopup: false,
-			tokenPopup: false,
-		}
-	},
-	methods: {
-		...mapActions('organizations', ['fetchOrganizations']),
-		addOrganization() {
-			this.$store.dispatch('organizations/addOrganization', {
-				name: this.organization_name,
-				description: this.organization_description,
-				token: this.organization_token
-			}).then(res => {
-				this.addPopup = false;
-				this.$vs.notify({
-          title: 'Отлично',
-          text: 'Вы успешно создали магазин',
-          color: 'success',
-          position: 'top-center'
-        });
-			})
-		}
-	},
-	mounted() {
-		this.fetchOrganizations();
-	},
-	computed: {
-		...mapGetters({
-			'organizations': 'organizations/organizations',
-		}),
-	}
+  },
+  data() {
+    return {
+      organization_name: '',
+      organization_description: '',
+      organization_token: '',
+      addPopup: false,
+      tokenPopup: false,
+    }
+  },
+  methods: {
+    ...mapActions('organizations', ['fetchOrganizations', 'addOrganization']),
+    addNewOrg() {
+      this.addOrganization({
+        name: this.organization_name,
+        description: this.organization_description,
+        token: this.organization_token
+      }).then(() => {
+          this.addPopup = false;
+          this.$vs.notify({
+            title: 'Отлично',
+            text: 'Вы успешно создали магазин',
+            color: 'success',
+            position: 'top-center'
+          });
+      });
+    },
+  },
+  mounted() {
+    this.$vs.loading({
+      container: '#organizations-div',
+      scale: 0.6
+    });
+    this.fetchOrganizations().then(() => {
+       this.$vs.loading.close('#organizations-div > .con-vs-loading')
+    });
+  },
+  computed: {
+    ...mapGetters({
+      'organizations': 'organizations/organizations',
+    }),
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -85,12 +91,12 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 30px;
-	&__add {
-		font-size: 48px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-	}
+  &__add {
+    font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 }
 </style>

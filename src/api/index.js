@@ -1,10 +1,9 @@
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
-import { notify } from 'vuesax';
 export const TOKEN = 'access_token';
 
 const http = axios.create({
-  baseURL: process.env.VUE_APP_BASE_URL,
+  baseURL: `${process.env.VUE_APP_BASE_URL}/rest/v1/`,
 });
 
 const noCrudUrls = ['auth/login'];
@@ -27,14 +26,14 @@ http.interceptors.request.use((config) => {
 
 http.interceptors.response.use(response => {
   if (response.data.status === 'Fail') {
-    notify({
+    global.vm.$vs.notify({
       title: 'Неверный ввод',
       color: 'warning',
       iconPack: 'feather',
       icon: 'icon-alert-circle',
     });
   } else if (response.data.status === 'Error') {
-    notify({
+    global.vm.$vs.notify({
       title: 'Ошибка',
       color: 'error',
       iconPack: 'feather',
@@ -42,12 +41,12 @@ http.interceptors.response.use(response => {
     });
   } else if (response.data.status === 'Success') {
     if (response.config.method === 'post' && !noCrudUrls.includes(response.config.url)) {
-      notify({
-        title: 'Успех',
-        color: 'success',
-        iconPack: 'feather',
-        icon: 'icon-alert-circle',
-      });
+      // global.vm.$vs.notify({
+      //   title: 'Успех',
+      //   color: 'success',
+      //   iconPack: 'feather',
+      //   icon: 'icon-alert-circle',
+      // });
     }
   }
   if (!response) return { data: {} };

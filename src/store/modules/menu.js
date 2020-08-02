@@ -1,8 +1,10 @@
 import axios from '@/axios';
+import api from '@/api/menu';
 
 export const state = {
   categories: [],
   products: [],
+  loading: false,
   statuses: {
     10: 'Активен',
     9: 'На модерации',
@@ -28,125 +30,203 @@ export const getters = {
   statuses: (state) => state.statuses
 }
 
-export const actions = {
-  fetchCategories({ commit, rootState }) {
-    return axios.get(`/categories/${rootState.organization}/list`)
-      .then(res => {
-        commit('SET_CATEGORIES', {
-          categories: res.data.data
-        });
-      });
-  },
-  createCategory({ commit, rootState }, payload) {
-    payload.append('bot_id', rootState.organization);
-    return axios.post('/categories', payload, {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    }).then(res => {
-      commit('ADD_CATEGORY', {
-        category: res.data.data
-      });
-    })
-  },
-  updateCategory({ commit, rootState }, payload) {
-    payload.append('bot_id', rootState.organization);
-    return axios.post('/categories/update', payload, {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    }).then(res => {
-      commit('UPDATE_CATEGORY', {
-        category: res.data.data
-      });
-    });
-  },
-  deleteCategory({ commit, rootState }, payload) {
-    return axios.post('/categories/deactivate/' + payload.id)
-      .then(() => {
-        commit('DELETE_CATEGORY', {
-          id: payload.id
-        });
-      });
+export const mutations = {
+  SET_LOADING(state, loading) {
+    state.loading = loading;
   },
 
-  fetchProducts({ commit, rootState }, payload) {
-    return axios.get(`/items/${rootState.organization}/list`)
-      .then(res => {
-        commit('SET_PRODUCTS', {
-          products: res.data.data
-        });
-      });
+  SET_CATEGORIES(state, categories) {
+    state.categories = categories;
   },
-  createProduct({ commit, rootState }, payload) {
-    return axios.post('/items', payload, {
-      headers: {
-        'content-type': 'multipart/form-data'
+
+  ADD_CATEGORY(state, category) {
+    state.categories.push(category);
+  },
+
+  UPDATE_CATEGORY(state, category) {
+    state.categories = state.categories.map(el => {
+      if (el.id === category.id) {
+        return category;
       }
-    }).then(res => {
-      commit('ADD_PRODUCT', {
-        product: res.data.data
-      });
+      return el;
     });
   },
-  updateProduct({ commit, rootState }, payload) {
-    return axios.post('/items/update', payload, {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    })
-      .then(res => {
-        commit('UPDATE_PRODUCT', {
-          product: res.data.data
-        });
-      });
+
+  DELETE_CATEGORY(state, category_id) {
+    state.categories = state.categories.filter(el => el.id !== category_id);
   },
-  deleteProduct({ commit, rootState }, payload) {
-    return axios.post('/items/deactivate/' + payload.id)
-      .then(() => {
-        commit('DELETE_PRODUCT', {
-          id: payload.id
-        });
-      });
+
+  SET_PRODUCTS(state, products) {
+    state.products = products;
+  },
+
+  ADD_PRODUCT(state, product) {
+    state.products.push(product);
+  },
+
+  UPDATE_PRODUCT(state, product) {
+    state.products = state.products.map(el => {
+      if (el.id === product.id) {
+        return product;
+      }
+      return el;
+    });
+  },
+
+  DELETE_PRODUCT(state, product_id) {
+    state.products = state.products.filter(el => el.id !== product_id);
   },
 }
 
-export const mutations = {
-  SET_CATEGORIES(state, payload) {
-    state.categories = payload.categories;
-  },
-  ADD_CATEGORY(state, payload) {
-    state.categories.push(payload.category);
-  },
-  UPDATE_CATEGORY(state, payload) {
-    state.categories = state.categories.map(category => {
-      if (category.id === payload.category.id) {
-        return payload.category;
-      }
-      return category;
+
+export const actions = {
+  fetchCategories({ commit, rootState }) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .categories(rootState.organization)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            console.log(data);
+            commit('SET_CATEGORIES', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
     });
-  },
-  DELETE_CATEGORY(state, payload) {
-    state.categories = state.categories.filter(category => category.id !== payload.id);
   },
 
-  SET_PRODUCTS(state, payload) {
-    state.products = payload.products;
-  },
-  ADD_PRODUCT(state, payload) {
-    state.products.push(payload.product);
-  },
-  UPDATE_PRODUCT(state, payload) {
-    state.products = state.products.map(product => {
-      if (product.id === payload.product.id) {
-        return payload.product;
-      }
-      return product;
+  createCategory({ commit, rootState }, payload) {
+    payload.append('bot_id', rootState.organization);
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .createCategory(payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('ADD_CATEGORY', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
     });
   },
-  DELETE_PRODUCT(state, payload) {
-    state.products = state.products.filter(product => product.id !== payload.id);
-  }
+
+  updateCategory({ commit, rootState }, payload) {
+    payload.append('bot_id', rootState.organization);
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .updateCategory(payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('UPDATE_CATEGORY', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
+
+  deleteCategory({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .deactivateCategory(payload.id)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('DELETE_CATEGORY', payload.id);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
+
+  fetchProducts({ commit, rootState }) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .items(rootState.organization)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            console.log(data);
+            commit('SET_PRODUCTS', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
+
+  createProduct({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .createItem(payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('ADD_PRODUCT', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
+
+  updateProduct({ commit, rootState }, payload) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .updateItem(payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('UPDATE_PRODUCT', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
+
+  deleteProduct({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .deactivateItem(payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('DELETE_PRODUCT', payload.id);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
 }
 
 export const namespaced = true;

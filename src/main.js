@@ -87,10 +87,10 @@ const i18n = new VueI18n({
 // Note: In latest version you have to add it separately
 // import 'vue-select/dist/vue-select.css';
 
-
+Vue.prototype.$url = process.env.VUE_APP_BASE_URL;
 Vue.config.productionTip = false
 
-new Vue({
+global.vm = new Vue({
     router,
     store,
     acl,
