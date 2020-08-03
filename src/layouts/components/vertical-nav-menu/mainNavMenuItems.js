@@ -22,6 +22,12 @@ export default [
         icon: "FileIcon",
     },
     {
+      url: "/support",
+      name: "Поддержка",
+      slug: "support",
+      icon: "HeartIcon",
+    },
+    {
         url: "/plans",
         name: "Тарифы",
         slug: "settings",

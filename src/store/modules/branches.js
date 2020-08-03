@@ -79,7 +79,7 @@ export const actions = {
           id: id
         });
       });
-  }
+  },
 }
 
 export const namespaced = true

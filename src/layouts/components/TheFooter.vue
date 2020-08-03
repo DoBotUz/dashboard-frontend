@@ -14,8 +14,8 @@
         <p>
           <span>COPYRIGHT &copy;</span>
           <span>{{ new Date().getFullYear() }} </span>
-          <a href="https://1.envato.market/vuexy_admin" target="_blank" rel="nofollow">Pixinvent</a>
-          <span class="hidden sm:inline-block">, All rights Reserved</span>
+          <a href="https://dobot.uz" target="_blank" rel="nofollow">DoBot</a>
+          <span class="hidden sm:inline-block">, Все права сохранены</span>
         </p>
         <span class="md:flex hidden items-center">
             <span>Hand-crafted & Made with</span>

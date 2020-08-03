@@ -40,6 +40,15 @@ const router = new Router({
                 },
               },
               {
+                path: '/support',
+                name: 'support',
+                component: () => import('./views/support/Support.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: defaultRole,
+                },
+              },
+              {
                 path: '/settings',
                 name: 'settings',
                 component: () => import('./views/profile-settings/ProfileSettings.vue'),
