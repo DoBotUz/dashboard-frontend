@@ -4,11 +4,11 @@ import api from '@/api/organizations';
 export const state = {
   organizations: [],
   loading: false,
+  organizationObj: {},
 }
 
 export const getters = {
   organizations: (state) => state.organizations,
-  organization: (state, undefined, rootState) => state.organizations.find(org => org.id === rootState.organization)
 }
 
 export const mutations = {
@@ -23,10 +23,30 @@ export const mutations = {
   },
   SET_LOADING(state, loading) {
     state.loading = loading;
-  }
+  },
+  SET_ORGANIZATION(state, org) {
+    state.organizationObj = org;
+  },
 }
 
 export const actions = {
+  getOrganization({ commit }, organization_id) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .get(organization_id)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('SET_ORGANIZATION', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
   fetchOrganizations({ commit }) {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
@@ -34,7 +54,6 @@ export const actions = {
         .list()
         .then(({ data }) => {
           if (data.status === 'Success') {
-            console.log(data);
             commit('SET_ORGANIZATIONS', data.data);
             resolve(data);
           } else {
