@@ -2,6 +2,7 @@
   <div class="bot-users">
     <vs-table ref="table" v-model="selected" search :data="botUsers">
       <template slot="thead">
+        <ts-th sort-key="id">ID</ts-th>
         <vs-th sort-key="avatar">Аватар</vs-th>
         <vs-th sort-key="tg_id">Telegram ID</vs-th>
         <vs-th sort-key="firstName">Имя</vs-th>
@@ -14,6 +15,9 @@
       <template slot-scope="{data}">
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
+            <vs-td>
+              <p class="font-medium">{{ tr.id }}</p>
+            </vs-td>
             <vs-td>
               <p class="font-medium">
                 <span class="avatar-wrap">

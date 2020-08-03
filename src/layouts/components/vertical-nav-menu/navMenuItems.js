@@ -58,10 +58,12 @@ export default [
         icon: "UserIcon",
       },
       {
-        url: "/page2",
+        url: {
+          name: 'DashBoardMassNotifs'
+        },
         name: "Рассылки",
-        slug: "page2",
-        icon: "FileIcon",
+        slug: "mass-notifs",
+        icon: "SendIcon",
       },
     ]
   },

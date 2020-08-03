@@ -85,6 +85,15 @@ const router = new Router({
               },
             },
             {
+              path: 'mass-notifs',
+              component: () => import('./views/dashboard/mass-notifs/MassNotifs.vue'),
+              name: 'DashBoardMassNotifs',
+              meta: {
+                rule: defaultRole,
+                pageTitle: 'Рассылки',
+              },
+            },
+            {
               path: 'branches',
               component: () => import('./views/dashboard/branches/Branches.vue'),
               name: 'DashboardBranches',

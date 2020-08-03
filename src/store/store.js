@@ -24,18 +24,20 @@ import * as moduleOrganizations from './modules/organizations';
 import * as moduleBranches from './modules/branches';
 import * as moduleMenu from './modules/menu';
 import * as moduleBotUsers from './modules/botUsers';
+import * as moduleMassNotifs from './modules/massNotifs';
 
 export default new Vuex.Store({
     getters,
     mutations,
     state,
     actions,
-    strict: process.env.NODE_ENV !== 'production',
+    strict: false,
     modules: {
       auth: moduleAuth,
       organizations: moduleOrganizations,
       branches: moduleBranches,
       menu: moduleMenu,
-      botUsers: moduleBotUsers
+      botUsers: moduleBotUsers,
+      massNotifs: moduleMassNotifs
     },
 })

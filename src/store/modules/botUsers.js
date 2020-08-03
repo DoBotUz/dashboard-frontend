@@ -42,10 +42,10 @@ export const actions = {
         .catch(reject);
     });
   },
-  updateBotUser({ commit }, payload) {
+  banBotUser({ commit }, botUserId) {
     return new Promise((resolve, reject) => {
       api()
-        .update(payload)
+        .ban(botUserId)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('UPDATE_BOT_USER', data.data);
