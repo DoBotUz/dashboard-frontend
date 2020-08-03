@@ -101,5 +101,8 @@ global.vm = new Vue({
     store,
     acl,
     i18n,
-    render: h => h(App)
+    render: h => h(App),
+    mounted(){
+      this.$store.dispatch('getUserInfo');
+    },
 }).$mount('#app')

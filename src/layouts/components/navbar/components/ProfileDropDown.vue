@@ -1,8 +1,8 @@
 <template>
-  <div class="the-navbar__user-meta flex items-center" v-if="activeUserInfo.displayName">
+  <div class="the-navbar__user-meta flex items-center" v-if="activeUserInfo.first_name">
 
     <div class="text-right leading-tight hidden sm:block">
-      <p class="font-semibold">{{ activeUserInfo.displayName }}</p>
+      <p class="font-semibold">{{ activeUserInfo.first_name + ' ' + activeUserInfo.last_name }}</p>
     </div>
 
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">

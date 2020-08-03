@@ -1,4 +1,5 @@
 import axios from '@/axios';
+import api from '@/api/auth';
 
 export const state = {
   token: localStorage.getItem('access_token') || null,
@@ -32,11 +33,12 @@ export const actions = {
       axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
     }
   },
-  login({ commit }, payload) {
+  login({ commit, dispatch}, payload) {
     const { email, password } = payload;
     return axios.post('/auth/login', { email, password })
       .then(res => {
         commit('SET_TOKEN', res.data.data);
+        dispatch('getUserInfo');
       });
   },
   signUp({ commit }, payload) {
@@ -50,5 +52,21 @@ export const actions = {
     return Promise.resolve(() => {
       commit('LOGOUT');
     });
-  }
+  },
+  getUserInfo({ dispatch }) {
+    console.log(123);
+    return new Promise((resolve, reject) => {
+      api()
+        .userInfo()
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            dispatch('updateUserInfo', data.data, {root: true});
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject);
+    });
+  },
 }
