@@ -21,6 +21,7 @@
         <vs-th sort-key="payment_type">Способ оплаты</vs-th>
         <vs-th sort-key="id">Промокод</vs-th>
         <vs-th sort-key="total_charge">Сумма</vs-th>
+        <vs-th sort-key="total_charge">Оплачен</vs-th>
         <vs-th sort-key="created_at">Дата</vs-th>
       </template>
 
@@ -31,19 +32,22 @@
               <p>{{ tr.id }}</p>
             </vs-td>
             <vs-td>
-              <p>{{ tr.status }}</p>
+              <p>{{ order_statuses[tr.status] }}</p>
             </vs-td>
             <vs-td>
               <p>{{ tr.phone }}</p>
             </vs-td>
             <vs-td>
-              <p>{{ tr.payment_type }}</p>
+              <p>{{ payment_types[tr.payment_type] }}</p>
             </vs-td>
             <vs-td>
               <p>----</p>
             </vs-td>
             <vs-td>
               <p>{{ tr.total_charge }}</p>
+            </vs-td>
+            <vs-td>
+              <p>{{ tr.is_paid ? 'Да' : 'Нет' }}</p>
             </vs-td>
             <vs-td>
               <p>{{ tr.created_at | date }}</p>
@@ -55,15 +59,24 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 const orders = require('./mock');
 
 export default {
   data() {
     return {
-      orders: orders,
+      // orders: orders,
     }
   },
+  computed: {
+    ...mapGetters('orders', {
+      'orders': 'orders',
+      'order_statuses': 'order_statuses',
+      'payment_types': 'payment_types',
+    }),
+  },
   methods: {
+    ...mapActions('orders', ['fetchOrders']),
     addOrder() {
       
     },
@@ -76,6 +89,10 @@ export default {
       });
     }
   },
+  mounted() {
+    this.fetchOrders()
+      .then(console.log);
+  }
 };
 </script>
 <style lang="scss" scoped>

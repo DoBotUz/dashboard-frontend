@@ -15,7 +15,7 @@ export default [
     },
     name: "Каталог / Меню",
     slug: "page2",
-    icon: "FileIcon",
+    icon: "BookmarkIcon",
   },
   {
     url: {
@@ -23,7 +23,7 @@ export default [
     },
     name: "Заказы",
     slug: "page2",
-    icon: "FileIcon",
+    icon: "BookIcon",
   },
   {
     url: "/page2",
@@ -78,7 +78,7 @@ export default [
         },
         name: "Филиалы",
         slug: "page2",
-        icon: "FileIcon",
+        icon: "HomeIcon",
       },
       {
         url: "/page2",
@@ -98,7 +98,7 @@ export default [
         },
         name: "Настройки",
         slug: "home",
-        icon: "HomeIcon",
+        icon: "SettingsIcon",
       },
     ]
   }

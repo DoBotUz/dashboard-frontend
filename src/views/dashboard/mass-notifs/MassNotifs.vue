@@ -77,14 +77,13 @@ export default {
     MassNotifForm,
   },
   computed: {
-    ...mapState('massNotifs', ['massNotifs', 'addPopup']),
+    ...mapState('massNotifs', ['massNotifs']),
   },
   methods: {
-    ...mapActions('massNotifs', ['fetchMassNotifs', 'resetFormFields']),
+    ...mapActions('massNotifs', ['fetchMassNotifs']),
     ...mapMutations('massNotifs', ['SET_ADD_POPUP']),
     createMassNotif(){
       this.selectedMassNotif = null;
-      this.resetFormFields();
       this.SET_ADD_POPUP(true);
     },
   },

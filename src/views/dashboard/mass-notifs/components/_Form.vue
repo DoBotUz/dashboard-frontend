@@ -43,11 +43,15 @@ export default {
     isUpdate: {
       type: Boolean,
       default: false
+    },
+  },
+  data() {
+    return {
+      form: {}
     }
   },
   computed: {
     ...mapState(['organization']),
-    ...mapState('massNotifs', ['form', 'addPopup']),
   },
   methods: {
     ...mapActions('massNotifs', ['createMassSend']),
@@ -72,5 +76,15 @@ export default {
       });
     },
   },
+  computed: {
+    addPopup: {
+      get() {
+        return this.$store.state.massNotifs.addPopup
+      },
+      set(val) {
+        this.SET_ADD_POPUP(val);
+      }
+    }
+  }
 }
 </script>
