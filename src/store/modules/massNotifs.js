@@ -2,7 +2,6 @@ import api from '@/api/massNotifs';
 
 export const state = {
   massNotifs: [],
-  form: {},
   addPopup: false,
 }
 
@@ -13,10 +12,6 @@ export const getters = {
 export const mutations = {
   SET_MASS_NOTIFS(state, massNotifs) {
     state.massNotifs = massNotifs;
-  },
-
-  SET_MASS_NOTIF_FORM(state, form) {
-    state.form = form;
   },
 
   ADD_MASS_NOTIF(state, massNotif) {
@@ -60,10 +55,7 @@ export const actions = {
         })
         .catch(reject);
     });
-  },
-  resetFormFields({ commit }) {
-    commit('SET_MASS_NOTIF_FORM', {});
-  },
+  }
 }
 
 export const namespaced = true

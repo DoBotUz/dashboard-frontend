@@ -9,12 +9,17 @@ export const state = {
     10: 'Активен',
     9: 'На модерации',
     0: 'Выключен',
-  }
+  },
 }
 
 export const getters = {
   categories: (state) => state.categories,
-  categoriesByParentId: (state) => (parent) => state.categories.filter(cat => cat.parent_category_id === parent),
+  categoriesByParentId: (state) => (parent) => {
+    if (!parent) {
+      return state.categories.filter(cat => !cat.parent_category_id);
+    }
+    return state.categories.filter(cat => cat.parent_category_id === parent);
+  },
   childlessCategories: state => {
     let childlessCategories = state.categories;
     state.categories.forEach(category => {
@@ -25,7 +30,7 @@ export const getters = {
     return childlessCategories;
   },
   productsByParentId: (state) => (parent) => {
-    return state.products.filter(prod => prod.category_id === parent)
+    return state.products.filter(prod => Number(prod.category_id) === parent)
   },
   statuses: (state) => state.statuses
 }
@@ -87,7 +92,6 @@ export const actions = {
         .categories(rootState.organization)
         .then(({ data }) => {
           if (data.status === 'Success') {
-            console.log(data);
             commit('SET_CATEGORIES', data.data);
             resolve(data);
           } else {
@@ -162,7 +166,6 @@ export const actions = {
         .items(rootState.organization)
         .then(({ data }) => {
           if (data.status === 'Success') {
-            console.log(data);
             commit('SET_PRODUCTS', data.data);
             resolve(data);
           } else {
