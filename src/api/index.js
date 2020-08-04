@@ -54,7 +54,6 @@ http.interceptors.response.use(response => {
 }, (response) => {
   if (response && response.message === 'Request failed with status code 401') {
     localStorage.removeItem(TOKEN);
-    window.location.href = '/signin';
   } else {
     return { data: 'Network Error' };
   }
