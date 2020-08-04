@@ -3,10 +3,10 @@
     <vx-card>
       <vs-tabs alignment="fixed">
         <vs-tab label="Общее">
-          <general-form :order="order" />
+          <general-form :order="order" @save="updateGeneralInfo" />
         </vs-tab>
         <vs-tab label="Продукты">
-          <products-table :order_id="order_id" />
+          <products-table :order="order" @save="updateGeneralInfo" />
         </vs-tab>
         <vs-tab label="История заказов">
           <orders-history :client_id="1" />
@@ -16,9 +16,9 @@
   </div>
 </template>
 <script>
-const orders = require('./mock');
-import GeneralForm from './components/general_form';
-import ProductsTable from './components/products_table';
+import { mapGetters, mapActions } from "vuex";
+import GeneralForm from "./components/general_form";
+import ProductsTable from "./components/products_table";
 
 export default {
   components: {
@@ -26,26 +26,40 @@ export default {
     ProductsTable,
   },
   beforeRouteEnter(to, from, next) {
-    to.meta.breadcrumb = [
-      { title: 'Заказы', url: { name: "DashboardOrders" }, slug: 'home' },
-      { title: `Заказ #${to.params.order_id}`, active: true }
-    ],
-    to.meta.pageTitle = `Заказ #${to.params.order_id}`
+    (to.meta.breadcrumb = [
+      { title: "Заказы", url: { name: "DashboardOrders" }, slug: "home" },
+      { title: `Заказ #${to.params.order_id}`, active: true },
+    ]),
+      (to.meta.pageTitle = `Заказ #${to.params.order_id}`);
     next();
   },
   props: {
     order_id: Number,
   },
-  data() {
-    return {}
-  },
   computed: {
-    order() {
-      let order_id = this.order_id;
-      return orders.find(order => order.id === order_id);
-    }
-  }
-}
+    ...mapGetters("orders", {
+      order: "order",
+    }),
+  },
+  methods: {
+    ...mapActions("orders", ["fetchOrder", "updateOrder"]),
+    updateGeneralInfo(updated_order) {
+      this.updateOrder(
+        Object.assign({ for_datetime: null }, this.order, updated_order)
+      ).then(() => {
+        this.$vs.notify({
+          title: "Отлично",
+          text: "Изменения сохранены",
+          color: "success",
+          position: "top-center",
+        });
+      });
+    },
+  },
+  mounted() {
+    this.fetchOrder(this.order_id);
+  },
+};
 </script>
 <style lang="scss" scoped>
 </style>

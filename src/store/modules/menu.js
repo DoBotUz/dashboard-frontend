@@ -32,7 +32,8 @@ export const getters = {
   productsByParentId: (state) => (parent) => {
     return state.products.filter(prod => Number(prod.category_id) === parent)
   },
-  statuses: (state) => state.statuses
+  statuses: (state) => state.statuses,
+  products: (state) => state.products,
 }
 
 export const mutations = {

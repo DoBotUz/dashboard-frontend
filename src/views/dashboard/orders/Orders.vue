@@ -16,6 +16,7 @@
 
       <template slot="thead">
         <vs-th sort-key="id">ID</vs-th>
+        <vs-th sort-key="branch_id">Филиал</vs-th>
         <vs-th sort-key="status">Статус</vs-th>
         <vs-th sort-key="phone">Клиент</vs-th>
         <vs-th sort-key="payment_type">Способ оплаты</vs-th>
@@ -30,6 +31,9 @@
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td>
               <p>{{ tr.id }}</p>
+            </vs-td>
+            <vs-td>
+              <p>{{ tr.branch.title }}</p>
             </vs-td>
             <vs-td>
               <p>{{ order_statuses[tr.status] }}</p>

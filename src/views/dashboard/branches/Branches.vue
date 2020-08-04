@@ -242,10 +242,5 @@ export default {
 };
 </script>
 <style>
-.vs-popup .ymap-container > * > ymaps {
-  height: 500px !important;
-}
-.con-vs-popup.fullscreen .vs-popup {
-  width: 75%;
-}
+
 </style>

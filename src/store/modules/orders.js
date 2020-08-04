@@ -3,6 +3,7 @@ import api from '@/api/orders';
 export const state = {
   loading: false,
   orders: [],
+  order: {},
   order_statuses: {
     10: 'Принят',
     9: 'Новый',
@@ -19,6 +20,7 @@ export const getters = {
   orders: (state) => state.orders,
   order_statuses: (state) => state.order_statuses,
   payment_types: (state) => state.payment_types,
+  order: (state) => state.order,
 }
 
 export const mutations = {
@@ -40,6 +42,10 @@ export const mutations = {
       return el;
     });
   },
+
+  SET_ORDER(state, order) {
+    state.order = order;
+  }
 }
 
 export const actions = {
@@ -51,6 +57,40 @@ export const actions = {
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORDERS', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
+  fetchOrder({ commit, rootState }, order_id) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .order(order_id)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('SET_ORDER', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
+  updateOrder({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .updateOrder(payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('SET_ORDER', data.data);
             resolve(data);
           } else {
             reject(data);
