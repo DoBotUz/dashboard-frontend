@@ -139,7 +139,15 @@ const router = new Router({
               props: (route) => ({
                 order_id: Number(route.params.order_id) || null
               }),
-            }
+            },
+            {
+              path: 'feedbacks',
+              component: () => import('./views/dashboard/feedbacks/Feedbacks.vue'),
+              name: 'DashboardFeedbacks',
+              meta: {
+                rule: defaultRole,
+              },
+            },
           ],
           meta: {
             authRequired: true,

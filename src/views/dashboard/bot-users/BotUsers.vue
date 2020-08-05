@@ -2,7 +2,7 @@
   <div class="bot-users">
     <vs-table ref="table" v-model="selected" search :data="botUsers">
       <template slot="thead">
-        <ts-th sort-key="id">ID</ts-th>
+        <vs-th sort-key="id">ID</vs-th>
         <vs-th sort-key="avatar">Аватар</vs-th>
         <vs-th sort-key="tg_id">Telegram ID</vs-th>
         <vs-th sort-key="firstName">Имя</vs-th>

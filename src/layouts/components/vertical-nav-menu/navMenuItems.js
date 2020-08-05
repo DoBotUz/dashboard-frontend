@@ -15,7 +15,7 @@ export default [
     },
     name: "Каталог / Меню",
     slug: "page2",
-    icon: "BookmarkIcon",
+    icon: "PackageIcon",
   },
   {
     url: {
@@ -23,7 +23,7 @@ export default [
     },
     name: "Заказы",
     slug: "page2",
-    icon: "BookIcon",
+    icon: "ShoppingBagIcon",
   },
   {
     url: "/page2",
@@ -36,18 +36,20 @@ export default [
     header: 'Клиенты',
     items: [
       {
-        url: "/page2",
+        url: {
+          name: 'DashboardFeedbacks'
+        },
         name: "Отзывы",
         tagColor: 'warning',
         tag: '2',
         slug: "page2",
-        icon: "FileIcon",
+        icon: "SmileIcon",
       },
       {
         url: "/page2",
         name: "Чат",
         slug: "page2",
-        icon: "FileIcon",
+        icon: "MessageSquareIcon",
         tagColor: 'warning',
         tag: '2',
       },
@@ -84,13 +86,13 @@ export default [
         url: "/page2",
         name: "Доставка",
         slug: "page2",
-        icon: "FileIcon",
+        icon: "TruckIcon",
       },
       {
         url: "/page2",
         name: "Способы оплаты",
         slug: "page2",
-        icon: "FileIcon",
+        icon: "CreditCardIcon",
       },
       {
         url: {
