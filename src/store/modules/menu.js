@@ -34,6 +34,7 @@ export const getters = {
   },
   statuses: (state) => state.statuses,
   products: (state) => state.products,
+  loading: (state) => state.loading,
 }
 
 export const mutations = {
@@ -88,7 +89,7 @@ export const mutations = {
 export const actions = {
   fetchCategories({ commit, rootState }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .categories(rootState.organization)
         .then(({ data }) => {
@@ -106,7 +107,7 @@ export const actions = {
 
   createCategory({ commit, rootState }, payload) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .createCategory(rootState.organization, payload)
         .then(({ data }) => {
@@ -125,7 +126,7 @@ export const actions = {
   updateCategory({ commit, rootState }, payload) {
     let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .updateCategory(rootState.organization, id, payload)
         .then(({ data }) => {
@@ -144,7 +145,7 @@ export const actions = {
   deleteCategory({ commit, rootState }, payload) {
     let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .updateCategory(rootState.organization, id, {
           id: id,
@@ -165,7 +166,7 @@ export const actions = {
 
   fetchProducts({ commit, rootState }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .items(rootState.organization)
         .then(({ data }) => {
@@ -183,7 +184,7 @@ export const actions = {
 
   createProduct({ commit, rootState }, payload) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .createItem(rootState.organization, payload)
         .then(({ data }) => {
@@ -202,7 +203,7 @@ export const actions = {
   updateProduct({ commit, rootState }, payload) {
     let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .updateItem(rootState.organization, id, payload)
         .then(({ data }) => {
@@ -221,7 +222,7 @@ export const actions = {
   deleteProduct({ commit, rootState }, payload) {
     let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .updateItem(rootState.organization, id, {
           id: id,

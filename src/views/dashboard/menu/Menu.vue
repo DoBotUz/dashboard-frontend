@@ -1,5 +1,5 @@
 <template>
-  <div class="menu">
+  <div class="menu vs-con-loading__container">
     <vs-table search :data="tableData" @selected="onSelected">
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <div class="flex flex-wrap-reverse items-center">
@@ -242,6 +242,7 @@ export default {
       childlessCategories: "childlessCategories",
       productsByParentId: "productsByParentId",
       statuses: "statuses",
+      loading: "loading",
     }),
     tableData() {
       if (this.categoriesByParentId(this.parent).length) {
@@ -440,6 +441,20 @@ export default {
     });
     this.fetchProducts();
   },
+  watch: {
+    loading(value) {
+      if (value) {
+        this.$vs.loading({
+          background: this.backgroundLoading,
+          color: this.colorLoading,
+          container: '.menu',
+          scale: 0.45
+        });
+      } else {
+        this.$vs.loading.close('.menu > .con-vs-loading')
+      }
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -5,12 +5,14 @@ export const state = {
   statuses: {
     10: 'Активен',
     11: 'Неактивен',
-  }
+  },
+  loading: false
 }
 
 export const getters = {
   branches: (state) => state.branches,
-  statuses: (state) => state.statuses
+  statuses: (state) => state.statuses,
+  loading: (state) => state.loading,
 }
 
 export const mutations = {
@@ -36,37 +38,51 @@ export const mutations = {
   },
   DELETE_BRANCH(state, payload) {
     state.branches = state.branches.filter(branch => branch.id !== payload.id);
-  }
+  },
+  SET_LOADING(state, loading) {
+    state.loading = loading;
+  },
 }
 
 export const actions = {
   fetchBranches({ commit, rootState }) {
+    commit('SET_LOADING', true);
     return axios.get(`${rootState.organization}/branches/`)
       .then(res => {
         commit('SET_BRANCHES', {
           branches: res.data.data
         });
         return res.data;
-      });
+      })
+      .finally(() => {
+        commit('SET_LOADING', false);
+      })
   },
   addBranch({ commit, rootState }, payload) {
+    commit('SET_LOADING', true);
     return axios.post(`${rootState.organization}/branches`, {
       ...payload,
     }).then(res => {
       commit('ADD_BRANCH', {
         branch: res.data.data
       });
+    }).finally(() => {
+      commit('SET_LOADING', false);
     })
   },
   updateBranch({ commit, rootState }, payload) {
-    const { id, ...branch } = payload;
+    commit('SET_LOADING', true);
+    const { id, } = payload;
     return axios.patch(`${rootState.organization}/branches/${id}`, payload).then(res => {
       commit('UPDATE_BRANCH', {
         branch: res.data.data
       });
-    });
+    }).finally(() => {
+      commit('SET_LOADING', false);
+    })
   },
   deleteBranch({ commit, rootState }, payload) {
+    commit('SET_LOADING', true);
     const { id } = payload;
     return axios.patch(`${rootState.organization}/branches/${id}`, {
       status: 0
@@ -75,7 +91,9 @@ export const actions = {
         commit('DELETE_BRANCH', {
           id: id
         });
-      });
+      }).finally(() => {
+        commit('SET_LOADING', false);
+      })
   },
 }
 

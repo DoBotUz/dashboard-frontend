@@ -1,5 +1,5 @@
 <template>
-  <div class="branches">
+  <div class="branches vs-con-loading__container">
     <vs-table ref="table" v-model="selected" search :data="branches">
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <div class="flex flex-wrap-reverse items-center data-list-btn-container">
@@ -235,11 +235,26 @@ export default {
     ...mapGetters({
       branches: "branches/branches",
       branchStatuses: "branches/statuses",
+      loading: "branches/loading"
     }),
   },
   mounted() {
     this.fetchBranches();
   },
+  watch: {
+    loading(value) {
+      if (value) {
+        this.$vs.loading({
+          background: this.backgroundLoading,
+          color: this.colorLoading,
+          container: '.branches',
+          scale: 0.45
+        });
+      } else {
+        this.$vs.loading.close('.branches > .con-vs-loading')
+      }
+    }
+  }
 };
 </script>
 <style>
