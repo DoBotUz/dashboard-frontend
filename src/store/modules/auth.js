@@ -22,6 +22,7 @@ export const mutations = {
     localStorage.setItem('access_token', access_token);
   },
   LOGOUT(state) {
+    localStorage.removeItem('access_token');
     state.token = null;
     axios.defaults.headers.common['Authorization'] = null;
   }
@@ -49,12 +50,13 @@ export const actions = {
       });
   },
   logout({ commit }, payload) {
-    return Promise.resolve(() => {
-      commit('LOGOUT');
-    });
+    return Promise.resolve(commit('LOGOUT'));
   },
-  getUserInfo({ dispatch }) {
-    console.log(123);
+  getUserInfo({ dispatch, getters }) {
+    console.log('isAuthenticaed', getters.isAuthenticated);
+    if (!getters.isAuthenticated) {
+      return;
+    }
     return new Promise((resolve, reject) => {
       api()
         .userInfo()

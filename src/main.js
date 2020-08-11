@@ -103,6 +103,17 @@ global.vm = new Vue({
     i18n,
     render: h => h(App),
     mounted(){
+      let that = this;
+      axios.interceptors.response.use(undefined, function (err) {
+        return new Promise(function (resolve, reject) {
+          if (err.response.status === 401) {
+            that.$store.dispatch('logout').then(_ => { that.$router.push('/pages/login'); })
+          }
+          throw err;
+        });
+      });
+
+      this.$store.dispatch('setAuthHeaders');
       this.$store.dispatch('getUserInfo');
     },
 }).$mount('#app')

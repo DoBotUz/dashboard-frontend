@@ -81,16 +81,6 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
 
     let that = this;
-    axios.interceptors.response.use(undefined, function (err) {
-      return new Promise(function (resolve, reject) {
-        if (err.response.status === 401) {
-          that.$store.dispatch('logout')
-            .then(_ => { that.$router.push('/pages/login'); })
-        }
-        throw err;
-      });
-    });
-    this.$store.dispatch('setAuthHeaders');
   },
   destroyed() {
     window.removeEventListener("resize", this.handleWindowResize);

@@ -80,6 +80,9 @@ export const actions = {
             token: token
           },
           fixed_delivery_price: true,
+          free_distance: 0,
+          is_multilanguage: true,
+          min_order_charge: 0,
         })
         .then(({ data }) => {
           if (data.status === 'Success') {
