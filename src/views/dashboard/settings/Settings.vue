@@ -36,6 +36,7 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import telegramApi from '@/api/telegram';
 
 export default {
   data() {
@@ -63,7 +64,16 @@ export default {
   },
   methods: {
     ...mapActions('organizations', ['getOrganization', 'updateOrganization']),
-    save() {
+    async save() {
+      let is_valid_token = await this.isValidToken();
+      if (!is_valid_token) {
+        return this.$vs.notify({
+          title: "Ошибка",
+          text: "Неверный токен",
+          color: "danger",
+          position: "bottom-right",
+        });
+      }
       const file = this.$refs.organzationThumbnail.filesx[this.$refs.organzationThumbnail.filesx.length - 1];
       const formData = new FormData();
       Object.keys(this.organizationObj).forEach((key) => {
@@ -84,6 +94,15 @@ export default {
         });
       });
     },
+    isValidToken() {
+      telegramApi.getMe(this.token)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(res => {
+          return false;
+        })
+    }
   },
   computed: {
     ...mapState(['organization']),
@@ -91,7 +110,7 @@ export default {
   },
   async mounted() {
     await this.getOrganization(this.organization);
-    this.token = this.organizationObj.bot.token;
+    this.token = ''; //this.organizationObj.bot.token;
   }
 };
 </script>
