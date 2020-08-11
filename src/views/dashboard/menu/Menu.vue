@@ -24,7 +24,7 @@
       <template slot="thead">
         <vs-th>Картинка</vs-th>
         <vs-th sort-key="name">Название</vs-th>
-        <vs-th sort-key="parent_category_id">Категория</vs-th>
+        <vs-th sort-key="parentCategoryId">Категория</vs-th>
         <vs-th sort-key="status">Статус</vs-th>
         <vs-th>Действия</vs-th>
       </template>
@@ -171,13 +171,13 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   beforeRouteUpdate(to, from, next) {
-    const parent_id = to.params.parent;
-    if (parent_id === undefined) {
+    const parentId = to.params.parent;
+    if (parentId === undefined) {
       to.meta.breadcrumb = null;
       return next();
     }
     const currentCategory = this.categories.find(
-      (cat) => cat.id === Number(parent_id)
+      (cat) => cat.id === Number(parentId)
     );
     const categoriesTree = [];
     for (
@@ -271,12 +271,13 @@ export default {
     addOrUpdateCategory() {
       let file = this.$refs.categoryFile.filesx[this.$refs.categoryFile.filesx.length - 1];
       let payload = {
+        organizationId: this.$store.state.organization,
         id: this.selectedCategory,
         thumbnail: file,
         ru_title: this.ru_title,
         uz_title: this.uz_title,
         en_title: this.en_title,
-        parent_category_id: this.parentCategory,
+        parentCategoryId: this.parentCategory,
         ru_description: "placeholder",
         uz_description: "placeholder",
         en_description: "placeholder",
@@ -323,6 +324,7 @@ export default {
     addOrUpdateProduct() {
       let file = this.$refs.productFile.filesx[this.$refs.productFile.filesx.length - 1];
       let payload = {
+        organizationId: this.$store.state.organization,
         id: this.selectedProduct,
         thumbnail: file,
         ru_title: this.product_ru_title,
@@ -332,7 +334,7 @@ export default {
         en_description: this.product_en_description,
         uz_description: this.product_uz_description,
         price: Number(this.product_price),
-        category_id: this.product_parent_category,
+        categoryId: this.product_parent_category,
         amount: 1,
       };
       const formData = new FormData();
@@ -393,8 +395,8 @@ export default {
       this.product_uz_description = tr.uz_description;
       this.product_price = tr.price;
       this.product_parent_category = null;
-      if (this.childlessCategories.find((cat) => cat.id === tr.category_id)) {
-        this.product_parent_category = tr.category_id;
+      if (this.childlessCategories.find((cat) => cat.id === tr.categoryId)) {
+        this.product_parent_category = tr.categoryId;
       }
       this.addProductPopup = true;
     },
@@ -403,7 +405,7 @@ export default {
       this.ru_title = tr.ru_title;
       this.uz_title = tr.uz_title;
       this.en_title = tr.en_title;
-      this.parentCategory = tr.parent_category ? tr.parent_category.id : null;
+      this.parentCategory = tr.parentCategoryId;
       this.addCategoryPopup = true;
     },
     deleteItem(tr) {

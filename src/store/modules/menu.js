@@ -16,21 +16,21 @@ export const getters = {
   categories: (state) => state.categories,
   categoriesByParentId: (state) => (parent) => {
     if (!parent) {
-      return state.categories.filter(cat => !cat.parent_category_id);
+      return state.categories.filter(cat => !cat.parentCategoryId);
     }
-    return state.categories.filter(cat => cat.parent_category_id === parent);
+    return state.categories.filter(cat => cat.parentCategoryId === parent);
   },
   childlessCategories: state => {
     let childlessCategories = state.categories;
     state.categories.forEach(category => {
-      if (category.parent_category_id) {
-        childlessCategories = childlessCategories.filter(cat => cat.id !== category.parent_category_id);
+      if (category.parentCategoryId) {
+        childlessCategories = childlessCategories.filter(cat => cat.id !== category.parentCategoryId);
       }
     });
     return childlessCategories;
   },
   productsByParentId: (state) => (parent) => {
-    return state.products.filter(prod => Number(prod.category_id) === parent)
+    return state.products.filter(prod => Number(prod.categoryId) === parent)
   },
   statuses: (state) => state.statuses,
   products: (state) => state.products,
@@ -105,11 +105,10 @@ export const actions = {
   },
 
   createCategory({ commit, rootState }, payload) {
-    payload.append('bot_id', rootState.organization);
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
       api()
-        .createCategory(payload)
+        .createCategory(rootState.organization, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('ADD_CATEGORY', data.data);
@@ -124,11 +123,11 @@ export const actions = {
   },
 
   updateCategory({ commit, rootState }, payload) {
-    payload.append('bot_id', rootState.organization);
+    let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
       api()
-        .updateCategory(payload)
+        .updateCategory(rootState.organization, id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('UPDATE_CATEGORY', data.data);
@@ -142,11 +141,15 @@ export const actions = {
     });
   },
 
-  deleteCategory({ commit }, payload) {
+  deleteCategory({ commit, rootState }, payload) {
+    let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
       api()
-        .deactivateCategory(payload.id)
+        .updateCategory(rootState.organization, id, {
+          id: id,
+          status: 0
+        })
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('DELETE_CATEGORY', payload.id);
@@ -178,11 +181,11 @@ export const actions = {
     });
   },
 
-  createProduct({ commit }, payload) {
+  createProduct({ commit, rootState }, payload) {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
       api()
-        .createItem(payload)
+        .createItem(rootState.organization, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('ADD_PRODUCT', data.data);
@@ -197,10 +200,11 @@ export const actions = {
   },
 
   updateProduct({ commit, rootState }, payload) {
+    let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
       api()
-        .updateItem(payload)
+        .updateItem(rootState.organization, id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('UPDATE_PRODUCT', data.data);
@@ -214,14 +218,18 @@ export const actions = {
     });
   },
 
-  deleteProduct({ commit }, payload) {
+  deleteProduct({ commit, rootState }, payload) {
+    let id = payload.id || payload.get('id');
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
       api()
-        .deactivateItem(payload)
+        .updateItem(rootState.organization, id, {
+          id: id,
+          status: 0
+        })
         .then(({ data }) => {
           if (data.status === 'Success') {
-            commit('DELETE_PRODUCT', payload.id);
+            commit('DELETE_PRODUCT', id);
             resolve(data);
           } else {
             reject(data);
