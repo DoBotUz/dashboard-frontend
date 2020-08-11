@@ -60,9 +60,7 @@ export const actions = {
   },
   updateBranch({ commit, rootState }, payload) {
     const { id, ...branch } = payload;
-    return axios.post(`${rootState.organization}/branches/${id}`, {
-      ...branch
-    }).then(res => {
+    return axios.patch(`${rootState.organization}/branches/${id}`, payload).then(res => {
       commit('UPDATE_BRANCH', {
         branch: res.data.data
       });
@@ -70,7 +68,9 @@ export const actions = {
   },
   deleteBranch({ commit, rootState }, payload) {
     const { id } = payload;
-    return axios.delete(`${rootState.organization}/branches/${id}`)
+    return axios.patch(`${rootState.organization}/branches/${id}`, {
+      status: 0
+    })
       .then(res => {
         commit('DELETE_BRANCH', {
           id: id
