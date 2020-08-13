@@ -21,6 +21,7 @@ export const getters = {
   order_statuses: (state) => state.order_statuses,
   payment_types: (state) => state.payment_types,
   order: (state) => state.order,
+  loading: (state) => state.loading,
 }
 
 export const mutations = {
@@ -51,7 +52,7 @@ export const mutations = {
 export const actions = {
   fetchOrders({ commit, rootState }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .orders(rootState.organization)
         .then(({ data }) => {
@@ -68,9 +69,9 @@ export const actions = {
   },
   fetchOrder({ commit, rootState }, order_id) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
-        .order(order_id)
+        .order(rootState.organization, order_id)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORDER', data.data);
@@ -83,14 +84,14 @@ export const actions = {
         .finally(() => commit('SET_LOADING', false));
     });
   },
-  updateOrder({ commit }, payload) {
+  updateOrder({ commit, rootState }, payload) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
-        .updateOrder(payload)
+        .updateOrder(rootState.organization, payload.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
-            commit('SET_ORDER', data.data);
+            commit('SET_ORDER', payload);
             resolve(data);
           } else {
             reject(data);

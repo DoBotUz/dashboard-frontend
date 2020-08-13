@@ -23,7 +23,6 @@ Vue.component(VxBreadcrumb.name, VxBreadcrumb)
 Vue.component(FeatherIcon.name, FeatherIcon)
 Vue.component(VxInputGroup.name, VxInputGroup)
 
-
 // v-select component
 import vSelect from 'vue-select'
 

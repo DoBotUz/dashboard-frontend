@@ -17,7 +17,10 @@ export const getters = {
 
 export const mutations = {
   SET_BRANCHES(state, payload) {
-    state.branches = payload.branches;
+    state.branches = payload.branches.map(branch => ({
+      ...branch,
+      timetable: JSON.parse(branch.timetable)
+    }));
   },
   ADD_BRANCH(state, payload) {
     state.branches.push({

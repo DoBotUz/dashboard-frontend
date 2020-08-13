@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vs-table ref="table" search :data="orders" @selected="onSelected">
+    <vs-table ref="table" search :data="orders" @selected="onSelected" class="vs-con-loading__container">
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <div class="flex flex-wrap-reverse items-center data-list-btn-container">
           <!-- ADD NEW -->
@@ -65,18 +65,19 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 const orders = require('./mock');
+import { loaderMixin } from '@/mixins';
 
 export default {
+  mixins: [loaderMixin],
   data() {
-    return {
-      // orders: orders,
-    }
+    return {}
   },
   computed: {
     ...mapGetters('orders', {
       'orders': 'orders',
       'order_statuses': 'order_statuses',
       'payment_types': 'payment_types',
+      'loading': 'loading',
     }),
   },
   methods: {
@@ -95,7 +96,6 @@ export default {
   },
   mounted() {
     this.fetchOrders()
-      .then(console.log);
   }
 };
 </script>

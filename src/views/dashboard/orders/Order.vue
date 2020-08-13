@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vx-card>
+    <vx-card class="vs-con-loading__container">
       <vs-tabs alignment="fixed">
         <vs-tab label="Общее">
           <general-form :order="order" @save="updateGeneralInfo" />
@@ -19,8 +19,10 @@
 import { mapGetters, mapActions } from "vuex";
 import GeneralForm from "./components/general_form";
 import ProductsTable from "./components/products_table";
+import { loaderMixin } from '@/mixins';
 
 export default {
+  mixins: [loaderMixin],
   components: {
     GeneralForm,
     ProductsTable,
@@ -39,6 +41,7 @@ export default {
   computed: {
     ...mapGetters("orders", {
       order: "order",
+      loading: 'loading',
     }),
   },
   methods: {

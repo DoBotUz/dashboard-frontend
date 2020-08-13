@@ -30,18 +30,18 @@
         </vs-th>
       </template>
       <template slot-scope="{data}">
-        <vs-tr :key="indextr" v-for="(tr, indextr) in data">
+        <vs-tr :key="indextr" v-for="(tr, indextr) in data" :set="item = getProductById(tr.itemId)">
           <vs-td>
-            {{tr.item.ru_title}}
+            {{item.ru_title}}
           </vs-td>
 
-          <vs-td>{{tr.item.price}}</vs-td>
+          <vs-td>{{item.price}}</vs-td>
 
           <vs-td>
             {{tr.amount}}
           </vs-td>
 
-          <vs-td>{{tr.item.price * tr.amount}} сум</vs-td>
+          <vs-td>{{item.price * tr.amount}} сум</vs-td>
           <vs-td>
             <feather-icon
                 icon="EditIcon"
@@ -113,8 +113,9 @@ export default {
       return false;
     },
     editProduct(product) {
+      // let item = getProductById(product.id);
       this.new_item = {
-        id: product.item.id,
+        id: product.itemId,
         amount: product.amount
       };
       this.addOrEditPopup = true;
@@ -126,7 +127,7 @@ export default {
         title: `Подтвердите действие`,
         text: `Вы действительно хотите удалить эту позицию?`,
         accept: () => {
-          this.order_items = this.order_items.filter(item => item.item.id !== product.item.id);
+          this.order_items = this.order_items.filter(item => item.itemId !== product.itemId);
           this.$vs.notify({
             title: "Окей",
             text: "Позиция удалена",
@@ -153,7 +154,7 @@ export default {
       this.addOrEditPopup = true;
     },
     saveProduct() {
-      let index = this.order_items.findIndex(product => product.item.id === this.new_item.id)
+      let index = this.order_items.findIndex(product => product.itemId === this.new_item.id)
       if (index > -1) {
         this.order_items[index].amount = this.new_item.amount;
       } else {
@@ -169,6 +170,9 @@ export default {
         id: null,
         amount: 1
       }
+    },
+    getProductById(id) {
+      return this.products.find(prod => prod.id === id);
     }
   },
   computed: {
@@ -188,7 +192,7 @@ export default {
     },
     selectedProduct() {
       return this.products.find(prod => prod.id === this.new_item.id);
-    }
+    },
   },
   mounted() {
     this.fetchProducts();

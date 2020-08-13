@@ -66,7 +66,7 @@
         </tbody>
       </template>
     </vs-table>
-    <vs-popup title="Добавить новую категорию" :active.sync="addCategoryPopup">
+    <vs-popup title="Добавить новую категорию" :active.sync="addCategoryPopup" class="vs-con-loading__container">
       <vs-input
         class="w-full mb-4"
         label="Название категории"
@@ -168,8 +168,10 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { loaderMixin } from '@/mixins';
 
 export default {
+  mixins: [loaderMixin],
   beforeRouteUpdate(to, from, next) {
     const parentId = to.params.parent;
     if (parentId === undefined) {
@@ -440,20 +442,6 @@ export default {
       this.$router.replace({ query: { temp: undefined } });
     });
     this.fetchProducts();
-  },
-  watch: {
-    loading(value) {
-      if (value) {
-        this.$vs.loading({
-          background: this.backgroundLoading,
-          color: this.colorLoading,
-          container: '.menu',
-          scale: 0.45
-        });
-      } else {
-        this.$vs.loading.close('.menu > .con-vs-loading')
-      }
-    }
   }
 };
 </script>

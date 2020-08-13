@@ -53,7 +53,7 @@
         </tbody>
       </template>
     </vs-table>
-    <vs-popup title="Добавить новый филиал" :active.sync="addPopup" fullscreen>
+    <vs-popup title="Добавить новый филиал" :active.sync="addPopup" fullscreen class="vs-con-loading__container">
       <vs-input class="w-full mb-4" label="Название филиала" v-model="title" />
       <vs-select autocomplete class="mb-4" label="Статус филиала" v-model="branchStatus">
         <vs-select-item
@@ -103,8 +103,10 @@
 import { mapActions, mapGetters } from "vuex";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
+import { loaderMixin } from '@/mixins';
 
 export default {
+  mixins: [loaderMixin],
   components: {
     flatPickr,
   },
@@ -240,20 +242,6 @@ export default {
   },
   mounted() {
     this.fetchBranches();
-  },
-  watch: {
-    loading(value) {
-      if (value) {
-        this.$vs.loading({
-          background: this.backgroundLoading,
-          color: this.colorLoading,
-          container: '.branches',
-          scale: 0.45
-        });
-      } else {
-        this.$vs.loading.close('.branches > .con-vs-loading')
-      }
-    }
   }
 };
 </script>
