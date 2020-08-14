@@ -18,7 +18,7 @@
             <vs-td>
               <p class="font-medium">
                 <star-rating
-                 :rating="3"
+                 :rating="tr.rating"
                  :inline="true"
                  :star-size="20"
                  :read-only="true"

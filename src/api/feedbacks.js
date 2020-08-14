@@ -1,5 +1,5 @@
 import axios from '@/api';
 
 export default () => ({
-  list: (organization) => axios.get(`/feedbacks/${organization}/list`),
+  list: (organization) => axios.get(`${organization}/feedbacks/`),
 })
