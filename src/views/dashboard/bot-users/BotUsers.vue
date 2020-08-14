@@ -3,13 +3,14 @@
     <vs-table ref="table" v-model="selected" search :data="botUsers">
       <template slot="thead">
         <vs-th sort-key="id">ID</vs-th>
-        <vs-th sort-key="avatar">Аватар</vs-th>
+        <vs-th>Аватар</vs-th>
         <vs-th sort-key="tg_id">Telegram ID</vs-th>
-        <vs-th sort-key="firstName">Имя</vs-th>
-        <vs-th sort-key="lastName">Фамилия</vs-th>
-        <vs-th sort-key="phoneNumber">Телефон</vs-th>
-        <vs-th sort-key="userName">@username</vs-th>
-        <vs-th sort-key="lastSeen">Последний визит</vs-th>
+        <vs-th sort-key="first_name">Имя</vs-th>
+        <vs-th sort-key="last_name">Фамилия</vs-th>
+        <vs-th sort-key="bio">Введенное имя</vs-th>
+        <vs-th sort-key="phone_number">Телефон</vs-th>
+        <vs-th sort-key="username">@username</vs-th>
+        <vs-th sort-key="created_at">Дата регистрации</vs-th>
       </template>
 
       <template slot-scope="{data}">
@@ -19,14 +20,7 @@
               <p class="font-medium">{{ tr.id }}</p>
             </vs-td>
             <vs-td>
-              <p class="font-medium">
-                <span class="avatar-wrap">
-                  <img v-if="tr.avatar" :src="tr.avatar" alt="">
-                  <span v-else class="initials-wrap">
-                    <span>{{ getInitials(tr.first_name, tr.last_name) }}</span>
-                  </span>
-                </span>
-              </p>
+              <vs-avatar color="primary" :text="getInitials(tr.first_name, tr.last_name)" size="45px" />
             </vs-td>
             <vs-td>
               <p class="font-medium">{{ tr.tg_id }}</p>
@@ -38,13 +32,16 @@
               <p class="font-medium">{{ tr.last_name }}</p>
             </vs-td>
             <vs-td>
+              <p class="font-medium">{{ tr.bio }}</p>
+            </vs-td>
+            <vs-td>
               <p class="font-medium">{{ tr.phone_number }}</p>
             </vs-td>
             <vs-td>
               <p class="font-medium">{{ tr.username }}</p>
             </vs-td>
             <vs-td>
-              <p class="font-medium">{{ tr.last_seen | date }}</p>
+              <p class="font-medium">{{ tr.created_at | date }}</p>
             </vs-td>
           </vs-tr>
         </tbody>
@@ -125,5 +122,4 @@ export default {
     }
   }
 }
-
 </style>
