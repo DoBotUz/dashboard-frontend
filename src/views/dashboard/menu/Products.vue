@@ -3,14 +3,6 @@
     <vs-table search :data="tableData" @selected="onSelected">
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <div class="flex flex-wrap-reverse items-center">
-          <!-- ADD NEW -->
-          <div
-            class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
-            @click="showAddCategoryPopup()"
-          >
-            <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Добавить категорию</span>
-          </div>
           <div
             class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-success border border-solid border-success"
             @click="showAddProductPopup()"
@@ -34,7 +26,7 @@
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td class="img-container">
               <img src="https://via.placeholder.com/150" class="product-img" v-if="!tr.thumbnail"/>
-              <img :src="isProduct(tr) ? `${$url}/public/items/${tr.thumbnail}` : `${$url}/public/categories/${tr.thumbnail}`" class="product-img" v-else />
+              <img :src="`${$url}/public/items/${tr.thumbnail}`" class="product-img" v-else />
             </vs-td>
 
             <vs-td>
@@ -53,7 +45,7 @@
               <feather-icon
                 icon="EditIcon"
                 svgClasses="w-5 h-5 hover:text-primary stroke-current"
-                @click.stop="isProduct(tr) ? editProduct(tr) : editCategory(tr)"
+                @click.stop="editProduct(tr)"
               />
               <feather-icon
                 icon="TrashIcon"
@@ -66,37 +58,6 @@
         </tbody>
       </template>
     </vs-table>
-    <vs-popup title="Добавить новую категорию" :active.sync="addCategoryPopup" class="vs-con-loading__container">
-      <vs-input
-        class="w-full mb-4"
-        label="Название категории"
-        v-model="ru_title"
-        @blur="fillCategoryTitle"
-      />
-      <vs-input class="w-full mb-4" label="Название категории на узбекском" v-model="uz_title" />
-      <vs-input class="w-full mb-4" label="Название категории на английском" v-model="en_title" />
-      <vs-select autocomplete class="mb-4" label="Родительская категория" v-model="parentCategory">
-        <vs-select-item
-          :key="index"
-          :value="item.id"
-          :text="item.ru_title"
-          v-for="(item,index) in categories"
-        />
-      </vs-select>
-      <div class="vx-col w-full">
-        <vs-upload
-          :limit="1"
-          :show-upload-button="false"
-          text="Загрузить файл"
-          ref="categoryFile"
-        />
-      </div>
-      <vs-button
-        class="mt-5 mb-3 float-right"
-        @click="addOrUpdateCategory"
-        color="primary"
-      >{{ selectedCategory ? 'Изменить' : 'Добавить' }}</vs-button>
-    </vs-popup>
     <vs-popup title="Добавить продукт" :active.sync="addProductPopup">
       <vs-input
         class="w-full mb-4"
@@ -172,47 +133,11 @@ import { loaderMixin } from '@/mixins';
 
 export default {
   mixins: [loaderMixin],
-  beforeRouteUpdate(to, from, next) {
-    const parentId = to.params.parent;
-    if (parentId === undefined) {
-      to.meta.breadcrumb = null;
-      return next();
-    }
-    const currentCategory = this.categories.find(
-      (cat) => cat.id === Number(parentId)
-    );
-    const categoriesTree = [];
-    console.log(currentCategory);
-    for (
-      let category = currentCategory.parent_category;
-      category;
-      category = category.parent_category
-    ) {
-      categoriesTree.push({
-        title: category.ru_title,
-        url: {
-          name: "DashboardMenu",
-          params: {
-            parent: category.id,
-          },
-        },
-      });
-    }
-    to.meta.breadcrumb = [
-      { title: "Menu", url: { name: "DashboardMenu" }, slug: "home" },
-      ...categoriesTree,
-      { title: currentCategory.ru_title, active: true },
-    ];
-    next();
-  },
   props: {
     parent: Number,
   },
   data() {
     return {
-      ru_title: "",
-      en_title: "",
-      uz_title: "",
       parentCategory: null,
 
       product_ru_title: "",
@@ -223,9 +148,6 @@ export default {
       product_uz_description: "",
       product_price: 0,
       product_parent_category: null,
-
-      addCategoryPopup: false,
-      selectedCategory: null,
       addProductPopup: false,
       selectedProduct: null,
     };
@@ -233,25 +155,21 @@ export default {
   head: {
     title() {
       return {
-        inner: 'Продукты и Категории',
+        inner: 'Продукт',
         complement: 'DoBot'
       }
     },
   },
   computed: {
     ...mapGetters('menu', {
-      categories: "categories",
-      categoriesByParentId: "categoriesByParentId",
+      products: 'products',
+      categories: 'categories',
       childlessCategories: "childlessCategories",
-      productsByParentId: "productsByParentId",
       statuses: "statuses",
       loading: "loading",
     }),
     tableData() {
-      if (this.categoriesByParentId(this.parent).length) {
-        return this.categoriesByParentId(this.parent);
-      }
-      return this.productsByParentId(this.parent);
+      return this.products;
     },
   },
   methods: {
@@ -271,48 +189,6 @@ export default {
         this.product_uz_description = this.product_ru_description;
       if (this.product_en_description === "")
         this.product_en_description = this.product_ru_description;
-    },
-    addOrUpdateCategory() {
-      let file = this.$refs.categoryFile.filesx[this.$refs.categoryFile.filesx.length - 1];
-      let payload = {
-        organizationId: this.$store.state.organization,
-        id: this.selectedCategory,
-        thumbnail: file,
-        ru_title: this.ru_title,
-        uz_title: this.uz_title,
-        en_title: this.en_title,
-        parentCategoryId: this.parentCategory,
-        ru_description: "placeholder",
-        uz_description: "placeholder",
-        en_description: "placeholder",
-      };
-      const formData = new FormData();
-      Object.keys(payload).forEach((key) => {
-        if (payload[key] !== null && payload[key] !== undefined)
-          formData.append(key, payload[key]);
-      });
-      if (!this.selectedCategory) {
-        return this.$store.dispatch("menu/createCategory", formData).then(() => {
-          this.addCategoryPopup = false;
-          this.$vs.notify({
-            title: "Отлично",
-            text: "Категория создана",
-            color: "success",
-            position: "top-center",
-          });
-        });
-      }
-      return this.$store
-        .dispatch("menu/updateCategory", formData)
-        .then(() => {
-          this.addCategoryPopup = false;
-          this.$vs.notify({
-            title: "Отлично",
-            text: "Категория изменена",
-            color: "success",
-            position: "top-center",
-          });
-        });
     },
     onSelected(tr) {
       if (this.isProduct(tr)) {
@@ -383,12 +259,6 @@ export default {
       }
       this.addProductPopup = true;
     },
-    showAddCategoryPopup() {
-      this.selectedCategory = null;
-      this.ru_title = this.uz_title = this.en_title = "";
-      this.parentCategory = this.parent || null;
-      this.addCategoryPopup = true;
-    },
     editProduct(tr) {
       this.selectedProduct = tr.id;
       this.product_ru_title = tr.ru_title;
@@ -403,14 +273,6 @@ export default {
         this.product_parent_category = tr.categoryId;
       }
       this.addProductPopup = true;
-    },
-    editCategory(tr) {
-      this.selectedCategory = tr.id;
-      this.ru_title = tr.ru_title;
-      this.uz_title = tr.uz_title;
-      this.en_title = tr.en_title;
-      this.parentCategory = tr.parentCategoryId;
-      this.addCategoryPopup = true;
     },
     deleteItem(tr) {
       this.$vs.dialog({
@@ -439,9 +301,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchCategories().then(() => {
-      this.$router.replace({ query: { temp: undefined } });
-    });
+    this.fetchCategories()
     this.fetchProducts();
   }
 };

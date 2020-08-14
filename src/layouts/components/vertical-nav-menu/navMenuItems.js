@@ -13,9 +13,17 @@ export default [
     url: {
       name: 'DashboardMenu'
     },
-    name: "Каталог / Меню",
+    name: "Категории",
     slug: "page2",
     icon: "PackageIcon",
+  },
+  {
+    url: {
+      name: 'DashboardProducts'
+    },
+    name: "Продукты",
+    slug: "page2",
+    icon: "TagIcon",
   },
   {
     url: {

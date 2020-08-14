@@ -78,11 +78,20 @@ const router = new Router({
               name: 'DashboardMenu',
               meta: {
                 rule: defaultRole,
-                pageTitle: 'Меню',
+                pageTitle: 'Категории',
               },
               props: (route) => ({
                 parent: Number(route.params.parent) || null
               })
+            },
+            {
+              path: 'products',
+              component: () => import('./views/dashboard/menu/Products.vue'),
+              name: 'DashboardProducts',
+              meta: {
+                rule: defaultRole,
+                pageTitle: 'Продукты',
+              },
             },
             {
               path: 'bot-users',
