@@ -50,7 +50,7 @@ export const mutations = {
 export const actions = {
   fetchBranches({ commit, rootState }) {
     commit('SET_LOADING', true);
-    return axios.get(`${rootState.organization}/branches/`)
+    return axios.get(`${rootState.organization.id}/branches/`)
       .then(res => {
         commit('SET_BRANCHES', {
           branches: res.data.data
@@ -63,7 +63,7 @@ export const actions = {
   },
   addBranch({ commit, rootState }, payload) {
     commit('SET_LOADING', true);
-    return axios.post(`${rootState.organization}/branches`, {
+    return axios.post(`${rootState.organization.id}/branches`, {
       ...payload,
     }).then(res => {
       commit('ADD_BRANCH', {
@@ -76,7 +76,7 @@ export const actions = {
   updateBranch({ commit, rootState }, payload) {
     commit('SET_LOADING', true);
     const { id, } = payload;
-    return axios.patch(`${rootState.organization}/branches/${id}`, payload).then(res => {
+    return axios.patch(`${rootState.organization.id}/branches/${id}`, payload).then(res => {
       commit('UPDATE_BRANCH', {
         branch: res.data.data
       });
@@ -87,7 +87,7 @@ export const actions = {
   deleteBranch({ commit, rootState }, payload) {
     commit('SET_LOADING', true);
     const { id } = payload;
-    return axios.patch(`${rootState.organization}/branches/${id}`, {
+    return axios.patch(`${rootState.organization.id}/branches/${id}`, {
       status: 0
     })
       .then(res => {

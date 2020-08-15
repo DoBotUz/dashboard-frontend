@@ -1,6 +1,6 @@
 import axios from '@/api';
 
 export default () => ({
-  list: (organization) => axios.get(`/bot-notifications/${organization}/list`),
+  list: (organizationId) => axios.get(`/bot-notifications/${organizationId}/list`),
   create: (payload) => axios.post('/bot-notifications/mass-send', payload),
 });

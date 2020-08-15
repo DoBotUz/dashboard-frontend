@@ -60,11 +60,11 @@ export default {
       let file = this.$refs.massNotifFile.filesx[this.$refs.massNotifFile.filesx.length - 1];
       const formData = new FormData();
       const template = this.form;
-      template.bot_id = this.organization;
+      template.bot_id = this.organization.id;
       formData.append('thumbnail', file);
       formData.append('template', JSON.stringify(template));
       formData.append('after_date_time', this.form.after_date_time ? this.form.after_date_time : new Date().toISOString());
-      formData.append('bot_id', this.organization);
+      formData.append('bot_id', this.organization.bot.id);
       return this.createMassSend(formData).then(() => {
         this.SET_ADD_POPUP(false);
         this.$vs.notify({
