@@ -52,6 +52,14 @@ export default {
   },
   computed: {
     ...mapState(['organization']),
+    addPopup: {
+      get() {
+        return this.$store.state.massNotifs.addPopup
+      },
+      set(val) {
+        this.SET_ADD_POPUP(val);
+      }
+    }
   },
   methods: {
     ...mapActions('massNotifs', ['createMassSend']),
@@ -75,16 +83,6 @@ export default {
         });
       });
     },
-  },
-  computed: {
-    addPopup: {
-      get() {
-        return this.$store.state.massNotifs.addPopup
-      },
-      set(val) {
-        this.SET_ADD_POPUP(val);
-      }
-    }
   }
 }
 </script>
