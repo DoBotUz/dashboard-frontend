@@ -70,11 +70,10 @@ export const actions = {
       commit('SET_LOADING', false)
       api()
         .create({
-          ru_title: name,
+          title: name,
+          slug: name,
           ru_description: description,
-          en_title: name,
           en_description: description,
-          uz_title: name,
           uz_description: description,
           bot: {
             token: token

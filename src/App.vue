@@ -17,6 +17,8 @@
 <script>
 import themeConfig from "@/../themeConfig.js";
 import axios from "./axios";
+import io from 'socket.io-client';
+
 
 export default {
   data() {
@@ -66,6 +68,21 @@ export default {
     },
   },
   mounted() {
+
+    const socket = io('http://localhost:3000/frontend', {
+      query: {
+        authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNTk3NDg2ODIyLCJleHAiOjE1OTgwOTE2MjJ9.StDUDbpLUponWx5tk6V0TQaCFpxyrly8RLfR-FK5Gn0',
+      },
+    });
+    socket.on('connect', function() {
+      console.log('Connected');
+
+      socket.emit('events', { test: 'test' });
+      // socket.emit('identity', 0, response =>
+      //   console.log('Identity:', response),
+      // );
+    });
+
     this.toggleClassInBody(themeConfig.theme);
     this.$store.commit("UPDATE_WINDOW_WIDTH", window.innerWidth);
 
@@ -81,6 +98,16 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
 
     let that = this;
+    axios.interceptors.response.use(undefined, function (err) {
+      return new Promise(function (resolve, reject) {
+        if (err.response.status === 401) {
+          that.$store.dispatch('logout')
+            .then(_ => { that.$router.push('/pages/login'); })
+        }
+        throw err;
+      });
+    });
+    this.$store.dispatch('setAuthHeaders');
   },
   destroyed() {
     window.removeEventListener("resize", this.handleWindowResize);
@@ -88,11 +115,3 @@ export default {
   },
 };
 </script>
-<style>
-.vs-popup .ymap-container > * > ymaps {
-  height: 500px !important;
-}
-.con-vs-popup.fullscreen .vs-popup {
-  width: 75%;
-}
-</style>
