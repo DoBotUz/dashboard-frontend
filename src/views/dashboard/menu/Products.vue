@@ -101,6 +101,9 @@
         class="mb-4"
         label="Родительская категория"
         v-model="product_parent_category"
+        name="product_parent_category"
+        data-vv-as="Родительская категория"
+        v-validate="'required'"
       >
         <vs-select-item
           :key="index"
@@ -109,6 +112,7 @@
           v-for="(item,index) in childlessCategories"
         />
       </vs-select>
+       <span class="text-danger text-sm">{{ errors.first('product_parent_category') }}</span>
 
       <div class="vx-col w-full">
         <vs-upload
@@ -171,6 +175,9 @@ export default {
     tableData() {
       return this.products;
     },
+    validateForm () {
+      return this.errors.any();
+    },
   },
   methods: {
     ...mapActions("menu", ["fetchCategories", "fetchProducts"]),
@@ -201,7 +208,12 @@ export default {
         },
       });
     },
-    addOrUpdateProduct() {
+    async addOrUpdateProduct() {
+      await this.$validator.validateAll();
+      if (this.validateForm) {
+        return;
+      }
+
       let file = this.$refs.productFile.filesx[this.$refs.productFile.filesx.length - 1];
       let payload = {
         organizationId: this.$store.state.organization.id,

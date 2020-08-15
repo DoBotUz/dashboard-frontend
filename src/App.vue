@@ -68,19 +68,19 @@ export default {
     },
   },
   mounted() {
-    const clientSocket = io('http://localhost:3000/frontend', {
-      query: {
-        authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNTk3NDg2ODIyLCJleHAiOjE1OTgwOTE2MjJ9.StDUDbpLUponWx5tk6V0TQaCFpxyrly8RLfR-FK5Gn0',
-      },
-    });
-    clientSocket.on('connect', function() {
-      console.log('Connected');
-      clientSocket.emit('events', { test: 123 });
-    });
+    // const clientSocket = io('http://localhost:3000/frontend', {
+    //   query: {
+    //     authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNTk3NDg2ODIyLCJleHAiOjE1OTgwOTE2MjJ9.StDUDbpLUponWx5tk6V0TQaCFpxyrly8RLfR-FK5Gn0',
+    //   },
+    // });
+    // clientSocket.on('connect', function() {
+    //   console.log('Connected');
+    //   clientSocket.emit('events', { test: 123 });
+    // });
 
-    clientSocket.on('newNotification', data => {
-      console.log(data);
-    });
+    // clientSocket.on('newNotification', data => {
+    //   console.log(data);
+    // });
 
     this.toggleClassInBody(themeConfig.theme);
     this.$store.commit("UPDATE_WINDOW_WIDTH", window.innerWidth);
