@@ -93,6 +93,7 @@ import TheNavbarVertical   from '@/layouts/components/navbar/TheNavbarVertical.v
 import TheFooter           from '@/layouts/components/TheFooter.vue'
 import themeConfig         from '@/../themeConfig.js'
 import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
+import io from 'socket.io-client';
 
 export default {
   props: {
@@ -202,7 +203,7 @@ export default {
     clientSocket.on('connect', function() {
       console.log('WS connected');
     });
-    clientSocket.on('newNotification', function(data) {
+    clientSocket.on('newNotification', (data) => {
       this.$store.dispatch('handleNewNotification', data);
     });
   }

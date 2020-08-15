@@ -25,7 +25,7 @@ export const mutations = {
     state.notifications = notifications;
   },
   ADD_NOTIFICATIONS(state, notifications) {
-    state.notifications.push(notifications);
+    state.notifications.unshift(notifications);
   }
 }
 
@@ -34,7 +34,7 @@ export const actions = {
     commit('SET_NOTIFICATIONS', notifications);
   },
   handleNewNotification({commit}, notification) {
-    commit('ADD_NOTIFICATIONS', notification);
+    commit('ADD_NOTIFICATIONS', JSON.parse(notification));
   }
 }
 
