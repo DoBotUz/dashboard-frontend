@@ -67,7 +67,7 @@ const state = {
     windowWidth: null,
 
     // DoBot state,
-    organization: null,
+    organization: {},
 }
 
 export default state

@@ -54,7 +54,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .orders(rootState.organization)
+        .orders(rootState.organization.id)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORDERS', data.data);
@@ -71,7 +71,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .order(rootState.organization, order_id)
+        .order(rootState.organization.id, order_id)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORDER', data.data);
@@ -88,7 +88,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateOrder(rootState.organization, payload.id, payload)
+        .updateOrder(rootState.organization.id, payload.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORDER', payload);

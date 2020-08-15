@@ -27,7 +27,7 @@ export const actions = {
   fetchMassNotifs({ commit, rootState }) {
     return new Promise((resolve, reject) => {
       api()
-        .list(rootState.organization)
+        .list(rootState.organization.id)
         .then(({ data }) => {
           if (data.status === 'Success') {
             console.log(data);

@@ -77,10 +77,6 @@ export default {
       console.log('WS connected');
     });
 
-    clientSocket.on('newNotification', data => {
-      console.log(data);
-    });
-
     this.toggleClassInBody(themeConfig.theme);
     this.$store.commit("UPDATE_WINDOW_WIDTH", window.innerWidth);
 

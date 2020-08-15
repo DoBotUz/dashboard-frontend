@@ -32,7 +32,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', false)
       api()
-        .list(rootState.organization)
+        .list(rootState.organization.id)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_FEEDBACKS', data.data);

@@ -190,7 +190,7 @@ export default {
     },
     addOrUpdateBranch() {
       const payload = {
-        organizationId: this.$store.state.organization,
+        organizationId: this.$store.state.organization.id,
         title: this.title,
         lat: Number(this.branchCoords[0]),
         lng: Number(this.branchCoords[1]),
