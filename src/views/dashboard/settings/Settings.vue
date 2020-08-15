@@ -1,11 +1,9 @@
 <template>
   <div>
     <vx-card no-shadow>
-      <vs-input class="w-full mb-8" label="Название заведения на русском" v-model="organizationObj.ru_title" />
+      <vs-input class="w-full mb-8" label="Название заведения на русском" v-model="organizationObj.title" />
       <vs-textarea label="Описание заведения на русском" v-model="organizationObj.ru_description" />
-      <vs-input class="w-full mb-8" label="Название заведения на английском" v-model="organizationObj.en_title" />
       <vs-textarea label="Описание заведения на английском" v-model="organizationObj.en_description" />
-      <vs-input class="w-full mb-8" label="Название заведения на узбекском" v-model="organizationObj.uz_title" />
       <vs-textarea label="Описание заведения на узбекском" v-model="organizationObj.uz_description" />
       <div v-if="organizationObj.thumbnail">
         <img :src="`${$url}/public/organizations/${organizationObj.thumbnail}`" alt="" width="64" height="64">

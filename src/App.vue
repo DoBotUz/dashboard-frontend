@@ -68,14 +68,13 @@ export default {
     },
   },
   mounted() {
-    const clientSocket = io('http://localhost:3000/frontend', {
+    const clientSocket = io(`${process.env.VUE_APP_WS_URL}/frontend`, {
       query: {
-        authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNTk3NDg2ODIyLCJleHAiOjE1OTgwOTE2MjJ9.StDUDbpLUponWx5tk6V0TQaCFpxyrly8RLfR-FK5Gn0',
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },
     });
     clientSocket.on('connect', function() {
-      console.log('Connected');
-      clientSocket.emit('events', { test: 123 });
+      console.log('WS connected');
     });
 
     clientSocket.on('newNotification', data => {

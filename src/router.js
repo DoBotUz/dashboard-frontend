@@ -155,6 +155,7 @@ const router = new Router({
               name: 'DashboardFeedbacks',
               meta: {
                 rule: defaultRole,
+                pageTitle: 'Отзывы'
               },
             },
           ],
