@@ -68,19 +68,18 @@ export default {
     },
   },
   mounted() {
-
-    const socket = io('http://localhost:3000/frontend', {
+    const clientSocket = io('http://localhost:3000/frontend', {
       query: {
         authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBtYWlsLmNvbSIsInN1YiI6MSwiaWF0IjoxNTk3NDg2ODIyLCJleHAiOjE1OTgwOTE2MjJ9.StDUDbpLUponWx5tk6V0TQaCFpxyrly8RLfR-FK5Gn0',
       },
     });
-    socket.on('connect', function() {
+    clientSocket.on('connect', function() {
       console.log('Connected');
+      clientSocket.emit('events', { test: 123 });
+    });
 
-      socket.emit('events', { test: 'test' });
-      // socket.emit('identity', 0, response =>
-      //   console.log('Identity:', response),
-      // );
+    clientSocket.on('newNotification', data => {
+      console.log(data);
     });
 
     this.toggleClassInBody(themeConfig.theme);
