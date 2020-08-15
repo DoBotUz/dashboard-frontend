@@ -109,8 +109,8 @@ export default {
     ...mapState('organizations', ['organizationObj']),
   },
   async mounted() {
-    await this.getOrganization(this.organization);
-    this.token = ''; //this.organizationObj.bot.token;
+    await this.getOrganization(this.organization.id);
+    this.token = '';
   }
 };
 </script>

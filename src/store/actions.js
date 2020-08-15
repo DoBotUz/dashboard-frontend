@@ -6,6 +6,7 @@
   Author: Pixinvent
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
+import organizationsApi from '@/api/organizations';
 
 const actions = {
 
@@ -50,10 +51,21 @@ const actions = {
       console.log(payload);
       commit('UPDATE_USER_INFO', payload)
     },
-    setOrganization({ commit }, payload) {
-      commit('SET_ORGANIZATION', {
-        id: payload.id
-      })
+
+    fetchOrganization({ commit }, organizationId) {
+      return new Promise((resolve, reject) => {
+        organizationsApi()
+        .get(organizationId)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('SET_ORGANIZATION', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+      });
     }
 }
 

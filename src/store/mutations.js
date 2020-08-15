@@ -117,8 +117,8 @@ const mutations = {
   },
 
   SET_ORGANIZATION(state, payload) {
-    state.organization = payload.id;
-  }
+    state.organization = payload;
+  },
 }
 
 export default mutations

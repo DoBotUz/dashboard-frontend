@@ -204,7 +204,7 @@ export default {
     addOrUpdateProduct() {
       let file = this.$refs.productFile.filesx[this.$refs.productFile.filesx.length - 1];
       let payload = {
-        organizationId: this.$store.state.organization,
+        organizationId: this.$store.state.organization.id,
         id: this.selectedProduct,
         thumbnail: file,
         ru_title: this.product_ru_title,

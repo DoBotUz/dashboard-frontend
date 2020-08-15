@@ -91,7 +91,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .categories(rootState.organization)
+        .categories(rootState.organization.id)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_CATEGORIES', data.data);
@@ -109,7 +109,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .createCategory(rootState.organization, payload)
+        .createCategory(rootState.organization.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('ADD_CATEGORY', data.data);
@@ -128,7 +128,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateCategory(rootState.organization, id, payload)
+        .updateCategory(rootState.organization.id, id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('UPDATE_CATEGORY', data.data);
@@ -147,7 +147,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateCategory(rootState.organization, id, {
+        .updateCategory(rootState.organization.id, id, {
           id: id,
           status: 0
         })
@@ -168,7 +168,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .items(rootState.organization)
+        .items(rootState.organization.id)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_PRODUCTS', data.data);
@@ -186,7 +186,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .createItem(rootState.organization, payload)
+        .createItem(rootState.organization.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('ADD_PRODUCT', data.data);
@@ -205,7 +205,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateItem(rootState.organization, id, payload)
+        .updateItem(rootState.organization.id, id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('UPDATE_PRODUCT', data.data);
@@ -224,7 +224,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateItem(rootState.organization, id, {
+        .updateItem(rootState.organization.id, id, {
           id: id,
           status: 0
         })
