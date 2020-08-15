@@ -83,6 +83,9 @@
                 :slug="item.slug">
                   <span v-show="!verticalNavMenuItemsMin" class="truncate">{{ item.name }}</span>
                   <vs-chip class="ml-auto" :color="item.tagColor" v-if="item.tag && (isMouseEnter || !reduce)">{{ item.tag }}</vs-chip>
+                  <vs-chip class="ml-auto" :color="item.tagColor" v-if="item.tagGetter && (isMouseEnter || !reduce)">
+                    {{ $store.getters[item.tagGetter] || 0 }}
+                  </vs-chip>
               </v-nav-menu-item>
 
               <!-- Nav-Group -->

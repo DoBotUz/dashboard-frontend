@@ -52,8 +52,7 @@ export const actions = {
   logout({ commit }, payload) {
     return Promise.resolve(commit('LOGOUT'));
   },
-  getUserInfo({ dispatch, getters }) {
-    console.log('isAuthenticaed', getters.isAuthenticated);
+  getUserInfo({ dispatch, getters }) {    
     if (!getters.isAuthenticated) {
       return;
     }
@@ -62,6 +61,8 @@ export const actions = {
         .userInfo()
         .then(({ data }) => {
           if (data.status === 'Success') {
+            console.log('setting notif');
+            dispatch('setNotifications', data.data.notifications);
             dispatch('updateUserInfo', data.data, {root: true});
             resolve(data);
           } else {

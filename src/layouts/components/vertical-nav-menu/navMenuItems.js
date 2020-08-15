@@ -48,8 +48,8 @@ export default [
           name: 'DashboardFeedbacks'
         },
         name: "Отзывы",
-        tagColor: 'warning',
-        tag: '2',
+        tagColor: 'primary',
+        tagGetter: 'feedbackNotificationsCount',
         slug: "page2",
         icon: "SmileIcon",
       },

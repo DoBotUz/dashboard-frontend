@@ -121,6 +121,7 @@ export default {
   watch: {
     "$route"() {
       this.routeTitle = this.$route.meta.pageTitle;
+      this.$store.commit('SET_ORGANIZATION', { id: this.id });
       this.$store.dispatch('fetchOrganization', this.id);
     },
     isThemeDark(val) {
@@ -189,6 +190,7 @@ export default {
     const color = this.navbarColor == "#fff" && this.isThemeDark ? "#10163a" : this.navbarColor
     this.updateNavbarColor(color)
     this.setNavMenuVisibility(this.$store.state.mainLayoutType)
+    this.$store.commit('SET_ORGANIZATION', { id: this.id });
     this.$store.dispatch('fetchOrganization', this.id);
   }
 }

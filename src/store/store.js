@@ -27,6 +27,7 @@ import * as moduleBotUsers from './modules/botUsers';
 import * as moduleMassNotifs from './modules/massNotifs';
 import * as moduleOrders from './modules/orders';
 import * as moduleFeedbacks from './modules/feedbacks';
+import * as moduleNotifications from './modules/notifications';
 
 export default new Vuex.Store({
     getters,
@@ -42,5 +43,6 @@ export default new Vuex.Store({
       massNotifs: moduleMassNotifs,
       orders: moduleOrders,
       feedbacks: moduleFeedbacks,
+      notifications: moduleNotifications,
     },
 })
