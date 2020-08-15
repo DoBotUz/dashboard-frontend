@@ -68,15 +68,6 @@ export default {
     },
   },
   mounted() {
-    const clientSocket = io(`${process.env.VUE_APP_WS_URL}/frontend`, {
-      query: {
-        authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-    });
-    clientSocket.on('connect', function() {
-      console.log('WS connected');
-    });
-
     this.toggleClassInBody(themeConfig.theme);
     this.$store.commit("UPDATE_WINDOW_WIDTH", window.innerWidth);
 

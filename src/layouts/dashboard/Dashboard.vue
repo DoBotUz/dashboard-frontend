@@ -192,6 +192,19 @@ export default {
     this.setNavMenuVisibility(this.$store.state.mainLayoutType)
     this.$store.commit('SET_ORGANIZATION', { id: this.id });
     this.$store.dispatch('fetchOrganization', this.id);
+
+    const clientSocket = io(`${process.env.VUE_APP_WS_URL}/frontend`, {
+      query: {
+        authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        organizationId: this.id
+      },
+    });
+    clientSocket.on('connect', function() {
+      console.log('WS connected');
+    });
+    clientSocket.on('newNotification', function(data) {
+      this.$store.dispatch('handleNewNotification', data);
+    });
   }
 }
 

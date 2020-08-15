@@ -32,6 +32,9 @@ export const mutations = {
 export const actions = {
   setNotifications({commit}, notifications) {
     commit('SET_NOTIFICATIONS', notifications);
+  },
+  handleNewNotification({commit}, notification) {
+    commit('ADD_NOTIFICATIONS', notification);
   }
 }
 
