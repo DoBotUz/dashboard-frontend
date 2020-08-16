@@ -10,8 +10,9 @@
         v-for="organization in organizations"
         :key="organization.id"
         :id="organization.id"
-        :title="organization.ru_title"
+        :title="organization.title"
         :description="organization.ru_description"
+        :thumbnail="organization.thumbnail"
       />
       <vx-card class="cursor-pointer organizations__add" @click="addPopup = true">
         <h1 class="organizations__add__plus mb-5">➕</h1>

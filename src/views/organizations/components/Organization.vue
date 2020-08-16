@@ -4,7 +4,7 @@
     @click="$router.push(`/shop/${id}/`)"
   >
       <vx-card class="text-center cursor-pointer">
-        <img src="/maps-and-flags.png" alt="graphic" width="180" class="mx-auto mb-4" />
+        <img :src="thumbnail ? `${$url}/public/organizations/${thumbnail}` : '/maps-and-flags.png'" alt="graphic" width="180" height="180" class="mx-auto mb-4" />
         <h4 class="mb-2">{{ title }}</h4>
         <small>{{ description }}</small>
       </vx-card>
@@ -16,6 +16,7 @@ export default {
     id: Number,
     title: String,
     description: String,
+    thumbnail: String
   },
   head: {
     title() {

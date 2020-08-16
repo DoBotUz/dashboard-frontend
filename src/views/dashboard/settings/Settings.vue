@@ -79,10 +79,11 @@ export default {
           formData.append(key, this.organizationObj[key]);
       });
       formData.append('thumbnail', file);
-      formData.append('bot', JSON.stringify({
-          id: this.organization,
+      formData.set('bot', JSON.stringify({
+          id: this.organization.id,
           token: this.token,
       }));
+      console.log(formData.get('bot'));
       this.updateOrganization(formData).then(() => {
         this.$vs.notify({
           title: "Отлично",
@@ -93,13 +94,14 @@ export default {
       });
     },
     isValidToken() {
-      telegramApi.getMe(this.token)
-        .then(res => {
-          console.log(res);
+      return new Promise((resolve, reject) => {
+        telegramApi.getMe(this.token).then(res => {
+          resolve(res.data.ok);
         })
         .catch(res => {
-          return false;
+          reject();
         })
+      });
     }
   },
   computed: {
@@ -108,7 +110,7 @@ export default {
   },
   async mounted() {
     await this.getOrganization(this.organization.id);
-    this.token = '';
+    this.token = this.organization.bot.token;
   }
 };
 </script>

@@ -16,7 +16,9 @@
 
           <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Заведения</span>
+            <router-link to="/">
+              <span class="ml-2">Заведения</span>
+            </router-link>
           </li>
 
           <vs-divider class="m-1" />
