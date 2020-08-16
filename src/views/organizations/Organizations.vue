@@ -20,9 +20,34 @@
       </vx-card>
     </div>
     <vs-popup title="Добавить новое заведение" :active.sync="addPopup">
-      <vs-input class="w-full mb-3" label="Название заведения" v-model="organization_name" />
-      <vs-textarea class="w-full mb-3" label="Описание заведения" v-model="organization_description" />
-      <vs-input class="w-full mb-3" label="Токен бота" v-model="organization_token" />
+      <vs-input
+        class="w-full mb-3"
+        label="Название заведения"
+        v-model="organization_name"
+        name="organization_name"
+        data-vv-as="Название заведения"
+        v-validate="'required'"
+      />
+      <span class="text-danger text-sm">{{ errors.first('organization_name') }}</span>
+      <vs-textarea
+        class="w-full mb-3"
+        label="Описание заведения"
+        v-model="organization_description"
+        name="organization_description"
+        data-vv-as="Описание заведения"
+        v-validate="'required'"
+      />
+      <span class="text-danger text-sm">{{ errors.first('organization_description') }}</span>
+      <vs-input
+        class="w-full mb-3"
+        label="Токен бота"
+        v-model="token"
+        name="token"
+        data-vv-as="Токен бота"
+        v-validate="'required'"
+      />
+      <span class="text-danger text-sm">{{ errors.first('token') }}</span>
+      <div></div>
       <vs-button class="mb-3" @click="tokenPopup=true" color="primary" type="line">Как получить токен бота?</vs-button>
       <vs-button class="w-full" @click="addNewOrg" color="primary">Добавить</vs-button>
 
@@ -34,6 +59,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import telegramApi from '@/api/telegram';
 import Organization from "./components/Organization";
 
 export default {
@@ -44,7 +70,7 @@ export default {
     return {
       organization_name: '',
       organization_description: '',
-      organization_token: '',
+      token: '',
       addPopup: false,
       tokenPopup: false,
     }
@@ -56,13 +82,34 @@ export default {
       }
     },
   },
+  computed: {
+    ...mapGetters({
+      'organizations': 'organizations/organizations',
+    }),
+  },
   methods: {
     ...mapActions('organizations', ['fetchOrganizations', 'addOrganization']),
-    addNewOrg() {
+    async addNewOrg() {
+      await this.$validator.validateAll();
+      if (this.errors.any()) {
+        return;
+      }
+
+      const is_valid_token = await this.isValidToken();
+      console.log(is_valid_token);
+      if (!is_valid_token) {
+        return this.$vs.notify({
+          title: 'Ошибка',
+          text: 'Неверный токен',
+          color: 'danger',
+          position: 'bottom-right',
+        });
+      }
+
       this.addOrganization({
         name: this.organization_name,
         description: this.organization_description,
-        token: this.organization_token
+        token: this.token
       }).then(() => {
           this.addPopup = false;
           this.$vs.notify({
@@ -73,6 +120,16 @@ export default {
           });
       });
     },
+    isValidToken() {
+      return new Promise((resolve, reject) => {
+        telegramApi.getMe(this.token).then(res => {
+          resolve(res.data.ok);
+        })
+        .catch(res => {
+          resolve(false);
+        })
+      });
+    }
   },
   mounted() {
     this.$vs.loading({
@@ -83,11 +140,6 @@ export default {
        this.$vs.loading.close('#organizations-div > .con-vs-loading')
     });
   },
-  computed: {
-    ...mapGetters({
-      'organizations': 'organizations/organizations',
-    }),
-  }
 };
 </script>
 <style lang="scss" scoped>

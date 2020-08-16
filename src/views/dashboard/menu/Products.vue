@@ -175,9 +175,6 @@ export default {
     tableData() {
       return this.products;
     },
-    validateForm () {
-      return this.errors.any();
-    },
   },
   methods: {
     ...mapActions("menu", ["fetchCategories", "fetchProducts"]),
@@ -210,7 +207,7 @@ export default {
     },
     async addOrUpdateProduct() {
       await this.$validator.validateAll();
-      if (this.validateForm) {
+      if (this.errors.any()) {
         return;
       }
 

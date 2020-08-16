@@ -99,7 +99,7 @@ export default {
           resolve(res.data.ok);
         })
         .catch(res => {
-          reject();
+          return false;
         })
       });
     }
