@@ -14,7 +14,7 @@
         :description="organization.ru_description"
         :thumbnail="organization.thumbnail"
       />
-      <vx-card class="cursor-pointer organizations__add" @click="addPopup = true">
+      <vx-card class="cursor-pointer organizations__add" @click="addPopup = true" style="min-height: 286px;">
         <h1 class="organizations__add__plus mb-5">➕</h1>
         <h4>Добавить заведение</h4>
       </vx-card>

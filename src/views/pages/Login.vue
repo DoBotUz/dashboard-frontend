@@ -16,8 +16,11 @@
     <div class="vx-col sm:w-1/2 md:w-1/2 lg:w-3/4 xl:w-3/5 sm:m-0 m-4">
       <vx-card>
         <div slot="no-body" class="full-page-bg-color">
-          <div class="vx-row no-gutter justify-center items-center">
-            <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
+          <div class="vx-row no-gutter justify-center items-center" style="padding: 60px;">
+            <div class="vx-col sm:w-full md:w-full lg:w-1/3 cursor-pointer" style="height: 100px; float: left;">
+              <logo class="" />
+            </div>
+            <div class="vx-col sm:w-full md:w-full lg:w-2/3 d-theme-dark-bg">
               <div class="p-8 login-tabs-container">
                 <div>
                   <vs-tabs v-model="activeTab">
@@ -135,7 +138,12 @@
   </div>
 </template>
 <script>
+import Logo from "@/layouts/components/Logo.vue";
+
 export default {
+  components: {
+    Logo,
+  },
   data() {
     return {
       activeTab: 0,
