@@ -12,7 +12,7 @@
 <template>
   <div class="parentx">
     <vs-sidebar
-      class="v-nav-menu"
+      class="v-nav-menu items-no-padding"
       v-model="isVerticalNavMenuActive"
       ref="verticalNavMenu"
       default-index="-1"
