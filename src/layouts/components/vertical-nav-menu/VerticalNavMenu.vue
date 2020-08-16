@@ -11,9 +11,8 @@
 
 <template>
   <div class="parentx">
-
     <vs-sidebar
-      class="v-nav-menu items-no-padding"
+      class="v-nav-menu"
       v-model="isVerticalNavMenuActive"
       ref="verticalNavMenu"
       default-index="-1"
@@ -336,7 +335,7 @@ export default {
     },
   },
   mounted() {
-    this.setVerticalNavMenuWidth()
+    this.setVerticalNavMenuWidth();
   },
 }
 
@@ -344,5 +343,5 @@ export default {
 
 
 <style lang="scss">
-@import "@/assets/scss/vuexy/components/verticalNavMenu.scss"
+@import "@/assets/scss/vuexy/components/verticalNavMenu.scss";
 </style>

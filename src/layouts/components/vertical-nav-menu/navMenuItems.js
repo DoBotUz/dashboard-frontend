@@ -91,13 +91,17 @@ export default [
         icon: "HomeIcon",
       },
       {
-        url: "/page2",
+        url: {
+          name: 'DashboardDelivery',
+        },
         name: "Доставка",
         slug: "page2",
         icon: "TruckIcon",
       },
       {
-        url: "/page2",
+        url: {
+          name: 'DashboardPaymentTypes',
+        },
         name: "Способы оплаты",
         slug: "page2",
         icon: "CreditCardIcon",
