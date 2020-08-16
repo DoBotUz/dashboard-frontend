@@ -90,22 +90,22 @@ export default [
         slug: "page2",
         icon: "HomeIcon",
       },
-      {
-        url: {
-          name: 'DashboardDelivery',
-        },
-        name: "Доставка",
-        slug: "page2",
-        icon: "TruckIcon",
-      },
-      {
-        url: {
-          name: 'DashboardPaymentTypes',
-        },
-        name: "Способы оплаты",
-        slug: "page2",
-        icon: "CreditCardIcon",
-      },
+      // {
+      //   url: {
+      //     name: 'DashboardDelivery',
+      //   },
+      //   name: "Доставка",
+      //   slug: "page2",
+      //   icon: "TruckIcon",
+      // },
+      // {
+      //   url: {
+      //     name: 'DashboardPaymentTypes',
+      //   },
+      //   name: "Способы оплаты",
+      //   slug: "page2",
+      //   icon: "CreditCardIcon",
+      // },
       {
         url: {
           name: 'DashboardSettings',
