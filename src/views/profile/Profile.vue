@@ -23,17 +23,17 @@
       <!-- Content Row -->
       <div class="vx-row">
         <vs-col vs-w="6" class="p-4">
-          <vs-input class="w-full" label="Email" v-model="email" v-validate="'required|email'" name="email"  data-vv-as="Email" />
+          <vs-input class="w-full" label="Email" v-model="email" v-validate="'required|email|max:255'" name="email"  data-vv-as="Email" />
           <span class="text-danger text-sm"  v-show="errors.has('email')">{{ errors.first('email') }}</span>
 
-          <vs-input class="w-full mt-4" label="Имя" v-model="first_name" v-validate="'required'" name="first_name"  data-vv-as="Имя" />
+          <vs-input class="w-full mt-4" label="Имя" v-model="first_name" v-validate="'required|max:255'" name="first_name"  data-vv-as="Имя" />
           <span class="text-danger text-sm"  v-show="errors.has('first_name')">{{ errors.first('first_name') }}</span>
         </vs-col>
         <vs-col vs-w="6" class="p-4">
-          <vs-input class="w-full" name="password" label="Новый Пароль" v-model="password" v-validate="'min:6'" />
+          <vs-input class="w-full" name="password" label="Новый Пароль" v-model="password" v-validate="'min:6|max:255'" />
           <span class="text-danger text-sm"  v-show="errors.has('password')">{{ errors.first('password') }}</span>
 
-          <vs-input class="w-full mt-4" label="Фамилия" v-model="last_name" v-validate="'required'" name="last_name"  data-vv-as="Фамилия" />
+          <vs-input class="w-full mt-4" label="Фамилия" v-model="last_name" v-validate="'required|max:255'" name="last_name"  data-vv-as="Фамилия" />
           <span class="text-danger text-sm"  v-show="errors.has('last_name')">{{ errors.first('last_name') }}</span>
         </vs-col>
       </div>
@@ -83,6 +83,12 @@ export default {
       await this.$validator.validateAll();
 
       if (this.errors.any()) {
+        this.$vs.notify({
+          title: "Неверный ввод",
+          text: "Проверьте правильность заполненных данных",
+          color: "warning",
+          position: "top-center",
+        });
         return;
       }
       const form = {

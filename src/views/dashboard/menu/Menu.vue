@@ -67,124 +67,186 @@
       </template>
     </vs-table>
     <vs-popup title="Добавить новую категорию" :active.sync="addCategoryPopup" class="vs-con-loading__container">
-      <vs-input
-        class="w-full mb-4"
-        label="Название категории"
-        v-model="ru_title"
-        @blur="fillCategoryTitle"
-      />
-      <vs-input class="w-full mb-4" label="Название категории на узбекском" v-model="uz_title" />
-      <vs-input class="w-full mb-4" label="Название категории на английском" v-model="en_title" />
-      <vs-select autocomplete class="mb-4" label="Родительская категория" v-model="parentCategory">
-        <vs-select-item
-          :key="index"
-          :value="item.id"
-          :text="item.ru_title"
-          v-for="(item,index) in categories"
+      <form @submit.prevent="" data-vv-scope="category">
+         <vs-input
+          class="w-full mt-4"
+          label="Название категории"
+          v-model="ru_title"
+          @blur="fillCategoryTitle"
+          name="ru_title"
+          data-vv-as="Заголовок на русском"
+          v-validate="'required|max:255'"
         />
-      </vs-select>
-      <div class="vx-col w-full">
-        <vs-upload
-          :limit="1"
-          :show-upload-button="false"
-          text="Загрузить файл"
-          ref="categoryFile"
-        />
-      </div>
+        <span class="text-danger text-sm">{{ errors.first('category.ru_title') }}</span>
 
-      <div class="con-select-example" v-if="selectedCategory">
-        <vs-select
-        class="selectExample"
-        label="Статус"
-        v-model="status"
-        >
-          <vs-select-item v-for="(item, index) in statusesList" :key="index" :value="item.value" :text="item.text" />
+        <vs-input
+        class="w-full mt-4"
+        label="Название категории на английском"
+        v-model="en_title"
+        name="en_title"
+        data-vv-as="Заголовок на английском"
+        v-validate="'required|max:255'"
+        />
+        <span class="text-danger text-sm">{{ errors.first('category.en_title') }}</span>
+
+        <vs-input
+          class="w-full mt-4"
+          label="Название категории на узбекском"
+          v-model="uz_title"
+          name="uz_title"
+          data-vv-as="Заголовок на узбекском"
+          v-validate="'required|max:255'"
+        />
+        <span class="text-danger text-sm">{{ errors.first('category.uz_title') }}</span>
+
+        <vs-select autocomplete class="mt-4" label="Родительская категория" v-model="parentCategory">
+          <vs-select-item
+            :key="index"
+            :value="item.id"
+            :text="item.ru_title"
+            v-for="(item,index) in categories"
+          />
         </vs-select>
-      </div>
+        <div class="vx-col w-full">
+          <vs-upload
+            :limit="1"
+            :show-upload-button="false"
+            text="Загрузить файл"
+            ref="categoryFile"
+          />
+        </div>
 
-      <vs-button
-        class="mt-5 mb-3 float-right"
-        @click="addOrUpdateCategory"
-        color="primary"
-      >{{ selectedCategory ? 'Изменить' : 'Добавить' }}</vs-button>
+        <div class="con-select-example" v-if="selectedCategory">
+          <vs-select
+          class="selectExample"
+          label="Статус"
+          v-model="status"
+          >
+            <vs-select-item v-for="(item, index) in statusesList" :key="index" :value="item.value" :text="item.text" />
+          </vs-select>
+        </div>
+
+        <vs-button
+          class="mt-5 mb-3 float-right"
+          @click="addOrUpdateCategory"
+          color="primary"
+          :disabled="!validateForm"
+        >{{ selectedCategory ? 'Изменить' : 'Добавить' }}</vs-button>
+      </form>
     </vs-popup>
     <vs-popup title="Добавить продукт" :active.sync="addProductPopup">
-      <vs-input
-        class="w-full mb-4"
-        label="Название продукта"
-        v-model="product_ru_title"
-        @blur="fillProductTitle"
-      />
-      <vs-textarea
-        class="w-full mb-4"
-        label="Описании продукта"
-        v-model="product_ru_description"
-        @blur="fillProductDescription"
-      ></vs-textarea>
-
-      <vs-input
-        class="w-full mb-4"
-        label="Название продукта на узбекском"
-        v-model="product_uz_title"
-      />
-      <vs-textarea
-        class="w-full mb-4"
-        label="Описании продукта на узбекском"
-        v-model="product_uz_description"
-      ></vs-textarea>
-
-      <vs-input
-        class="w-full mb-4"
-        label="Название продукта на английском"
-        v-model="product_en_title"
-      />
-      <vs-textarea
-        class="w-full mb-4"
-        label="Описании продукта на английском"
-        v-model="product_en_description"
-      ></vs-textarea>
-
-      <vs-input type="number" class="w-full mb-4" label="Цена продукта" v-model="product_price" />
-
-      <vs-select
-        autocomplete
-        class="mb-4"
-        label="Родительская категория"
-        v-model="product_parent_category"
-      >
-        <vs-select-item
-          :key="index"
-          :value="item.id"
-          :text="item.ru_title"
-          v-for="(item,index) in childlessCategories"
+      <form @submit.prevent="" data-vv-scope="product">
+        <vs-input
+          class="w-full mt-4"
+          label="Название продукта"
+          v-model="product_ru_title"
+          @blur="fillProductTitle"
+          name="product_ru_title"
+          data-vv-as="Заголовок на русском"
+          v-validate="'required|max:255'"
         />
-      </vs-select>
+        <span class="text-danger text-sm">{{ errors.first('product.product_ru_title') }}</span>
 
-      <div class="vx-col w-full">
-        <vs-upload
-          :limit="1"
-          :show-upload-button="false"
-          text="Загрузить файл"
-          ref="productFile"
+        <vs-textarea
+          class="w-full mt-4"
+          label="Описании продукта"
+          v-model="product_ru_description"
+          @blur="fillProductDescription"
+          name="product_ru_description"
+          data-vv-as="Описание на русском"
+          v-validate="'required'"
+        ></vs-textarea>
+        <span class="text-danger text-sm">{{ errors.first('product.product_ru_description') }}</span>
+
+        <vs-input
+          class="w-full mt-4"
+          label="Название продукта на английском"
+          v-model="product_en_title"
+          name="product_en_title"
+          data-vv-as="Заголовок на английксом"
+          v-validate="'required|max:255'"
         />
-      </div>
+        <span class="text-danger text-sm">{{ errors.first('product.product_en_title') }}</span>
 
-      <div class="con-select-example" v-if="selectedProduct">
+        <vs-textarea
+          class="w-full mt-4"
+          label="Описании продукта на английском"
+          v-model="product_en_description"
+          name="product_en_description"
+          data-vv-as="Описание на английском"
+          v-validate="'required'"
+        ></vs-textarea>
+        <span class="text-danger text-sm">{{ errors.first('product.product_en_description') }}</span>
+
+        <vs-input
+          class="w-full mt-4"
+          label="Название продукта на узбекском"
+          v-model="product_uz_title"
+          name="product_uz_title"
+          data-vv-as="Заголовок на узбекском"
+          v-validate="'required|max:255'"
+        />
+        <span class="text-danger text-sm">{{ errors.first('product.product_uz_title') }}</span>
+
+        <vs-textarea
+          class="w-full mt-4"
+          label="Описании продукта на узбекском"
+          v-model="product_uz_description"
+          name="product_uz_description"
+          data-vv-as="Описание на узбекском"
+          v-validate="'required'"
+        ></vs-textarea>
+        <span class="text-danger text-sm">{{ errors.first('product.product_uz_description') }}</span>
+
+        <vs-input type="number" class="w-full mt-4" label="Цена продукта" v-model="product_price"         name="product_price"
+        data-vv-as="Цена продукта"
+        v-validate="'required|numeric|min_value:0'" />
+        <span class="text-danger text-sm">{{ errors.first('product.product_price') }}</span>
+
         <vs-select
-        class="selectExample"
-        label="Статус"
-        v-model="status"
+          autocomplete
+          class="mt-4"
+          label="Родительская категория"
+          v-model="product_parent_category"
+          name="product_parent_category"
+          data-vv-as="Родительская категория"
+          v-validate="'required'"
         >
-          <vs-select-item v-for="(item, index) in statusesList" :key="index" :value="item.value" :text="item.text" />
+          <vs-select-item
+            :key="index"
+            :value="item.id"
+            :text="item.ru_title"
+            v-for="(item,index) in childlessCategories"
+          />
         </vs-select>
-      </div>
+        <span class="text-danger text-sm">{{ errors.first('product.product_parent_category') }}</span>
 
+        <div class="vx-col w-full">
+          <vs-upload
+            :limit="1"
+            :show-upload-button="false"
+            text="Загрузить файл"
+            ref="productFile"
+          />
+        </div>
 
-      <vs-button
-        class="mt-5 mb-3 float-right"
-        @click="addOrUpdateProduct"
-        color="primary"
-      >{{ selectedProduct ? 'Изменить' : 'Добавить' }}</vs-button>
+        <div class="con-select-example" v-if="selectedProduct">
+          <vs-select
+          class="selectExample"
+          label="Статус"
+          v-model="status"
+          >
+            <vs-select-item v-for="(item, index) in statusesList" :key="index" :value="item.value" :text="item.text" />
+          </vs-select>
+        </div>
+
+        <vs-button
+          class="mt-5 mb-3 float-right"
+          @click="addOrUpdateProduct"
+          color="primary"
+          :disabled="!validateForm"
+        >{{ selectedProduct ? 'Изменить' : 'Добавить' }}</vs-button>
+      </form>
     </vs-popup>
   </div>
 </template>
@@ -296,6 +358,10 @@ export default {
       }
       return this.productsByParentId(this.parent);
     },
+
+    validateForm () {
+      return !this.errors.any()
+    }
   },
   methods: {
     ...mapActions("menu", ["fetchCategories", "fetchProducts"]),
@@ -315,7 +381,19 @@ export default {
       if (this.product_en_description === "")
         this.product_en_description = this.product_ru_description;
     },
-    addOrUpdateCategory() {
+    async addOrUpdateCategory() {
+      await this.$validator.validateAll('category');
+      console.log(this.errors);
+      if (this.errors.any()) {
+          this.$vs.notify({
+            title: "Неверный ввод",
+            text: "Проверьте правильность заполненных данных",
+            color: "warning",
+            position: "top-center",
+          });
+        return;
+      }
+
       let file = this.$refs.categoryFile.filesx[this.$refs.categoryFile.filesx.length - 1];
       let payload = {
         organizationId: this.$store.state.organization.id,
@@ -345,7 +423,9 @@ export default {
           });
         });
       }
-      formData.append('status', this.status);
+      if(this.status)
+        formData.append('status', this.status);
+
       return this.$store
         .dispatch("menu/updateCategory", formData)
         .then(() => {
@@ -369,7 +449,20 @@ export default {
         },
       });
     },
-    addOrUpdateProduct() {
+
+    async addOrUpdateProduct() {
+      await this.$validator.validateAll('product');
+      console.log(this.errors);
+      if (this.errors.any()) {
+          this.$vs.notify({
+            title: "Неверный ввод",
+            text: "Проверьте правильность заполненных данных",
+            color: "warning",
+            position: "top-center",
+          });
+        return;
+      }
+
       let file = this.$refs.productFile.filesx[this.$refs.productFile.filesx.length - 1];
       let payload = {
         organizationId: this.$store.state.organization.id,
@@ -401,7 +494,10 @@ export default {
           });
         });
       }
-      formData.append('status', this.status);
+
+      if(this.status)
+        formData.append('status', this.status);
+
       return this.$store
         .dispatch("menu/updateProduct", formData)
         .then(() => {
@@ -427,12 +523,14 @@ export default {
         this.product_parent_category = this.parent;
       }
       this.addProductPopup = true;
+      this.$validator.reset();
     },
     showAddCategoryPopup() {
       this.selectedCategory = null;
       this.ru_title = this.uz_title = this.en_title = "";
       this.parentCategory = this.parent || null;
       this.addCategoryPopup = true;
+      this.$validator.reset();
     },
     editProduct(tr) {
       this.selectedProduct = tr.id;
@@ -448,6 +546,7 @@ export default {
       if (this.childlessCategories.find((cat) => cat.id === tr.categoryId)) {
         this.product_parent_category = tr.categoryId;
       }
+      this.$validator.reset();
       this.addProductPopup = true;
     },
     editCategory(tr) {
@@ -458,6 +557,7 @@ export default {
       this.parentCategory = tr.parentCategoryId;
       this.status = tr.status;
       this.addCategoryPopup = true;
+      this.$validator.reset();
     },
     deleteItem(tr) {
       this.$vs.dialog({

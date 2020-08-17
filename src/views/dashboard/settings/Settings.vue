@@ -1,10 +1,43 @@
 <template>
   <div>
     <vx-card>
-      <vs-input class="w-full mb-8" label="Название заведения на русском" v-model="organizationObj.title" />
-      <vs-textarea label="Описание заведения на русском" v-model="organizationObj.ru_description" />
-      <vs-textarea label="Описание заведения на английском" v-model="organizationObj.en_description" />
-      <vs-textarea label="Описание заведения на узбекском" v-model="organizationObj.uz_description" />
+      <vs-input
+        class="w-full mt-8"
+        label="Название заведения на русском"
+        v-model="organizationObj.title" name="organization_title"
+        data-vv-as="Название заведения"
+        v-validate="'required|max:255'"
+      />
+      <span class="text-danger text-sm">{{ errors.first('organization_title') }}</span>
+
+    <vs-textarea
+      class="w-full mt-8"
+      label="Описание заведения на русском"
+      v-model="organizationObj.ru_description"
+      name="ru_description"
+      data-vv-as="Описание на русском"
+      v-validate="'required'"
+    />
+    <span class="text-danger text-sm">{{ errors.first('ru_description') }}</span>
+
+    <vs-textarea class="w-full mt-8" label="Описание заведения на английском"
+      v-model="organizationObj.en_description"
+      name="en_description"
+      data-vv-as="Описание на английском"
+      v-validate="'required'"
+    />
+    <span class="text-danger text-sm">{{ errors.first('en_description') }}</span>
+
+    <vs-textarea
+      class="w-full mt-8"
+      label="Описание заведения на узбекском"
+      v-model="organizationObj.uz_description"
+      name="uz_description"
+      data-vv-as="Описание на узбекском"
+      v-validate="'required'"
+    />
+    <span class="text-danger text-sm">{{ errors.first('uz_description') }}</span>
+
       <vs-row>
           <vs-col vs-w="3" id="avatar-col" v-if="organizationObj.thumbnail">
             <div class="img-container mb-4" style="margin-top: 25px;">
@@ -20,10 +53,10 @@
             />
           </vs-col>
       </vs-row>
-      <vs-input class="w-full mb-8" label="Токен" v-model="token"/>
       <vs-alert title="Предупреждение" active="true" color="warning">
-        Изменение статуса влиет на работу телеграм бота.
+        Изменение токена, статуса влиет на работу телеграм бота.
       </vs-alert>
+      <vs-input class="w-full mt-8" label="Токен" v-model="token"/>
       <div class="con-select-example">
         <vs-select
         class="selectExample"
@@ -34,7 +67,7 @@
         </vs-select>
       </div>
       <div class="flex flex-wrap items-center justify-end">
-        <vs-button class="ml-auto mt-2" @click="save">Сохранить</vs-button>
+        <vs-button class="ml-auto mt-2" @click="save" :disabled="!validateForm">Сохранить</vs-button>
       </div>
     </vx-card>
     <vx-card style="margin-top: 20px;">
@@ -46,7 +79,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import telegramApi from '@/api/telegram';
 
 export default {
@@ -65,6 +98,7 @@ export default {
       ]
     };
   },
+
   head: {
     title() {
       return {
@@ -73,9 +107,30 @@ export default {
       }
     },
   },
+
+  computed: {
+    ...mapState(['organization']),
+    ...mapState('organizations', ['organizationObj']),
+
+    validateForm () {
+      return !this.errors.any()
+    }
+  },
+
   methods: {
     ...mapActions('organizations', ['getOrganization', 'updateOrganization', 'deleteOrganization']),
     async save() {
+      await this.$validator.validateAll();
+      if (this.errors.any()) {
+        this.$vs.notify({
+          title: "Неверный ввод",
+          text: "Проверьте правильность заполненных данных",
+          color: "warning",
+          position: "top-center",
+        });
+        return;
+      }
+
       let is_valid_token = await this.isValidToken();
       if (!is_valid_token) {
         return this.$vs.notify({
@@ -111,7 +166,7 @@ export default {
           resolve(res.data.ok);
         })
         .catch(res => {
-          return false;
+          resolve(false);
         })
       });
     },
@@ -138,10 +193,7 @@ export default {
       })
     },
   },
-  computed: {
-    ...mapState(['organization']),
-    ...mapState('organizations', ['organizationObj']),
-  },
+
   async mounted() {
     await this.getOrganization(this.organization.id);
     this.token = this.organization.bot.token;

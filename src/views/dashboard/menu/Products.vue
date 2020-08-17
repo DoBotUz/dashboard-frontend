@@ -64,41 +64,71 @@
         label="Название продукта"
         v-model="product_ru_title"
         @blur="fillProductTitle"
+        name="product_ru_title"
+        data-vv-as="Заголовок на русском"
+        v-validate="'required|max:255'"
       />
+      <span class="text-danger text-sm">{{ errors.first('product_ru_title') }}</span>
+
       <vs-textarea
-        class="w-full mb-4"
+        class="w-full mt-4"
         label="Описании продукта"
         v-model="product_ru_description"
         @blur="fillProductDescription"
+        name="product_ru_description"
+        data-vv-as="Описание на русском"
+        v-validate="'required'"
       ></vs-textarea>
+      <span class="text-danger text-sm">{{ errors.first('product_ru_description') }}</span>
 
       <vs-input
-        class="w-full mb-4"
-        label="Название продукта на узбекском"
-        v-model="product_uz_title"
-      />
-      <vs-textarea
-        class="w-full mb-4"
-        label="Описании продукта на узбекском"
-        v-model="product_uz_description"
-      ></vs-textarea>
-
-      <vs-input
-        class="w-full mb-4"
+        class="w-full mt-4"
         label="Название продукта на английском"
         v-model="product_en_title"
+        name="product_en_title"
+        data-vv-as="Заголовок на английксом"
+        v-validate="'required|max:255'"
       />
+      <span class="text-danger text-sm">{{ errors.first('product_en_title') }}</span>
+
       <vs-textarea
-        class="w-full mb-4"
+        class="w-full mt-4"
         label="Описании продукта на английском"
         v-model="product_en_description"
+        name="product_en_description"
+        data-vv-as="Описание на английском"
+        v-validate="'required'"
       ></vs-textarea>
+      <span class="text-danger text-sm">{{ errors.first('product_en_description') }}</span>
 
-      <vs-input type="number" class="w-full mb-4" label="Цена продукта" v-model="product_price" />
+      <vs-input
+        class="w-full mt-4"
+        label="Название продукта на узбекском"
+        v-model="product_uz_title"
+        name="product_uz_title"
+        data-vv-as="Заголовок на узбекском"
+        v-validate="'required|max:255'"
+      />
+      <span class="text-danger text-sm">{{ errors.first('product_uz_title') }}</span>
+
+      <vs-textarea
+        class="w-full mt-4"
+        label="Описании продукта на узбекском"
+        v-model="product_uz_description"
+        name="product_uz_description"
+        data-vv-as="Описание на узбекском"
+        v-validate="'required'"
+      ></vs-textarea>
+      <span class="text-danger text-sm">{{ errors.first('product_uz_description') }}</span>
+
+      <vs-input type="number" class="w-full mt-4" label="Цена продукта" v-model="product_price"         name="product_price"
+      data-vv-as="Цена продукта"
+      v-validate="'required|numeric|min_value:0'" />
+      <span class="text-danger text-sm">{{ errors.first('product_price') }}</span>
 
       <vs-select
         autocomplete
-        class="mb-4"
+        class="mt-4"
         label="Родительская категория"
         v-model="product_parent_category"
         name="product_parent_category"
@@ -112,7 +142,7 @@
           v-for="(item,index) in childlessCategories"
         />
       </vs-select>
-       <span class="text-danger text-sm">{{ errors.first('product_parent_category') }}</span>
+      <span class="text-danger text-sm">{{ errors.first('product_parent_category') }}</span>
 
       <div class="vx-col w-full">
         <vs-upload
@@ -137,6 +167,7 @@
         class="mt-5 mb-3 float-right"
         @click="addOrUpdateProduct"
         color="primary"
+        :disabled="!validateForm"
       >{{ selectedProduct ? 'Изменить' : 'Добавить' }}</vs-button>
     </vs-popup>
   </div>
@@ -202,6 +233,10 @@ export default {
     tableData() {
       return this.products;
     },
+
+    validateForm () {
+      return !this.errors.any()
+    }
   },
   methods: {
     ...mapActions("menu", ["fetchCategories", "fetchProducts"]),
@@ -235,6 +270,12 @@ export default {
     async addOrUpdateProduct() {
       await this.$validator.validateAll();
       if (this.errors.any()) {
+          this.$vs.notify({
+            title: "Неверный ввод",
+            text: "Проверьте правильность заполненных данных",
+            color: "warning",
+            position: "top-center",
+          });
         return;
       }
 

@@ -54,9 +54,15 @@
       </template>
     </vs-table>
     <vs-popup title="Добавить новый филиал" :active.sync="addPopup" fullscreen class="vs-con-loading__container">
-      <vs-input class="w-full mb-4" label="Название филиала на русском" v-model="ru_title" @blur="fillBranchTitle"/>
-      <vs-input class="w-full mb-4" label="Название филиала на английском" v-model="en_title" />
-      <vs-input class="w-full mb-4" label="Название филиала на узбекском" v-model="uz_title" />
+      <vs-input class="w-full mb-4" label="Название филиала на русском" v-model="ru_title" v-validate="'required'" name="ru_title"  data-vv-as="Название на русском" @blur="fillBranchTitle"/>
+      <span class="text-danger text-sm"  v-show="errors.has('ru_title')">{{ errors.first('ru_title') }}</span>
+
+      <vs-input class="w-full mb-4" label="Название филиала на английском" v-model="en_title" v-validate="'required'" name="en_title"  data-vv-as="Название на английском" />
+      <span class="text-danger text-sm"  v-show="errors.has('en_title')">{{ errors.first('en_title') }}</span>
+
+      <vs-input class="w-full mb-4" label="Название филиала на узбекском" v-model="uz_title"  v-validate="'required'" name="uz_title"  data-vv-as="Название на узбекском"/>
+      <span class="text-danger text-sm"  v-show="errors.has('uz_title')">{{ errors.first('uz_title') }}</span>
+
       <vs-select autocomplete class="mb-4" label="Статус филиала" v-model="branchStatus">
         <vs-select-item
           :key="index"
@@ -65,6 +71,7 @@
           v-for="(item,index) in Object.keys(branchStatuses)"
         />
       </vs-select>
+
       <div class="branch-timetable mb-4">
         <div class="sm:w-1/3 w-full mb-2">
           <span>Время работы филиала</span>
@@ -97,6 +104,7 @@
         class="mt-5 mb-3 float-right"
         @click="addOrUpdateBranch"
         color="primary"
+        :disabled="!validateForm"
       >{{ selectedBranch ? 'Изменить' : 'Добавить' }}</vs-button>
     </vs-popup>
   </div>
@@ -142,6 +150,18 @@ export default {
         inner: 'Филиалы',
       }
     },
+  },
+
+  computed: {
+    ...mapGetters({
+      branches: "branches/branches",
+      branchStatuses: "branches/statuses",
+      loading: "branches/loading"
+    }),
+
+    validateForm () {
+      return !this.errors.any()
+    }
   },
   methods: {
     ...mapActions("branches", ["fetchBranches"]),
@@ -205,7 +225,13 @@ export default {
         },
       });
     },
-    addOrUpdateBranch() {
+    async addOrUpdateBranch() {
+      await this.$validator.validateAll();
+
+      if (this.errors.any()) {
+        return;
+      }
+
       const payload = {
         organizationId: this.$store.state.organization.id,
         ru_title: this.ru_title,
@@ -251,13 +277,6 @@ export default {
           });
       }
     },
-  },
-  computed: {
-    ...mapGetters({
-      branches: "branches/branches",
-      branchStatuses: "branches/statuses",
-      loading: "branches/loading"
-    }),
   },
   mounted() {
     this.fetchBranches();

@@ -23,12 +23,12 @@
       <vs-input
         class="w-full mb-3"
         label="Название заведения"
-        v-model="organization_name"
-        name="organization_name"
+        v-model="organization_title"
+        name="organization_title"
         data-vv-as="Название заведения"
         v-validate="'required'"
       />
-      <span class="text-danger text-sm">{{ errors.first('organization_name') }}</span>
+      <span class="text-danger text-sm">{{ errors.first('organization_title') }}</span>
       <vs-textarea
         class="w-full mb-3"
         label="Описание заведения"
@@ -49,7 +49,7 @@
       <span class="text-danger text-sm">{{ errors.first('token') }}</span>
       <div></div>
       <vs-button class="mb-3" @click="tokenPopup=true" color="primary" type="line">Как получить токен бота?</vs-button>
-      <vs-button class="w-full" @click="addNewOrg" color="primary">Добавить</vs-button>
+      <vs-button class="w-full" @click="addNewOrg" color="primary" :disabled="!validateForm" >Добавить</vs-button>
 
       <vs-popup title="Как получить токен от бота?" :active.sync="tokenPopup">
         <p>Заходите в @botfather и без задней мысли получаете токен</p>
@@ -68,7 +68,7 @@ export default {
   },
   data() {
     return {
-      organization_name: '',
+      organization_title: '',
       organization_description: '',
       token: '',
       addPopup: false,
@@ -86,12 +86,22 @@ export default {
     ...mapGetters({
       'organizations': 'organizations/organizations',
     }),
+
+    validateForm () {
+      return !this.errors.any()
+    }
   },
   methods: {
     ...mapActions('organizations', ['fetchOrganizations', 'addOrganization']),
     async addNewOrg() {
       await this.$validator.validateAll();
       if (this.errors.any()) {
+        this.$vs.notify({
+          title: "Неверный ввод",
+          text: "Проверьте правильность заполненных данных",
+          color: "warning",
+          position: "top-center",
+        });
         return;
       }
 
@@ -106,7 +116,7 @@ export default {
       }
 
       this.addOrganization({
-        name: this.organization_name,
+        name: this.organization_title,
         description: this.organization_description,
         token: this.token
       }).then(() => {
