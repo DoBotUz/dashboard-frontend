@@ -19,6 +19,7 @@
         <!-- SM - OPEN SIDEBAR BUTTON -->
         <feather-icon class="sm:inline-flex xl:hidden cursor-pointer p-2" icon="MenuIcon" @click.stop="showSidebar" />
 
+        <!-- <vx-breadcrumb /> -->
         <vs-spacer />
 
         <notification-drop-down />

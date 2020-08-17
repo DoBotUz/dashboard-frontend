@@ -32,7 +32,6 @@ export const actions = {
         .list(rootState.organization.id)
         .then(({ data }) => {
           if (data.status === 'Success') {
-            console.log(data);
             commit('SET_BOT_USERS', data.data);
             resolve(data);
           } else {

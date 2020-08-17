@@ -91,6 +91,17 @@
           ref="categoryFile"
         />
       </div>
+
+      <div class="con-select-example" v-if="selectedCategory">
+        <vs-select
+        class="selectExample"
+        label="Статус"
+        v-model="status"
+        >
+          <vs-select-item v-for="(item, index) in statusesList" :key="index" :value="item.value" :text="item.text" />
+        </vs-select>
+      </div>
+
       <vs-button
         class="mt-5 mb-3 float-right"
         @click="addOrUpdateCategory"
@@ -158,6 +169,17 @@
         />
       </div>
 
+      <div class="con-select-example" v-if="selectedProduct">
+        <vs-select
+        class="selectExample"
+        label="Статус"
+        v-model="status"
+        >
+          <vs-select-item v-for="(item, index) in statusesList" :key="index" :value="item.value" :text="item.text" />
+        </vs-select>
+      </div>
+
+
       <vs-button
         class="mt-5 mb-3 float-right"
         @click="addOrUpdateProduct"
@@ -175,14 +197,16 @@ export default {
   beforeRouteUpdate(to, from, next) {
     const parentId = to.params.parent;
     if (parentId === undefined) {
-      to.meta.breadcrumb = null;
+      to.meta.breadcrumb = [
+        { title: "Заведения", url: '/', slug: "home" },
+        { title: '', slug: 'organization-name', active: true },
+      ];
       return next();
     }
     const currentCategory = this.categories.find(
       (cat) => cat.id === Number(parentId)
     );
     const categoriesTree = [];
-    console.log(currentCategory);
     for (
       let category = currentCategory.parent_category;
       category;
@@ -199,7 +223,9 @@ export default {
       });
     }
     to.meta.breadcrumb = [
-      { title: "Menu", url: { name: "DashboardMenu" }, slug: "home" },
+      { title: "Заведения", url: '/', slug: "home" },
+      { title: '', slug: 'organization-name', },
+      { title: "Меню", url: { name: "DashboardMenu" } },
       ...categoriesTree,
       { title: currentCategory.ru_title, active: true },
     ];
@@ -224,6 +250,8 @@ export default {
       product_price: 0,
       product_parent_category: null,
 
+      status: 10,
+
       addCategoryPopup: false,
       selectedCategory: null,
       addProductPopup: false,
@@ -247,6 +275,21 @@ export default {
       statuses: "statuses",
       loading: "loading",
     }),
+
+    statusesList() {
+      if (this.statuses) {
+        let out = [];
+        for(let status in this.statuses){
+          out.push({
+            text: this.statuses[status],
+            value: status
+          })
+        }
+        return out;
+      }
+      return [];
+    },
+
     tableData() {
       if (this.categoriesByParentId(this.parent).length) {
         return this.categoriesByParentId(this.parent);
@@ -302,6 +345,7 @@ export default {
           });
         });
       }
+      formData.append('status', this.status);
       return this.$store
         .dispatch("menu/updateCategory", formData)
         .then(() => {
@@ -357,6 +401,7 @@ export default {
           });
         });
       }
+      formData.append('status', this.status);
       return this.$store
         .dispatch("menu/updateProduct", formData)
         .then(() => {
@@ -399,6 +444,7 @@ export default {
       this.product_uz_description = tr.uz_description;
       this.product_price = tr.price;
       this.product_parent_category = null;
+      this.status = tr.status;
       if (this.childlessCategories.find((cat) => cat.id === tr.categoryId)) {
         this.product_parent_category = tr.categoryId;
       }
@@ -410,6 +456,7 @@ export default {
       this.uz_title = tr.uz_title;
       this.en_title = tr.en_title;
       this.parentCategory = tr.parentCategoryId;
+      this.status = tr.status;
       this.addCategoryPopup = true;
     },
     deleteItem(tr) {
@@ -417,6 +464,8 @@ export default {
         type: "confirm",
         color: "danger",
         title: `Подтвердите действие`,
+        acceptText: 'Удалить',
+        cancelText: 'Отмена',
         text: `Вы действительно хотите удалить ${tr.ru_title}?`,
         accept: () => {
           this.$store
@@ -430,9 +479,10 @@ export default {
               this.$vs.notify({
                 title: "Отлично",
                 text: "Позиция удалена",
-                color: "danger",
+                color: "sucess",
                 position: "top-center",
               });
+              this.$router.push({ name: 'DashboardMenu' });
             });
         },
       });

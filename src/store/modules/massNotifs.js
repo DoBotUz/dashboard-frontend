@@ -30,7 +30,6 @@ export const actions = {
         .list(rootState.organization.id)
         .then(({ data }) => {
           if (data.status === 'Success') {
-            console.log(data);
             commit('SET_MASS_NOTIFS', data.data);
             resolve(data);
           } else {

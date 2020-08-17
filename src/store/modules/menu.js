@@ -6,9 +6,9 @@ export const state = {
   products: [],
   loading: false,
   statuses: {
+    11: 'Не активен',
     10: 'Активен',
     9: 'На модерации',
-    0: 'Выключен',
   },
 }
 
@@ -128,7 +128,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateCategory(rootState.organization.id, id, payload)
+        .updateCategory(rootState.organization.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('UPDATE_CATEGORY', data.data);
@@ -147,7 +147,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateCategory(rootState.organization.id, id, {
+        .updateCategoryStatus(rootState.organization.id, {
           id: id,
           status: 0
         })
@@ -205,7 +205,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateItem(rootState.organization.id, id, payload)
+        .updateItem(rootState.organization.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('UPDATE_PRODUCT', data.data);
@@ -224,7 +224,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateItem(rootState.organization.id, id, {
+        .updateItemStatus(rootState.organization.id, {
           id: id,
           status: 0
         })

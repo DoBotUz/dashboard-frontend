@@ -181,11 +181,10 @@ export default {
         email: this.email,
         password: this.password
       })
-        .then((res) => {
+        .then(() => {
           this.$router.push('/');
         })
         .catch((err) => {
-          console.log(err);
           this.$vs.notify({
             title: 'Ошибка',
             text: 'Неверный логин или пароль!',
@@ -206,7 +205,6 @@ export default {
         password: this.password,
       })
       .then((res) => {
-        console.log(res);
         this.$vs.notify({
           title: 'Отлично',
           text: 'Вы успешно зарегистрировались',
@@ -216,7 +214,6 @@ export default {
         this.activeTab = 0;
       })
       .catch((err) => {
-        console.log(err);
         this.$vs.notify({
           title: 'Ошибка',
           text: 'Этот email уже используется!',

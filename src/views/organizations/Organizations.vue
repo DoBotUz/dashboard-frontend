@@ -96,7 +96,6 @@ export default {
       }
 
       const is_valid_token = await this.isValidToken();
-      console.log(is_valid_token);
       if (!is_valid_token) {
         return this.$vs.notify({
           title: 'Ошибка',
@@ -121,11 +120,11 @@ export default {
       });
     },
     isValidToken() {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         telegramApi.getMe(this.token).then(res => {
           resolve(res.data.ok);
         })
-        .catch(res => {
+        .catch(() => {
           resolve(false);
         })
       });

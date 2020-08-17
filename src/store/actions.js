@@ -7,6 +7,7 @@
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 import organizationsApi from '@/api/organizations';
+import profileApi from '@/api/profile';
 
 const actions = {
 
@@ -48,7 +49,6 @@ const actions = {
     // /////////////////////////////////////////////
 
     updateUserInfo({ commit }, payload) {
-      console.log(payload);
       commit('UPDATE_USER_INFO', payload)
     },
 
@@ -59,6 +59,38 @@ const actions = {
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORGANIZATION', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+      });
+    },
+
+    deleteAvatar({ commit }) {
+      return new Promise((resolve, reject) => {
+        profileApi()
+        .deleteAvatar()
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('UPDATE_USER_INFO', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+      });
+    },
+
+    updateProfile({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        profileApi()
+        .update(payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('UPDATE_USER_INFO', data.data);
             resolve(data);
           } else {
             reject(data);
