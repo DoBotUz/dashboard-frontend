@@ -1,4 +1,4 @@
-import axios from '@/axios';
+import api from '@/api/branch';
 
 export const state = {
   branches: [],
@@ -16,31 +16,31 @@ export const getters = {
 }
 
 export const mutations = {
-  SET_BRANCHES(state, payload) {
-    state.branches = payload.branches.map(branch => ({
+  SET_BRANCHES(state, branches) {
+    state.branches = branches.map(branch => ({
       ...branch,
       timetable: JSON.parse(branch.timetable)
     }));
   },
-  ADD_BRANCH(state, payload) {
+  ADD_BRANCH(state, branch) {
     state.branches.push({
-      ...payload.branch,
-      timetable: JSON.parse(payload.branch.timetable)
+      ...branch,
+      timetable: JSON.parse(branch.timetable)
     });
   },
-  UPDATE_BRANCH(state, payload) {
-    state.branches = state.branches.map(branch => {
-      if (branch.id === payload.branch.id) {
+  UPDATE_BRANCH(state, branch) {
+    state.branches = state.branches.map(el => {
+      if (el.id === branch.id) {
         return {
-          ...payload.branch,
-          timetable: JSON.parse(payload.branch.timetable)
+          ...branch,
+          timetable: JSON.parse(branch.timetable)
         };
       }
-      return branch;
+      return el;
     });
   },
-  DELETE_BRANCH(state, payload) {
-    state.branches = state.branches.filter(branch => branch.id !== payload.id);
+  DELETE_BRANCH(state, branch) {
+    state.branches = state.branches.filter(el => el.id !== branch.id);
   },
   SET_LOADING(state, loading) {
     state.loading = loading;
@@ -49,54 +49,77 @@ export const mutations = {
 
 export const actions = {
   fetchBranches({ commit, rootState }) {
-    commit('SET_LOADING', true);
-    return axios.get(`${rootState.organization.id}/branches/`)
-      .then(res => {
-        commit('SET_BRANCHES', {
-          branches: res.data.data
-        });
-        return res.data;
-      })
-      .finally(() => {
-        commit('SET_LOADING', false);
-      })
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .list(rootState.organization.id)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('SET_BRANCHES', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
   },
   addBranch({ commit, rootState }, payload) {
-    commit('SET_LOADING', true);
-    return axios.post(`${rootState.organization.id}/branches`, {
-      ...payload,
-    }).then(res => {
-      commit('ADD_BRANCH', {
-        branch: res.data.data
-      });
-    }).finally(() => {
-      commit('SET_LOADING', false);
-    })
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .create(rootState.organization.id, payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('ADD_BRANCH', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
   },
   updateBranch({ commit, rootState }, payload) {
-    commit('SET_LOADING', true);
-    const { id, } = payload;
-    return axios.patch(`${rootState.organization.id}/branches/${id}`, payload).then(res => {
-      commit('UPDATE_BRANCH', {
-        branch: res.data.data
-      });
-    }).finally(() => {
-      commit('SET_LOADING', false);
-    })
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .update(rootState.organization.id, payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('UPDATE_BRANCH', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
   },
   deleteBranch({ commit, rootState }, payload) {
-    commit('SET_LOADING', true);
-    const { id } = payload;
-    return axios.patch(`${rootState.organization.id}/branches/${id}`, {
-      status: 0
-    })
-      .then(res => {
-        commit('DELETE_BRANCH', {
-          id: id
-        });
-      }).finally(() => {
-        commit('SET_LOADING', false);
-      })
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .updateBranchStatus(rootState.organization.id, {
+          id: payload.id,
+          status: 0,
+        })
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('DELETE_BRANCH', {
+              id: payload.id
+            });
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
   },
 }
 

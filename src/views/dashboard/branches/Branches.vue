@@ -25,7 +25,7 @@
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td>
-              <p class="product-name font-medium">{{ tr.title }}</p>
+              <p class="product-name font-medium">{{ tr.ru_title }}</p>
             </vs-td>
 
             <vs-td>
@@ -54,7 +54,9 @@
       </template>
     </vs-table>
     <vs-popup title="Добавить новый филиал" :active.sync="addPopup" fullscreen class="vs-con-loading__container">
-      <vs-input class="w-full mb-4" label="Название филиала" v-model="title" />
+      <vs-input class="w-full mb-4" label="Название филиала на русском" v-model="ru_title" @blur="fillBranchTitle"/>
+      <vs-input class="w-full mb-4" label="Название филиала на английском" v-model="en_title" />
+      <vs-input class="w-full mb-4" label="Название филиала на узбекском" v-model="uz_title" />
       <vs-select autocomplete class="mb-4" label="Статус филиала" v-model="branchStatus">
         <vs-select-item
           :key="index"
@@ -87,7 +89,7 @@
           <ymap-marker
             marker-id="2"
             :coords="branchCoords"
-            :balloon="{header: this.title.length ? this.title : 'Филиал'}"
+            :balloon="{header: this.ru_title.length ? this.ru_title : 'Филиал'}"
           />
         </yandex-map>
       </div>
@@ -112,7 +114,9 @@ export default {
   },
   data() {
     return {
-      title: "",
+      ru_title: "",
+      en_title: "",
+      uz_title: "",
       is_all_day: false,
       status: null,
       timetableFrom: null,
@@ -141,13 +145,22 @@ export default {
   },
   methods: {
     ...mapActions("branches", ["fetchBranches"]),
+    fillBranchTitle() {
+      if (this.en_title === "")
+        this.en_title = this.ru_title;
+      if (this.uz_title === "")
+        this.uz_title = this.ru_title;
+    },
+
     addBranch() {
       this.selectedBranch = null;
       this.resetFields();
       this.addPopup = true;
     },
     resetFields() {
-      this.title = "";
+      this.ru_title = "";
+      this.en_title = "";
+      this.uz_title = "";
       this.is_all_day = false;
       this.timetableFrom = this.timetableTo = null;
       this.branchStatus = 10;
@@ -155,7 +168,9 @@ export default {
     },
     editBranch(branch) {
       this.selectedBranch = branch.id;
-      this.title = branch.title;
+      this.ru_title = branch.ru_title;
+      this.en_title = branch.en_title;
+      this.uz_title = branch.uz_title;
       this.is_all_day = branch.is_all_day;
       this.timetableFrom = branch.timetable.from;
       this.timetableTo = branch.timetable.to;
@@ -171,7 +186,9 @@ export default {
         type: "confirm",
         color: "danger",
         title: `Подтвердите действие`,
-        text: `Вы действительно хотите удалить филиал ${branch.title}?`,
+        acceptText: 'Удалить',
+        cancelText: 'Отмена',
+        text: `Вы действительно хотите удалить филиал ${branch.ru_title}?`,
         accept: () => {
           this.$store
             .dispatch("branches/deleteBranch", {
@@ -181,7 +198,7 @@ export default {
               this.$vs.notify({
                 title: "Отлично",
                 text: "Филиал удален",
-                color: "danger",
+                color: "success",
                 position: "top-center",
               });
             });
@@ -191,7 +208,9 @@ export default {
     addOrUpdateBranch() {
       const payload = {
         organizationId: this.$store.state.organization.id,
-        title: this.title,
+        ru_title: this.ru_title,
+        en_title: this.en_title,
+        uz_title: this.uz_title,
         lat: Number(this.branchCoords[0]),
         lng: Number(this.branchCoords[1]),
         is_all_day: Boolean(this.is_all_day),

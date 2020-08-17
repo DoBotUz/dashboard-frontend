@@ -1,22 +1,29 @@
 <template>
   <div>
-    <vx-card no-shadow>
+    <vx-card>
       <vs-input class="w-full mb-8" label="Название заведения на русском" v-model="organizationObj.title" />
       <vs-textarea label="Описание заведения на русском" v-model="organizationObj.ru_description" />
       <vs-textarea label="Описание заведения на английском" v-model="organizationObj.en_description" />
       <vs-textarea label="Описание заведения на узбекском" v-model="organizationObj.uz_description" />
-      <div v-if="organizationObj.thumbnail">
-        <img :src="`${$url}/public/organizations/${organizationObj.thumbnail}`" alt="" width="64" height="64">
-      </div>
-      <div class="vx-col w-full">
-        <vs-upload
-          :limit="1"
-          :show-upload-button="false"
-          text="Загрузить изображение"
-          ref="organzationThumbnail"
-        />
-      </div>
+      <vs-row>
+          <vs-col vs-w="3" id="avatar-col" v-if="organizationObj.thumbnail">
+            <div class="img-container mb-4" style="margin-top: 25px;">
+              <img :src="`${$url}/public/organizations/${organizationObj.thumbnail}`" class="rounded w-full" />
+            </div>
+          </vs-col>
+          <vs-col vs-w="9">
+            <vs-upload
+              :limit="1"
+              :show-upload-button="false"
+              :text="organizationObj.thumbnail ? 'Заменить изображение' : 'Загрузить изображение'"
+              ref="organzationThumbnail"
+            />
+          </vs-col>
+      </vs-row>
       <vs-input class="w-full mb-8" label="Токен" v-model="token"/>
+      <vs-alert title="Предупреждение" active="true" color="warning">
+        Изменение статуса влиет на работу телеграм бота.
+      </vs-alert>
       <div class="con-select-example">
         <vs-select
         class="selectExample"
@@ -29,6 +36,12 @@
       <div class="flex flex-wrap items-center justify-end">
         <vs-button class="ml-auto mt-2" @click="save">Сохранить</vs-button>
       </div>
+    </vx-card>
+    <vx-card style="margin-top: 20px;">
+      <vs-alert title="Опасно" active="true" color="danger" style="margin-bottom: 10px;">
+        Удаление приведет к удалению всех данных о заведении!
+      </vs-alert>
+      <vs-button color="danger" type="border" @click="openDeleteSureDialog">Удалить заведение</vs-button>
     </vx-card>
   </div>
 </template>
@@ -47,7 +60,7 @@ export default {
         },
         {
           text: 'Не активен',
-          value: 0
+          value: 11
         },
       ]
     };
@@ -61,7 +74,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('organizations', ['getOrganization', 'updateOrganization']),
+    ...mapActions('organizations', ['getOrganization', 'updateOrganization', 'deleteOrganization']),
     async save() {
       let is_valid_token = await this.isValidToken();
       if (!is_valid_token) {
@@ -83,7 +96,6 @@ export default {
           id: this.organization.id,
           token: this.token,
       }));
-      console.log(formData.get('bot'));
       this.updateOrganization(formData).then(() => {
         this.$vs.notify({
           title: "Отлично",
@@ -102,7 +114,29 @@ export default {
           return false;
         })
       });
-    }
+    },
+    openDeleteSureDialog() {
+      this.$vs.dialog({
+        type:'confirm',
+        color: 'danger',
+        title: `Удалить заведение`,
+        acceptText: 'Удалить',
+        cancelText: 'Отмена',
+        text: `Вы уверены в том что хотите удалить ${this.organizationObj.title} ?`,
+        accept: this.acceptDelete
+      })
+    },
+    acceptDelete(){
+      this.deleteOrganization(this.organizationObj.id).then(() => {
+        this.$vs.notify({
+          title: "Отлично",
+          text: "Заведение было успешно удалено",
+          color: "success",
+          position: "top-center",
+        });
+        this.$router.push('/');
+      })
+    },
   },
   computed: {
     ...mapState(['organization']),

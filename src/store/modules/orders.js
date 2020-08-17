@@ -88,7 +88,7 @@ export const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
       api()
-        .updateOrder(rootState.organization.id, payload.id, payload)
+        .updateOrder(rootState.organization.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORDER', payload);

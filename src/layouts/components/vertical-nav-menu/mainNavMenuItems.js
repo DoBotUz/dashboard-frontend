@@ -16,6 +16,12 @@ export default [
         icon: "HomeIcon",
     },
     {
+      url: "/profile",
+      name: "Мой профиль",
+      slug: "profile",
+      icon: "UserIcon",
+    },
+    {
         url: "/settings",
         name: "Настройки",
         slug: "settings",

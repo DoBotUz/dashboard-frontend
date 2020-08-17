@@ -58,7 +58,7 @@
         </tbody>
       </template>
     </vs-table>
-    <vs-popup title="Добавить продукт" :active.sync="addProductPopup">
+    <vs-popup :title="(selectedProduct ? 'Изменить' : 'Добавить') + ' продукт'" :active.sync="addProductPopup">
       <vs-input
         class="w-full mb-4"
         label="Название продукта"
@@ -123,6 +123,16 @@
         />
       </div>
 
+      <div class="con-select-example" v-if="selectedProduct">
+        <vs-select
+        class="selectExample"
+        label="Статус"
+        v-model="status"
+        >
+          <vs-select-item v-for="(item, index) in statusesList" :key="index" :value="item.value" :text="item.text" />
+        </vs-select>
+      </div>
+
       <vs-button
         class="mt-5 mb-3 float-right"
         @click="addOrUpdateProduct"
@@ -152,8 +162,10 @@ export default {
       product_uz_description: "",
       product_price: 0,
       product_parent_category: null,
-      addProductPopup: false,
       selectedProduct: null,
+      status: 10,
+
+      addProductPopup: false,
     };
   },
   head: {
@@ -172,6 +184,21 @@ export default {
       statuses: "statuses",
       loading: "loading",
     }),
+
+    statusesList() {
+      if (this.statuses) {
+        let out = [];
+        for(let status in this.statuses){
+          out.push({
+            text: this.statuses[status],
+            value: status
+          })
+        }
+        return out;
+      }
+      return [];
+    },
+
     tableData() {
       return this.products;
     },
@@ -242,6 +269,7 @@ export default {
           });
         });
       }
+      formData.append('status', this.status);
       return this.$store
         .dispatch("menu/updateProduct", formData)
         .then(() => {
@@ -278,6 +306,7 @@ export default {
       this.product_uz_description = tr.uz_description;
       this.product_price = tr.price;
       this.product_parent_category = null;
+      this.status = tr.status;
       if (this.childlessCategories.find((cat) => cat.id === tr.categoryId)) {
         this.product_parent_category = tr.categoryId;
       }
@@ -288,6 +317,8 @@ export default {
         type: "confirm",
         color: "danger",
         title: `Подтвердите действие`,
+        acceptText: 'Удалить',
+        cancelText: 'Отмена',
         text: `Вы действительно хотите удалить ${tr.ru_title}?`,
         accept: () => {
           this.$store

@@ -106,10 +106,21 @@ global.vm = new Vue({
       let that = this;
       axios.interceptors.response.use(undefined, function (err) {
         return new Promise(function (resolve, reject) {
-          if (err.response.status === 401) {
-            that.$store.dispatch('logout').then(_ => { that.$router.push('/pages/login'); })
+          if (err.message && err.message === 'Network Error') {
+            global.vm.$vs.notify({
+              title: 'Проблемы с сетью',
+              color: 'danger',
+              iconPack: 'feather',
+              icon: 'icon-alert-circle',
+            });
+            throw err;
+            // that.$store.dispatch('logout').then(() => { that.$router.push('/pages/login'); })
+          } else {
+            if (err.response.status === 401) {
+              that.$store.dispatch('logout').then(() => { that.$router.push('/pages/login'); })
+            }
+            throw err;
           }
-          throw err;
         });
       });
 

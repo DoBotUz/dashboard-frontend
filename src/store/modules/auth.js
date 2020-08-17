@@ -49,10 +49,10 @@ export const actions = {
         return res.data.data;
       });
   },
-  logout({ commit }, payload) {
+  logout({ commit }) {
     return Promise.resolve(commit('LOGOUT'));
   },
-  getUserInfo({ dispatch, getters }) {    
+  getUserInfo({ dispatch, getters }) {
     if (!getters.isAuthenticated) {
       return;
     }
@@ -61,15 +61,17 @@ export const actions = {
         .userInfo()
         .then(({ data }) => {
           if (data.status === 'Success') {
-            console.log('setting notif');
             dispatch('setNotifications', data.data.notifications);
             dispatch('updateUserInfo', data.data, {root: true});
             resolve(data);
           } else {
+            dispatch('logout').then(() => { this.$router.push('/pages/login'); });
             reject(data);
           }
         })
-        .catch(reject);
+        .catch((err) => {
+          dispatch('logout').then(() => { this.$router.push('/pages/login'); });
+        });
     });
   },
 }

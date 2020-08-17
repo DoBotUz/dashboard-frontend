@@ -4,7 +4,7 @@ export const TOKEN = 'access_token';
 
 const noCrudUrls = ['auth/login'];
 
-axios.interceptors.response.use(response => {
+axios.interceptors.response.use((response) => {
   if (response.data.status === 'Fail') {
     global.vm.$vs.notify({
       title: 'Неверный ввод',
@@ -15,7 +15,7 @@ axios.interceptors.response.use(response => {
   } else if (response.data.status === 'Error') {
     global.vm.$vs.notify({
       title: 'Ошибка',
-      color: 'error',
+      color: 'danger',
       iconPack: 'feather',
       icon: 'icon-alert-circle',
     });

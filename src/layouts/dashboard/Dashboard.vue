@@ -54,14 +54,14 @@
           <div class="router-content">
 
             <transition :name="routerTransition">
-
               <div v-if="$route.meta.breadcrumb || $route.meta.pageTitle" class="router-header flex flex-wrap items-center mb-6">
                 <div
                   class="content-area__heading"
                   :class="{'pr-4 border-0 md:border-r border-solid border-grey-light' : $route.meta.breadcrumb}">
                   <h2 class="mb-1">{{ routeTitle }}</h2>
                 </div>
-                <vx-breadcrumb class="ml-4 md:block hidden" v-if="$route.meta.breadcrumb" :route="$route" :isRTL="$vs.rtl" />
+                <vx-breadcrumb :class-atr="'ml-4 md:block hidden'" v-if="$route.meta.breadcrumb" :route="$route" :isRTL="$vs.rtl" />
+
               </div>
             </transition>
 
@@ -93,6 +93,7 @@ import TheNavbarVertical   from '@/layouts/components/navbar/TheNavbarVertical.v
 import TheFooter           from '@/layouts/components/TheFooter.vue'
 import themeConfig         from '@/../themeConfig.js'
 import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
+import VxBreadcrumb        from '@/layouts/components/VxBreadcrumb.vue'
 import io from 'socket.io-client';
 
 export default {
@@ -105,7 +106,8 @@ export default {
     TheFooter,
     TheNavbarHorizontal,
     TheNavbarVertical,
-    VNavMenu
+    VNavMenu,
+    VxBreadcrumb,
   },
   data() {
     return {

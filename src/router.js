@@ -51,7 +51,16 @@ const router = new Router({
               {
                 path: '/settings',
                 name: 'settings',
-                component: () => import('./views/profile-settings/ProfileSettings.vue'),
+                component: () => import('./views/settings/Settings.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: defaultRole,
+                },
+              },
+              {
+                path: '/profile',
+                name: 'profile',
+                component: () => import('./views/profile/Profile.vue'),
                 meta: {
                   authRequired: true,
                   rule: defaultRole,
@@ -77,6 +86,10 @@ const router = new Router({
               component: () => import('./views/dashboard/menu/Menu.vue'),
               name: 'DashboardMenu',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Категории',
               },
@@ -89,6 +102,10 @@ const router = new Router({
               component: () => import('./views/dashboard/menu/Products.vue'),
               name: 'DashboardProducts',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Продукты',
               },
@@ -98,6 +115,10 @@ const router = new Router({
               component: () => import('./views/dashboard/bot-users/BotUsers.vue'),
               name: 'DashBoardBotUsers',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Подписчики',
               },
@@ -107,6 +128,10 @@ const router = new Router({
               component: () => import('./views/dashboard/mass-notifs/MassNotifs.vue'),
               name: 'DashBoardMassNotifs',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Рассылки',
               },
@@ -116,6 +141,10 @@ const router = new Router({
               component: () => import('./views/dashboard/branches/Branches.vue'),
               name: 'DashboardBranches',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Филиалы',
               },
@@ -125,6 +154,10 @@ const router = new Router({
               component: () => import('./views/dashboard/settings/Settings.vue'),
               name: 'DashboardSettings',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Настройки',
               },
@@ -134,6 +167,10 @@ const router = new Router({
               component: () => import('./views/dashboard/orders/Orders.vue'),
               name: 'DashboardOrders',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Заказы'
               }
@@ -143,6 +180,10 @@ const router = new Router({
               component: () => import('./views/dashboard/orders/Order.vue'),
               name: 'DashboardOrder',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
               },
               props: (route) => ({
@@ -154,6 +195,10 @@ const router = new Router({
               component: () => import('./views/dashboard/feedbacks/Feedbacks.vue'),
               name: 'DashboardFeedbacks',
               meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
                 rule: defaultRole,
                 pageTitle: 'Отзывы'
               },

@@ -111,6 +111,22 @@ export const actions = {
         .finally(() => commit('SET_LOADING', false));
     });
   },
+  deleteOrganization({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', false)
+      api()
+        .delete(id)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false));
+    });
+  },
 }
 
 export const namespaced = true;
