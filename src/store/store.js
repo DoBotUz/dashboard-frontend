@@ -28,6 +28,7 @@ import * as moduleMassNotifs from './modules/massNotifs';
 import * as moduleOrders from './modules/orders';
 import * as moduleFeedbacks from './modules/feedbacks';
 import * as moduleNotifications from './modules/notifications';
+import * as moduleMailing from './modules/mailing';
 
 export default new Vuex.Store({
     getters,
@@ -44,5 +45,6 @@ export default new Vuex.Store({
       orders: moduleOrders,
       feedbacks: moduleFeedbacks,
       notifications: moduleNotifications,
+      mailing: moduleMailing,
     },
 })

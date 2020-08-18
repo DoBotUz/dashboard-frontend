@@ -113,6 +113,7 @@
             :show-upload-button="false"
             text="Загрузить файл"
             ref="categoryFile"
+            accept="image/*"
           />
         </div>
 
@@ -227,6 +228,7 @@
             :show-upload-button="false"
             text="Загрузить файл"
             ref="productFile"
+            accept="image/*"
           />
         </div>
 

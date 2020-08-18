@@ -137,6 +137,26 @@ const router = new Router({
               },
             },
             {
+              path: 'mailing',
+              redirect: 'mailing/drafts',
+              name: 'DashBoardMailing'
+            },
+            {
+              path: 'mailing/:filter',
+              component: () => import('./views/dashboard/mailing/Mailing.vue'),
+              name: 'DashBoardMailingList',
+              meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
+                parent: 'DashBoardMailing',
+                no_scroll: true,
+                rule: defaultRole,
+                pageTitle: 'Рассылки',
+              },
+            },
+            {
               path: 'branches',
               component: () => import('./views/dashboard/branches/Branches.vue'),
               name: 'DashboardBranches',

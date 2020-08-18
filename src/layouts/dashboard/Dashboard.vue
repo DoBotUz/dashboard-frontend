@@ -48,7 +48,7 @@
     </template>
     <!-- /Navbar -->
 
-      <div class="content-wrapper">
+      <div class="content-wrapper" v-if="organization && organization.title">
 
         <div class="router-view">
           <div class="router-content">
@@ -95,6 +95,7 @@ import themeConfig         from '@/../themeConfig.js'
 import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
 import VxBreadcrumb        from '@/layouts/components/VxBreadcrumb.vue'
 import io from 'socket.io-client';
+import { mapState } from 'vuex'
 
 export default {
   props: {
@@ -122,10 +123,9 @@ export default {
     }
   },
   watch: {
-    "$route"() {
+    async "$route"() {
       this.routeTitle = this.$route.meta.pageTitle;
-      this.$store.commit('SET_ORGANIZATION', { id: this.id });
-      this.$store.dispatch('fetchOrganization', this.id);
+      // await this.$store.dispatch('fetchOrganization', this.id);
     },
     isThemeDark(val) {
       const color = this.navbarColor == "#fff" && val ? "#10163a" : "#fff"
@@ -136,6 +136,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['organization']),
     bodyOverlay() { return this.$store.state.bodyOverlay },
     contentAreaClass() {
       if(this.mainLayoutType === "vertical") {
@@ -189,12 +190,11 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
     const color = this.navbarColor == "#fff" && this.isThemeDark ? "#10163a" : this.navbarColor
     this.updateNavbarColor(color)
     this.setNavMenuVisibility(this.$store.state.mainLayoutType)
-    this.$store.commit('SET_ORGANIZATION', { id: this.id });
-    this.$store.dispatch('fetchOrganization', this.id);
+    await this.$store.dispatch('fetchOrganization', this.id);
 
     const clientSocket = io(`${process.env.VUE_APP_WS_URL}/frontend`, {
       query: {

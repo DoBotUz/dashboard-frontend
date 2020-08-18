@@ -1,14 +1,4 @@
-/*=========================================================================================
-    File Name: email.scss
-    Description: Email app's styles. This is imported in Email.vue file
-    ----------------------------------------------------------------------------------------
-    Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
-      Author: Pixinvent
-    Author URL: http://www.themeforest.net/user/pixinvent
-==========================================================================================*/
-
-
-#email-app{
+#mailing-app{
     .vs-sidebar--background{
         position: absolute;
     }
@@ -17,7 +7,7 @@
             margin-right: 0.8rem;
         }
     }
-    .email-filter-scroll-area {
+    .mailing-filter-scroll-area {
         position: relative;
         margin: auto;
         width: 100%;
@@ -28,7 +18,7 @@
         }
     }
 
-    .email-content-scroll-area {
+    .mailing-content-scroll-area {
         position: relative;
         margin: auto;
         width: 100%;
@@ -50,25 +40,19 @@
       }
     }
 
-    .email__mails {
-        .mail__opened-mail {
-            background-color: #eee;
-        }
-    }
 
-
-    .email__mails {
-
-        .email__mail-item {
+    .mailing__mailings {
+        .wmailing__mailing-item {
             transition: all .35s;
+            background-color: #eee;
 
             &:not(:first-of-type) {
-                .mail__mail-item {
+                .mailing__mailing-item {
                     border-top: 1px solid #dae1e7;
                 }
             }
 
-            .mail__mail-item {
+            .mailing__mailing-item {
                 transition: all 0.2s;
 
 
@@ -86,24 +70,24 @@
         }
     }
 
-    .email-view-sidebar {
+    .mailing-view-sidebar {
         .vs-sidebar{
             background-color: #f8f8f8 !important;
             border-left: 1px solid #dae1e7;
         }
 
-        .email-header{
+        .mailing-header{
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.04);
             border-bottom: 1px solid #eee;
             z-index: 1;
             position: relative;
         }
 
-        .open-mail-label {
+        .open-mailing-label {
             transition: all .35s;
         }
 
-        .mail__attachment {
+        .mailing__attachment {
           .vs-chip--text {
             margin-left: 0;
             margin-right: 0;
@@ -114,7 +98,7 @@
 
 
 // COMPOSE MAIL DIALOG
-.con-vs-dialog.email-compose {
+.con-vs-dialog.mailing-compose {
     .vs-dialog {
         max-width: 530px;
         // max-height: 95vh;
