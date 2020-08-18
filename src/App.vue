@@ -17,6 +17,7 @@
 <script>
 import themeConfig from "@/../themeConfig.js";
 import axios from "./axios";
+import './assets/style.scss';
 
 export default {
   data() {
