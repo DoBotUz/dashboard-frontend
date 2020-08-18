@@ -383,6 +383,7 @@ export default {
     },
   },
   mounted() {
+    this.mounted = true;
     this.fetchCategories()
     this.fetchProducts();
   }

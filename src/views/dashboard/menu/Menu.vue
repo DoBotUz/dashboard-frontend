@@ -253,7 +253,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, createNamespacedHelpers } from "vuex";
 import { loaderMixin } from '@/mixins';
 
 export default {
@@ -591,6 +591,7 @@ export default {
     },
   },
   mounted() {
+    this.mounted = true;
     this.fetchCategories().then(() => {
       this.$router.replace({ query: { temp: undefined } });
     });
