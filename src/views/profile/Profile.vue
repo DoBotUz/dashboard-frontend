@@ -30,7 +30,7 @@
           <span class="text-danger text-sm"  v-show="errors.has('first_name')">{{ errors.first('first_name') }}</span>
         </vs-col>
         <vs-col vs-w="6" class="p-4">
-          <vs-input class="w-full" name="password" label="Новый Пароль" v-model="password" v-validate="'min:6|max:255'" />
+          <vs-input class="w-full" name="password" label="Новый Пароль" v-model="password" v-validate="'min:6|max:255'" data-vv-as="Пароль" />
           <span class="text-danger text-sm"  v-show="errors.has('password')">{{ errors.first('password') }}</span>
 
           <vs-input class="w-full mt-4" label="Фамилия" v-model="last_name" v-validate="'required|max:255'" name="last_name"  data-vv-as="Фамилия" />

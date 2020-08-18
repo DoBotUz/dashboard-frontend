@@ -4,6 +4,18 @@ export const TOKEN = 'access_token';
 
 const noCrudUrls = ['auth/login'];
 
+axios.interceptors.request.use((config) => {
+  if (config.method === 'get' && config.params) {
+    const params = {};
+    Object.keys(config.params).forEach((key) => {
+      if (config.params[key]) params[key] = config.params[key];
+    });
+    config.params = params;
+  }
+
+  return config;
+});
+
 axios.interceptors.response.use((response) => {
   if (response.data.status === 'Fail') {
     global.vm.$vs.notify({

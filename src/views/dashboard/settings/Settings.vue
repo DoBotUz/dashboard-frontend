@@ -50,6 +50,7 @@
               :show-upload-button="false"
               :text="organizationObj.thumbnail ? 'Заменить изображение' : 'Загрузить изображение'"
               ref="organzationThumbnail"
+              accept="image/*"
             />
           </vs-col>
       </vs-row>

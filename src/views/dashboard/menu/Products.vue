@@ -150,6 +150,7 @@
           :show-upload-button="false"
           text="Загрузить файл"
           ref="productFile"
+          accept="image/*"
         />
       </div>
 
