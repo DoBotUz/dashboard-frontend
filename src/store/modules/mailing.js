@@ -12,7 +12,8 @@ export const state = {
     DRAFTS: 10,
     SENT: 11,
     SENDING: 12,
-  }
+  },
+  currentMailing: {},
 }
 
 export const getters = {
@@ -53,6 +54,10 @@ export const mutations = {
 
   ADD_MAILING(state, mailing) {
     state.mailings.unshift(mailing);
+  },
+
+  SET_CURRENT_MAILING(state, mailing) {
+    state.currentMailing = mailing;
   }
 }
 
@@ -63,11 +68,12 @@ export const actions = {
 
   getMailing({ commit, rootState }, mailing_id) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .fetchOne(rootState.organization.id, mailing_id)
         .then(({ data }) => {
           if (data.status === 'Success') {
+            commit('SET_CURRENT_MAILING', data.data);
             resolve(data.data);
           } else {
             reject(data);
@@ -80,7 +86,7 @@ export const actions = {
 
   fetchMailings({ commit, rootState }, params) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .fetch(rootState.organization.id, params)
         .then(({ data }) => {
@@ -98,7 +104,7 @@ export const actions = {
 
   fetchMailingCats({ commit, rootState }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .fetchCats(rootState.organization.id)
         .then(({ data }) => {
@@ -117,7 +123,7 @@ export const actions = {
   saveToDrafts({ commit, rootState, state }, payload) {
     payload.append('status', state.STATUSES.DRAFTS);
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       if(payload.id) {
         api()
         .updateDraft(rootState.organization.bot.id, payload)
