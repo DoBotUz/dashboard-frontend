@@ -71,17 +71,9 @@ export default [
       },
       {
         url: {
-          name: 'DashBoardMassNotifs'
-        },
-        name: "Рассылки",
-        slug: "mass-notifs",
-        icon: "SendIcon",
-      },
-      {
-        url: {
           name: 'DashBoardMailing'
         },
-        name: "Mailing",
+        name: "Рассылки",
         slug: "mailing",
         icon: "SendIcon",
       },

@@ -29,9 +29,9 @@
           <div class="flex mb-4">
             <div class="flex items-center">
               <feather-icon
-                :icon="$vs.rtl ? 'ArrowRightIcon' : 'ArrowLeftIcon'"
+                icon="ArrowLeftIcon"
                 @click="$emit('close-sidebar')"
-                class="cursor-pointer mr-4"
+                class="cursor-pointer mr-4 transform hover:-translate-x-1 transition duration-100"
                 svg-classes="w-6 h-6"
               ></feather-icon>
               <h4>{{ currentMailing.ru_title }}</h4>
@@ -39,34 +39,16 @@
           </div>
           <div class="ml-10 mb-4 mt-1">
             <div class="mailing__actions--single flex items-baseline">
-              <!-- ADD LABEL DROPDOWN -->
-              <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
-                <feather-icon icon="TagIcon" svg-classes="h-6 w-6" class="cursor-pointer ml-4"></feather-icon>
-                <vs-dropdown-menu style="z-index: 40001">
-                  <vs-dropdown-item
-                    v-for="(category, index) in mailingCats"
-                    :key="index"
-                    @click.stop
-                  >
-                    <vs-radio
-                      :vs-value="category.value"
-                      v-model="currentMailing.category"
-                      name="category"
-                    >{{ category.text }}</vs-radio>
-                  </vs-dropdown-item>
-                </vs-dropdown-menu>
-              </vs-dropdown>
-
               <feather-icon
                 icon="Edit2Icon"
                 svg-classes="h-6 w-6"
-                class="cursor-pointer ml-4"
+                class="cursor-pointer ml-4 transform hover:-translate-y-1 hover:scale-110 transition duration-100"
                 @click="editMailing"
               ></feather-icon>
               <feather-icon
                 icon="TrashIcon"
                 svg-classes="h-6 w-6"
-                class="cursor-pointer ml-4"
+                class="cursor-pointer ml-4 transform hover:-translate-y-1 hover:scale-110 transition duration-100"
                 @click="$emit('remove-mailing')"
               ></feather-icon>
             </div>
@@ -119,8 +101,8 @@
                       class="mb-4"
                       color="primary"
                       type="filled"
-                    >Назначить рассылку на указанное время</vs-button>
-                    <vs-button class="mb-4" color="danger" type="filled">Начать рассылку сейчас</vs-button>
+                    > Назначить рассылку на указанное время</vs-button>
+                    <vs-button class="mb-4" color="danger" type="filled"> Начать рассылку сейчас</vs-button>
                   </div>
                 </vx-card>
               </div>

@@ -25,7 +25,7 @@
       class="no-scroll-content border border-solid d-theme-border-grey-light border-r-0 border-t-0 border-b-0"
     >
       <!-- SEARCH BAR -->
-      <div class="flex border d-theme-dark-bg items-center">
+      <div class="flex border d-theme-dark-bg items-center search-bar-wrap">
         <feather-icon
           class="md:inline-flex lg:hidden ml-4 mr-4 cursor-pointer"
           icon="MenuIcon"

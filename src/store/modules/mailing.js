@@ -1,4 +1,5 @@
 import api from '@/api/mailing';
+import router from '@/router';
 
 export const state = {
   loading: false,
@@ -142,7 +143,9 @@ export const actions = {
         .createDraft(rootState.organization.bot.id, payload)
         .then(({ data }) => {
           if (data.status === 'Success') {
-            commit('ADD_MAILING', data.data);
+            if(router.currentRoute.params.filter === 'drafts')
+              commit('ADD_MAILING', data.data);
+
             resolve(data);
           } else {
             reject(data);

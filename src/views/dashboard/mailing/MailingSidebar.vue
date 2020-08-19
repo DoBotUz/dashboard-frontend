@@ -24,6 +24,7 @@
           @on-send="sendMailing"
           @on-draft="saveMailingToDrafts"
           :formFields="formFields"
+          ref="mailingFormSidebars"
         />
       </component>
     </vs-popup>
@@ -150,7 +151,7 @@ export default {
   computed: {
     ...mapState(["organization"]),
     ...mapState("mailing", ["meta"]),
-    
+
     baseUrl() {
       const path = this.$route.path;
       return path.slice(0, path.lastIndexOf("/"));
@@ -186,6 +187,7 @@ export default {
           color: "success",
           position: "top-center",
         });
+        this.$refs.mailingFormSidebars.clearForm();
       });
     },
     sendMailing() {

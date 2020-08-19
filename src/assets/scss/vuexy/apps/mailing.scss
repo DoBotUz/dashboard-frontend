@@ -40,21 +40,24 @@
       }
     }
 
+    .search-bar-wrap{
+      border-bottom: 1px solid #ccc;
+    }
 
     .mailing__mailings {
         .wmailing__mailing-item {
             transition: all .35s;
-            background-color: #eee;
+            background-color: #fff;
 
             &:not(:first-of-type) {
-                .mailing__mailing-item {
-                    border-top: 1px solid #dae1e7;
-                }
+              .mailing__mailing-item {
+                border-top: 1px solid #ccc;
+              }
             }
 
             .mailing__mailing-item {
+                z-index: 9999;
                 transition: all 0.2s;
-
 
                 &:hover {
                     transform: translateY(-4px);

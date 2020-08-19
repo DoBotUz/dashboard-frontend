@@ -124,19 +124,6 @@ const router = new Router({
               },
             },
             {
-              path: 'mass-notifs',
-              component: () => import('./views/dashboard/mass-notifs/MassNotifs.vue'),
-              name: 'DashBoardMassNotifs',
-              meta: {
-                breadcrumb: [
-                  { title: 'Заведения', url: '/', slug: 'home' },
-                  { title: '', slug: 'organization-name', active: true },
-                ],
-                rule: defaultRole,
-                pageTitle: 'Рассылки',
-              },
-            },
-            {
               path: 'mailing',
               redirect: 'mailing/drafts',
               name: 'DashBoardMailing'

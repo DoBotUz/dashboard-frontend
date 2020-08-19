@@ -5,7 +5,7 @@
       label="Заголовок на русском"
       v-model="form.ru_title"
       name="ru_title"
-      v-validate="'required|max:255'"
+      v-validate="'required|min:3|max:255'"
       data-vv-as="Заголовок на русском"
       :color="!errors.has('newMailing.ru_title') ? 'success' : 'danger'"
     />
@@ -33,7 +33,7 @@
       label="Заголовок на английском"
       v-model="form.en_title"
       name="en_title"
-      v-validate="'required|max:255'"
+      v-validate="'required|min:3|max:255'"
       data-vv-as="Заголовок на английском"
       :color="!errors.has('newMailing.en_title') ? 'success' : 'danger'"
     />
@@ -61,7 +61,7 @@
       label="Заголовок на узбекском"
       v-model="form.uz_title"
       name="uz_title"
-      v-validate="'required|max:255'"
+      v-validate="'required|min:3|max:255'"
       data-vv-as="Заголовок на узбекском"
       :color="!errors.has('newMailing.uz_title') ? 'success' : 'danger'"
     />
@@ -139,7 +139,9 @@ export default {
     formFields: {
       type: Object,
       required: false,
-      default: {},
+      default: function () {
+        return {};
+      }
     },
   },
   data() {
@@ -168,6 +170,16 @@ export default {
     },
   },
   methods: {
+    clearForm() {
+      for (let key in this.form) {
+        this.form[key] = '';
+      }
+      this.errors.clear('newMailing');
+      this.$nextTick(() => {
+          this.$validator.reset();
+      });
+    },
+
     async isFormValid() {
       await this.$validator.validateAll("newMailing");
       if (this.errors.any()) {
@@ -181,6 +193,7 @@ export default {
       }
       return true;
     },
+
     buildFormData() {
       const formData = new FormData();
       Object.keys(this.form).forEach((key) => {
@@ -206,6 +219,7 @@ export default {
           : new Date().toISOString()
       );
       formData.append("organizationId", this.organization.id);
+      return formData;
     },
     async onMailingSend() {
       if (!(await this.isFormValid())) {

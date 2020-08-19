@@ -1,29 +1,26 @@
 <template>
     <div class="mailing__mailing-item sm:px-4 px-2 py-6">
-
+        <div class="vx-col w-full ml-auto flex justify-between">
+          <div class="mailing__labels mb-2 ml-2">
+            <vs-chip>
+              <div class="h-2 w-2 rounded-full mr-2" :class="'bg-' + categoryColor(mailing.category)"></div>
+              <span>{{ categoryLabel(mailing.category) | capitalize }}</span>
+            </vs-chip>
+          </div>
+          <span>Дата создания: {{ mailing.created_at | date }}</span>
+        </div>
         <!-- MAIL ROW 1 : META -->
         <div class="flex w-full">
-            <img class="sender__avatar flex-shrink-0 mr-3 border-2 border-solid border-white" :src="mailing.thumbnail ? `${$url}/public/mailing-templates/${mailing.thumbnail}` : '/eye.png'" width="40px" />
-
-            <div class="flex w-full justify-between items-start">
-                <div class="mailing__details">
+            <div class="vx-col">
+              <img class="sender__avatar flex-shrink-0 mr-3 border-2 border-solid border-white" :src="mailing.thumbnail ? `${$url}/public/mailing-templates/${mailing.thumbnail}` : 'https://via.placeholder.com/150'" width="80px" height="80px" />
+            </div>
+            <div class="vx-col w-full sm:w-8/12 flex sm:flex-col">
+                <div class="mailing__details flex items-center">
                     <h5 class="mb-1 font-semibold">{{ mailing.ru_title }}</h5>
                 </div>
-
-                <div class="mailing-item__meta flex items-center">
-                    <div class="mailing__labels hidden sm:flex items-center">
-                        <div class="h-2 w-2 rounded-full mr-2" :class="'bg-' + categoryColor(mailing.category)"></div>
-                    </div>
-                    <span>{{ mailing.after_date_time | date }}</span>
+                <div class="mailing__message truncate">
+                    <span>{{ mailing.ru_description | filter_tags }}</span>
                 </div>
-            </div>
-
-        </div>
-        <div class="flex w-full">
-            <div class="flex items-center ml-10">
-              <div class="mailing__message truncate ml-3">
-                  <span>{{ mailing.ru_description | filter_tags }}</span>
-              </div>
             </div>
         </div>
     </div>
@@ -63,6 +60,16 @@ export default {
           return this.mailingCats.find((cat) => {
             return cat.value === category
           }).color
+        }
+        return '';
+      }
+    },
+    categoryLabel () {
+      return (category) => {
+        if(this.mailingCats && this.mailingCats.length) {
+          return this.mailingCats.find((cat) => {
+            return cat.value === category
+          }).text
         }
         return '';
       }
