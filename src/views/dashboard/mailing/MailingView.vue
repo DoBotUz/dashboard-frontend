@@ -108,12 +108,12 @@
               <div class="vx-col w-full">
                 <vx-card>
                   <h5 class="mb-5">Действия</h5>
-                  <!-- <flat-pickr
-                                :config="configdateTimePicker"
-                                v-model="mailingStartTime"
-                                placeholder="Укажите время начала рассылки"
-                                class="w-1/2 mr-auto"
-                  />-->
+                  <flat-pickr
+                    :config="configdateTimePicker"
+                    v-model="mailingStartTime"
+                    placeholder="Укажите время начала рассылки"
+                    class="w-1/2 mr-auto"
+                  />
                   <div class="mailing-view__actions">
                     <vs-button
                       class="mb-4"
