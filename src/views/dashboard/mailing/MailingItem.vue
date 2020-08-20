@@ -1,7 +1,10 @@
 <template>
     <div class="mailing__mailing-item sm:px-4 px-2 py-6">
         <div class="vx-col w-full ml-auto flex justify-between">
-          <div class="mailing__labels mb-2 ml-2">
+          <div class="mailing__labels mb-2">
+            <vs-chip :color="getStatusColor(mailing.status)" class="mr-2">
+              {{ getStatusLabel(mailing.status) }}
+            </vs-chip>
             <vs-chip>
               <div class="h-2 w-2 rounded-full mr-2" :class="'bg-' + categoryColor(mailing.category)"></div>
               <span>{{ categoryLabel(mailing.category) | capitalize }}</span>
@@ -27,7 +30,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   props: {
     mailing: {
@@ -54,6 +57,7 @@ export default {
   },
   computed: {
     ...mapState('mailing', ['mailingCats']),
+    ...mapGetters("mailing", ['getStatusColor', 'getStatusLabel']),
     categoryColor () {
       return (category) => {
         if(this.mailingCats && this.mailingCats.length) {

@@ -51,8 +51,8 @@
       >
         <div>
           <transition-group
-            name="list-enter-up"
-            class="mailing__mailings"
+            name="list"
+            class="mailing__mailings "
             tag="ul"
             appear
             v-if="mailings && mailings.length"
@@ -116,7 +116,7 @@ export default {
       isMailingSidebarActive: true,
       settings: {
         maxScrollbarLength: 60,
-        wheelSpeed: 0.3,
+        wheelSpeed: 0.7,
       },
       isSidebarPopupOpen: false,
     };
@@ -132,10 +132,19 @@ export default {
       scroll_el.scrollTop = 0;
 
       this.UPDATE_MAILING_FILTER(this.$route.params.filter);
+      let filter = ``;
+      if(!this.getStatusValue(this.$route.params.filter)){
+        filter = `category||$eq||${this.$route.params.filter}`;
+      } else {
+        if(this.$route.params.filter === 'sent'){
+          filter = `status||$ne||${this.getStatusValue('drafts')}`;
+        } else {
+          filter = `status||$eq||${this.getStatusValue(this.$route.params.filter)}`;
+        }
+      }
+
       this.fetchMailings({
-        filter: `status||$eq||${this.getStatusValue(
-          this.$route.params.filter
-        )}`,
+        filter,
       }); // Fetch Mailings
       this.toggleMailingSidebar();
     },
@@ -254,14 +263,28 @@ export default {
     MailingView,
     VuePerfectScrollbar,
   },
-  created() {
+  async created() {
     this.setSidebarWidth();
 
     this.UPDATE_MAILING_FILTER(this.$route.params.filter); // Update Mail Filter
+    await this.fetchMailingCats(); // Fetch Mail Tags
+
+    let filter = ``;
+    if(!this.getStatusValue(this.$route.params.filter)){
+      filter = `category||$eq||${this.$route.params.filter}`;
+    } else {
+      if(this.$route.params.filter === 'sent'){
+        filter = `status||$ne||${this.getStatusValue('drafts')}`;
+      } else {
+        filter = `status||$eq||${this.getStatusValue(this.$route.params.filter)}`;
+      }
+    }
+
     this.fetchMailings({
-      filter: `status||$eq||${this.getStatusValue(this.$route.params.filter)}`,
+      filter,
     }); // Fetch Mailings
-    this.fetchMailingCats(); // Fetch Mail Tags
+
+
   },
   mounted() {
     this.setMailingSearchQuery("");

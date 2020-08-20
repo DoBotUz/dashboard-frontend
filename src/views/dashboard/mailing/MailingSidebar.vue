@@ -13,17 +13,15 @@
     <vs-popup
       class="mailing-compose"
       title="Новая рассылка"
-      @cancel="clearFields"
-      @close="clearFields"
+      @close="clearErrors"
       :active.sync="activePrompt"
       fullscreen
     >
       <component :is="scrollbarTag" class="scroll-area p-4" :settings="settings">
         <mailing-form
           :mailingCats="mailingCats"
-          @on-send="sendMailing"
+          @on-mailing="sendMailing"
           @on-draft="saveMailingToDrafts"
-          :formFields="formFields"
           ref="mailingFormSidebars"
         />
       </component>
@@ -43,25 +41,13 @@
           class="flex items-center mt-4 mb-2 cursor-pointer"
           :class="{'text-primary': mailingFilter == 'sent'}"
         >
-          <feather-icon
-            icon="SendIcon"
-            :svgClasses="[{'text-primary stroke-current': mailingFilter == 'sent'}, 'h-6 w-6']"
-          ></feather-icon>
-          <span class="text-lg ml-3">Доставлены</span>
-        </router-link>
-
-        <!-- sent -->
-        <router-link
-          tag="span"
-          :to="`${baseUrl}/sending`"
-          class="flex items-center mt-4 mb-2 cursor-pointer"
-          :class="{'text-primary': mailingFilter == 'sending'}"
-        >
-          <feather-icon
-            icon="PrinterIcon"
-            :svgClasses="[{'text-primary stroke-current': mailingFilter == 'sending'}, 'h-6 w-6']"
-          ></feather-icon>
-          <span class="text-lg ml-3">Доставляются</span>
+          <div class="flex items-center mb-2 transform hover:translate-x-1 transition duration-100">
+            <feather-icon
+              icon="SendIcon"
+              :svgClasses="[{'text-primary stroke-current': mailingFilter == 'sent'}, 'h-6 w-6']"
+            ></feather-icon>
+            <span class="text-lg ml-3">Отправлены</span>
+          </div>
         </router-link>
 
         <!-- draft -->
@@ -71,7 +57,7 @@
           class="flex justify-between items-center mt-4 cursor-pointer"
           :class="{'text-primary': mailingFilter == 'drafts'}"
         >
-          <div class="flex items-center mb-2">
+          <div class="flex items-center mb-2 transform hover:translate-x-1 transition duration-100">
             <feather-icon
               icon="Edit2Icon"
               :svgClasses="[{'text-primary stroke-current': mailingFilter == 'drafts'}, 'h-6 w-6']"
@@ -93,7 +79,7 @@
         <div class="mailing__lables-list">
           <router-link
             tag="span"
-            class="mailing__label flex items-center mb-4 cursor-pointer"
+            class="mailing__label flex items-center mb-4 cursor-pointer transform hover:translate-x-1 transition duration-100"
             v-for="(tag, index) in mailingCats"
             :key="index"
             :to="`${baseUrl}/${tag.value}`"
@@ -143,9 +129,6 @@ export default {
         maxScrollbarLength: 60,
         wheelSpeed: 0.3,
       },
-      formFields: {
-        category: "news"
-      },
     };
   },
   computed: {
@@ -172,12 +155,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions("mailing", ["saveToDrafts"]),
-    clearFields() {
-      this.$nextTick(() => {
-        this.formFields.category = "news";
-      });
+    ...mapActions("mailing", ["saveToDrafts", "startDraft"]),
+    clearErrors() {
+      this.$refs.mailingFormSidebars.clearErrors();
     },
+
     async saveMailingToDrafts(formData) {
       return this.saveToDrafts(formData).then(() => {
         this.activePrompt = false;
@@ -190,8 +172,20 @@ export default {
         this.$refs.mailingFormSidebars.clearForm();
       });
     },
-    sendMailing() {
-      this.clearFields();
+
+    sendMailing(formData) {
+      return this.saveToDrafts(formData).then((mailing) => {
+        this.startDraft(mailing).then((res) => {
+          this.activePrompt = false;
+          this.$vs.notify({
+            title: "Отлично",
+            text: "Рассылка добавлена в очередь",
+            color: "success",
+            position: "top-center",
+          });
+          this.$refs.mailingFormSidebars.clearForm();
+        });
+      });
     },
   },
   components: {

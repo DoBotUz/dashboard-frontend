@@ -1,6 +1,6 @@
 <template>
   <!-- NOTIFICATIONS -->
-  <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
+  <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer transform hover:-translate-y-1 hover:scale-110 transition duration-100">
     <feather-icon icon="BellIcon" class="cursor-pointer mt-1 sm:mr-6 mr-2" :badge="unreadNotifications.length" />
 
     <vs-dropdown-menu class="notification-dropdown dropdown-custom vx-navbar-dropdown">
@@ -139,7 +139,7 @@ export default {
       }
 
       return 'только что'
-    },    
+    },
     randomDate({ hr, min, sec }) {
       let date = new Date()
 

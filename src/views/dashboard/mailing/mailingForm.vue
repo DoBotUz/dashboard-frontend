@@ -84,16 +84,27 @@
       v-show="errors.has('newMailing.uz_description')"
     >{{ errors.first('newMailing.uz_description') }}</span>
 
+    <vs-row>
+        <vs-col vs-w="3" v-if="form.thumbnail">
+          <div class="img-container mb-4" style="margin-top: 25px;">
+            <img :src="`${$url}/public/mailing-templates/${form.thumbnail}`" class="w-full" />
+          </div>
+        </vs-col>
+        <vs-col vs-w="9">
+          <vs-upload
+            :limit="1"
+            :show-upload-button="false"
+            :text="form.thumbnail ? 'Заменить изображение' : 'Загрузить изображение'"
+            ref="mailingThumbnail"
+            accept="image/*"
+          />
+        </vs-col>
+    </vs-row>
+
     <div class="vx-col w-full">
-      <vs-upload
-        :limit="1"
-        :show-upload-button="false"
-        text="Заглавная картинка"
-        ref="mailingThumbnail"
-        accept="image/*"
-      />
+
     </div>
-    <vs-collapse type="border">
+    <!-- <vs-collapse type="border">
       <vs-collapse-item icon-arrow="attach_file">
         <div slot="header">Прикрепить файлы</div>Выберите файлы которые будут отправлены вместе с оповщением, это могут быть картинки / документы / видео
         <vs-alert active="true">Отправка прикрепленных файлов может занять долгое время.</vs-alert>
@@ -106,7 +117,7 @@
           class="compose-mailing-attachment"
         />
       </vs-collapse-item>
-    </vs-collapse>
+    </vs-collapse> -->
 
     <vs-select label="Категория" v-model="form.category">
       <vs-select-item
@@ -116,19 +127,50 @@
         :text="item.text"
       />
     </vs-select>
-    <div class="flex mt-5 mb-3 p-5 float-right">
-      <vs-button
-        class="mr-5"
-        @click="onSaveToDrafts"
-        color="primary"
-        type="border"
-      >Сохранить в черновики</vs-button>
-      <vs-button @click="onMailingSend" color="success" icon="send">Отправить</vs-button>
+    <h5 class="mb-2 mt-2">Дата начала рассылки</h5>
+    <flat-pickr
+      :config="configdateTimePicker"
+      v-model="form.after_date_time"
+      placeholder="Укажите дату начала рассылки"
+      class="w-1/2 mr-auto"
+    />
+    <div class="flex mt-10 mb-3 p-5 float-right">
+      <div v-if="formFields.id">
+        <vs-button
+          class="mr-5"
+          @click="onSaveToDrafts"
+          color="success"
+        >Сохранить</vs-button>
+      </div>
+      <div class="flex" v-else>
+        <vs-button
+          class="mr-5"
+          @click="onSaveToDrafts"
+          color="primary"
+          type="border"
+        >Сохранить в черновики</vs-button>
+        <vs-button @click="onMailingSend" color="success" icon="send">Начать рассылку</vs-button>
+      </div>
     </div>
   </form>
 </template>
 <script>
 import { mapState } from 'vuex';
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+
+const FORM_BASE = {
+  id: null,
+  thumbnail: null,
+  ru_title: "",
+  en_title: "",
+  uz_title: "",
+  ru_description: "",
+  en_description: "",
+  uz_description: "",
+  after_date_time: null,
+  category: "news",
+}
 
 export default {
   props: {
@@ -144,24 +186,30 @@ export default {
       }
     },
   },
+  components: {
+    flatPickr,
+  },
   data() {
-    let form = {
-      ru_title: "",
-      en_title: "",
-      uz_title: "",
-      ru_description: "",
-      en_description: "",
-      uz_description: "",
-      category: "news",
-    }
-    for (let key in form) {
-      if (this.formFields[key]) {
-        form[key] = this.formFields[key];
-      }
-    }
     return {
-      form,
+      form: {},
+      configdateTimePicker: {
+        enableTime: true,
+        dateFormat: "d-m-Y H:i",
+        minDate: new Date(),
+        time_24hr: true,
+      },
     };
+  },
+  watch: {
+    formFields: {
+      handler(newForm){
+        for (let key in FORM_BASE) {
+          if(typeof newForm[key] !== 'undefined')
+            this.form[key] = newForm[key];
+        }
+      },
+      deep: true
+    }
   },
   computed: {
     ...mapState(["organization"]),
@@ -171,9 +219,21 @@ export default {
   },
   methods: {
     clearForm() {
-      for (let key in this.form) {
-        this.form[key] = '';
+      if(!this.form.id) {
+        for (let key in this.form) {
+          this.form[key] = FORM_BASE[key];
+        }
+        this.errors.clear('newMailing');
+        this.$nextTick(() => {
+            this.$validator.reset();
+        });
       }
+      for(let i =0; i<this.$refs.mailingThumbnail.filesx.length; i++) {
+        this.$refs.mailingThumbnail.removeFile(i);
+      }
+    },
+
+    clearErrors() {
       this.errors.clear('newMailing');
       this.$nextTick(() => {
           this.$validator.reset();
@@ -209,24 +269,27 @@ export default {
         this.$refs.mailingThumbnail.filesx.length - 1
       ];
       formData.append("thumbnail", file);
-      for (let x = 0; x < this.$refs.mailingAttachments.filesx.length; x++) {
-        formData.append("files[]", this.$refs.mailingThumbnail.filesx[x]);
-      }
-      formData.append(
+      // for (let x = 0; x < this.$refs.mailingAttachments.filesx.length; x++) {
+      //   formData.append("files[]", this.$refs.mailingThumbnail.filesx[x]);
+      // }
+      formData.set(
         "after_date_time",
         this.form.after_date_time
-          ? this.form.after_date_time
+          ? new Date().toISOString(this.form.after_date_time)
           : new Date().toISOString()
       );
       formData.append("organizationId", this.organization.id);
       return formData;
     },
+
     async onMailingSend() {
       if (!(await this.isFormValid())) {
         return;
       }
-      this.$emit("on-send");
+
+      this.$emit("on-mailing", this.buildFormData());
     },
+
     async onSaveToDrafts() {
       if (!(await this.isFormValid())) {
         return;
@@ -234,6 +297,16 @@ export default {
 
       this.$emit("on-draft", this.buildFormData());
     },
+  },
+
+  created(){
+    let newForm = Object.assign({}, FORM_BASE);
+    for (let key in newForm) {
+      if (typeof this.formFields[key] !== 'undefined') {
+        newForm[key] = this.formFields[key];
+      }
+    }
+    this.form = newForm;
   },
 };
 </script>

@@ -19,7 +19,8 @@
             <mailing-form
               :mailingCats="mailingCats"
               :formFields="currentMailing"
-              :on-draft="onSaveDraft"
+              @on-draft="saveMailingToDrafts"
+              ref="mailingFormViews"
             />
           </component>
         </vs-popup>
@@ -43,13 +44,14 @@
                 icon="Edit2Icon"
                 svg-classes="h-6 w-6"
                 class="cursor-pointer ml-4 transform hover:-translate-y-1 hover:scale-110 transition duration-100"
+                v-if="currentMailing.status === 10"
                 @click="editMailing"
               ></feather-icon>
               <feather-icon
                 icon="TrashIcon"
                 svg-classes="h-6 w-6"
                 class="cursor-pointer ml-4 transform hover:-translate-y-1 hover:scale-110 transition duration-100"
-                @click="$emit('remove-mailing')"
+                @click="openDeleteSureDialog"
               ></feather-icon>
             </div>
           </div>
@@ -61,23 +63,6 @@
           :settings="settings"
           :key="$vs.rtl"
         >
-          <!-- LABEL ROW -->
-          <div class="vx-row">
-            <div class="vx-col w-full">
-              <div class="mailing__labels--single flex ml-10 items-center mt-2">
-                <div class="open-mail-label flex items-center mr-4">
-                  <div
-                    class="h-3 w-3 rounded-full mr-1"
-                    :class="'bg-' + categoryColor(currentMailing.category)"
-                  ></div>
-                  <span class="text-sm">{{ currentMailing.category | capitalize }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /LABEL ROW -->
-          <br />
-
           <div v-if="isSidebarActive">
             <!-- LATEST MESSAGE -->
             <div class="vx-row">
@@ -90,19 +75,16 @@
               <div class="vx-col w-full">
                 <vx-card>
                   <h5 class="mb-5">Действия</h5>
-                  <flat-pickr
-                    :config="configdateTimePicker"
-                    v-model="mailingStartTime"
-                    placeholder="Укажите время начала рассылки"
-                    class="w-1/2 mr-auto"
-                  />
                   <div class="mailing-view__actions">
                     <vs-button
-                      class="mb-4"
+                      class="mr-5"
+                      @click="duplicateAction"
                       color="primary"
-                      type="filled"
-                    > Назначить рассылку на указанное время</vs-button>
-                    <vs-button class="mb-4" color="danger" type="filled"> Начать рассылку сейчас</vs-button>
+                      type="border"
+                      v-if="currentMailing.status != 10"
+                    >Дублировать в черновики</vs-button>
+
+                    <vs-button class="mb-4" color="success" icon="send" @click="startMailingOpenSure" v-else>Начать рассылку</vs-button>
                   </div>
                 </vx-card>
               </div>
@@ -118,8 +100,6 @@
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import MailingCard from "./MailingCard.vue";
 import MailingForm from './mailingForm.vue';
-import flatPickr from "vue-flatpickr-component";
-import "flatpickr/dist/flatpickr.css";
 
 import { mapActions, mapState } from "vuex";
 
@@ -149,13 +129,6 @@ export default {
         wheelSpeed: 0.5,
       },
       currentMailing: null,
-      mailingStartTime: null,
-      configdateTimePicker: {
-        enableTime: true,
-        dateFormat: "d-m-Y H:i",
-        minDate: new Date(),
-        time_24hr: true,
-      },
       editPopup: false,
     };
   },
@@ -185,14 +158,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("mailing", ["getMailing"]),
-    toggleIsStarred() {
-      const payload = {
-        mailId: this.openMailingId,
-        value: !this.currentMailing.isStarred,
-      };
-      this.$store.dispatch("mailing/toggleIsMailingStarred", payload);
-    },
+    ...mapActions("mailing", ["getMailing", 'saveToDrafts', 'deleteOne', 'startDraft', 'duplicateToDrafts']),
     moveTo(to) {
       this.$emit("close-sidebar");
       this.$emit("moveTo", to);
@@ -200,23 +166,84 @@ export default {
     editMailing() {
       this.editPopup = true;
     },
-    onSaveDraft(formData) {
-      // TODO отправить formData на сервер
-    }
+
+    duplicateAction() {
+      return this.duplicateToDrafts(this.currentMailing.id).then((res) => {
+        this.$vs.notify({
+          title: "Отлично",
+          text: "Шаблон сохранен",
+          color: "success",
+          position: "top-center",
+        });
+      });
+    },
+
+    async saveMailingToDrafts(formData) {
+      return this.saveToDrafts(formData).then((res) => {
+        this.editPopup = false;
+        this.$vs.notify({
+          title: "Отлично",
+          text: "Шаблон сохранен",
+          color: "success",
+          position: "top-center",
+        });
+        this.currentMailing = res;
+        this.$refs.mailingFormViews.clearForm();
+      });
+    },
+
+    openDeleteSureDialog() {
+      this.$vs.dialog({
+        type:'confirm',
+        color: 'danger',
+        title: `Удалить рассылку`,
+        acceptText: 'Удалить',
+        cancelText: 'Отмена',
+        text: `Вы уверены в том что хотите удалить ${this.currentMailing.ru_title} ?`,
+        accept: this.deleteMailing
+      })
+    },
+
+    deleteMailing() {
+      return this.deleteOne(this.currentMailing.id).then((res) => {
+        this.$vs.notify({
+          title: "Отлично",
+          text: "Рассылка удалена",
+          color: "success",
+          position: "top-center",
+        });
+        this.$emit("close-sidebar");
+      });
+    },
+
+    startMailingOpenSure() {
+      this.$vs.dialog({
+        type:'confirm',
+        color: 'success',
+        title: `Начать рассылку`,
+        acceptText: 'Начать',
+        cancelText: 'Отмена',
+        text: `Вы уверены в том что хотите начать рассылку ${this.currentMailing.ru_title} ?`,
+        accept: this.startMailingAction
+      })
+    },
+
+    startMailingAction() {
+      return this.startDraft(this.currentMailing).then((res) => {
+        this.$vs.notify({
+          title: "Отлично",
+          text: "Рассылка отправлена в очередь",
+          color: "success",
+          position: "top-center",
+        });
+        this.$emit("close-sidebar");
+      });
+    },
   },
   components: {
     VuePerfectScrollbar,
     MailingCard,
     MailingForm,
-    flatPickr,
-  },
-  updated() {
-    if (!this.currentMailing) return;
-    if (this.currentMailing.unread && this.isSidebarActive)
-      this.$store.dispatch("mailing/setUnread", {
-        mailingIds: [this.openMailingId],
-        unread: false,
-      });
   },
   async mounted() {
     this.currentMailing = await this.getMailing(this.openMailingId);
