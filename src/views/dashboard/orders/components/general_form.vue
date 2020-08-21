@@ -5,7 +5,7 @@
         <div class="fields">
           <field label="ID" :value="order.id" />
           <field label="Адрес доставки">
-            <vs-input class="w-full" value="Открыть в Яндекс.карты" @focus="onClickEditAddress" />
+            <vs-input class="w-full" :value="hasOnlyLocation ? 'Открыть в Яндекс.карты' : order.address" @focus="onClickEditAddress" />
             <vs-popup title="Нажмите на точку на карте, чтобы изменить локацию" :active.sync="editLocationPopup" fullscreen>
               <yandex-map :coords="orderLocation" :zoom="10" @click="onClickOnMap">
                 <ymap-marker
@@ -46,6 +46,9 @@
         </div>
       </vs-col>
       <vs-col vs-w="4">
+        <field label="Филиал" class="mb-4">
+          <vs-select class="w-full" :value="order.branch.ru_title" disabled :placeholder="order.branch.ru_title"></vs-select>
+        </field>
         <field class="w-full" label="Комментарий">
           <vs-textarea
             v-model="orderComment"
@@ -78,7 +81,7 @@ export default {
   },
   methods: {
     onClickEditAddress(e) {
-      if (this.order.lat && this.order.lng && !this.order.address) {
+      if (this.hasOnlyLocation) {
         e.preventDefault();
         this.editLocationPopup = true;
         return false;
@@ -117,6 +120,9 @@ export default {
       order_statuses: 'order_statuses',
       payment_types: 'payment_types',
     }),
+    hasOnlyLocation() {
+      return this.order.lat && this.order.lng && !this.order.address;
+    },
     orderLocation: {
       get: function() {
         if (this.updated_order.lat) {

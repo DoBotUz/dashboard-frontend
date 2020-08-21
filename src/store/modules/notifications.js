@@ -1,3 +1,5 @@
+import api from '@/api/notifications';
+
 export const KEYS = {
   NEW_ORDER: 1,
   NEW_FEEDBACK: 2,
@@ -31,11 +33,19 @@ export const mutations = {
 
 export const actions = {
   setNotifications({commit}, notifications) {
-    commit('SET_NOTIFICATIONS', notifications);
+    commit('SET_NOTIFICATIONS', notifications.filter(n => n.status !== 0));
   },
   handleNewNotification({commit}, notification) {
     commit('ADD_NOTIFICATIONS', JSON.parse(notification));
-  }
+  },
+  readAllNotifications({ commit }) {
+    api() 
+      .readAll()
+      .then(() => {
+        commit('SET_NOTIFICATIONS', []);
+      })
+      .catch(() => {});
+  },
 }
 
 export const namespaced = false;

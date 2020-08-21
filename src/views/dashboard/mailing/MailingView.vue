@@ -253,7 +253,7 @@ export default {
 <style lang="scss" scoped>
 .mailing-view__actions {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   flex-direction: column;
 }
 </style>

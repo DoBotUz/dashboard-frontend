@@ -33,7 +33,7 @@
               <p>{{ tr.id }}</p>
             </vs-td>
             <vs-td>
-              <p>{{ tr.branch.title }}</p>
+              <p>{{ tr.branch.ru_title }}</p>
             </vs-td>
             <vs-td>
               <p>{{ order_statuses[tr.status] }}</p>

@@ -46,7 +46,9 @@
         border-r-0
         border-solid
         d-theme-border-grey-light
-        cursor-pointer">
+        cursor-pointer"
+        @click="readAllNotifications"
+      >
         <span>Отменить все как прочитанное</span>
       </div>
     </vs-dropdown-menu>
@@ -55,7 +57,7 @@
 
 <script>
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { KEYS, TYPES } from '@/store/modules/notifications';
 
 export default {
@@ -94,6 +96,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['readAllNotifications']),
     onClickOnNotification(ntf) {
       if (ntf.key === KEYS.NEW_FEEDBACK) {
         return this.$router.push({
