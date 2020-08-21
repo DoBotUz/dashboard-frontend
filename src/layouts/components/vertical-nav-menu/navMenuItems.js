@@ -32,6 +32,8 @@ export default [
     name: "Заказы",
     slug: "page2",
     icon: "ShoppingBagIcon",
+    tagColor: 'primary',
+    tagGetter: 'orderNotificationsCount',
   },
   {
     url: "/page2",
@@ -54,12 +56,14 @@ export default [
         icon: "SmileIcon",
       },
       {
-        url: "/page2",
+        url: {
+          name: 'DashboardChat'
+        },
         name: "Чат",
         slug: "page2",
         icon: "MessageSquareIcon",
-        tagColor: 'warning',
-        tag: '2',
+        tagColor: 'primary',
+        tag: '0',
       },
       {
         url: {

@@ -29,6 +29,7 @@ import * as moduleOrders from './modules/orders';
 import * as moduleFeedbacks from './modules/feedbacks';
 import * as moduleNotifications from './modules/notifications';
 import * as moduleMailing from './modules/mailing';
+import * as moduleChat from './modules/chat';
 
 export default new Vuex.Store({
     getters,
@@ -46,5 +47,6 @@ export default new Vuex.Store({
       feedbacks: moduleFeedbacks,
       notifications: moduleNotifications,
       mailing: moduleMailing,
+      chat: moduleChat,
     },
 })

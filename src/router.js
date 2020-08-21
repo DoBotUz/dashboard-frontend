@@ -210,6 +210,15 @@ const router = new Router({
                 pageTitle: 'Отзывы'
               },
             },
+            {
+              path: 'chat',
+              component: () => import('./views/dashboard/chat/Chat.vue'),
+              name: 'DashboardChat',
+              meta: {
+                rule: defaultRole,
+              },
+              pageTitle: 'Чат'
+            }
           ],
           meta: {
             authRequired: true,
