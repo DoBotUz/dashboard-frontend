@@ -239,6 +239,14 @@ const router = new Router({
                   rule: defaultRole,
                 },
               },
+              {
+                path: '/pages/complete-registration',
+                name: 'page-complete-registration',
+                component: () => import('@/views/pages/CompleteRegistration.vue'),
+                meta: {
+                  rule: defaultRole,
+                },
+              },
             ]
         },
         // Redirect to 404 page, if no match found
@@ -250,7 +258,12 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  if(store.getters.isAuthenticated && (to.name === 'page-login' || to.name === 'page-complete-registration')){
+    next('/');
+  }
+
   if (!to.meta.authRequired || (to.meta.authRequired && store.getters.isAuthenticated)) {
+
     return next();
   }
   next('/pages/login');

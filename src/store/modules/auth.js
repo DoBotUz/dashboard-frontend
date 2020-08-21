@@ -34,6 +34,7 @@ export const actions = {
       axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
     }
   },
+
   login({ commit, dispatch}, payload) {
     const { email, password } = payload;
     return axios.post('/auth/login', { email, password })
@@ -42,6 +43,7 @@ export const actions = {
         dispatch('getUserInfo');
       });
   },
+
   signUp({ commit }, payload) {
     const { first_name, last_name, email, password } = payload;
     return axios.post('/auth/signup', { first_name, last_name, email, password })
@@ -49,9 +51,11 @@ export const actions = {
         return res.data.data;
       });
   },
+
   logout({ commit }) {
     return Promise.resolve(commit('LOGOUT'));
   },
+
   getUserInfo({ dispatch, getters }) {
     if (!getters.isAuthenticated) {
       return;
@@ -71,6 +75,21 @@ export const actions = {
         })
         .catch((err) => {
           dispatch('logout').then(() => { this.$router.push('/pages/login'); });
+        });
+    });
+  },
+
+  activateAccount({ commit }, token) {
+    return new Promise((resolve, reject) => {
+      api()
+        .activateByToken(token)
+        .then(({ data }) => {
+          if (data.status === 'Success' && data.data) {
+            commit('SET_TOKEN', data.data);
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         });
     });
   },
