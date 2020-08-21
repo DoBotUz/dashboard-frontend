@@ -6,4 +6,5 @@ export default () => ({
   create: (payload) => axios.post('/organizations/', payload),
   update: (payload) => axios.post('/organizations/update', payload),
   delete: (id) => axios.delete(`/organizations/${id}`),
+  switchStatus: (id, status) => axios.post('/organizations/switch-bot-status', { id, status }) 
 });

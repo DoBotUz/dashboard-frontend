@@ -68,6 +68,7 @@ const state = {
 
     // DoBot state,
     organization: {},
+    organization_loading: false,
 }
 
 export default state

@@ -31,7 +31,7 @@ export const mutations = {
 export const actions = {
   getOrganization({ commit }, organization_id) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .get(organization_id)
         .then(({ data }) => {
@@ -48,7 +48,7 @@ export const actions = {
   },
   fetchOrganizations({ commit }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .list()
         .then(({ data }) => {
@@ -66,7 +66,7 @@ export const actions = {
   addOrganization({ commit }, payload) {
     const { name, description, token } = payload;
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .create({
           title: name,
@@ -96,7 +96,7 @@ export const actions = {
   },
   updateOrganization({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .update(payload)
         .then(({ data }) => {
@@ -113,7 +113,7 @@ export const actions = {
   },
   deleteOrganization({ commit }, id) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING', false)
+      commit('SET_LOADING', true)
       api()
         .delete(id)
         .then(({ data }) => {

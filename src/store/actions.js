@@ -68,6 +68,24 @@ const actions = {
       });
     },
 
+    switchOrganizationStatus({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        commit('SET_ORG_LOADING', true);
+        organizationsApi()
+          .switchStatus(payload.id, payload.status)
+          .then(({ data }) => {
+            if (data.status === 'Success') {
+              commit('SET_ORGANIZATION_STATUS', payload.status);
+              resolve(data);
+            } else {
+              reject(data);
+            }
+          })
+          .catch(reject)
+          .finally(() => commit('SET_ORG_LOADING', false))
+      });
+    },
+
     deleteAvatar({ commit }) {
       return new Promise((resolve, reject) => {
         profileApi()

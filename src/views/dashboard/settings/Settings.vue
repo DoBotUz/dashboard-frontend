@@ -57,15 +57,20 @@
       <vs-alert title="Предупреждение" active="true" color="warning">
         Изменение токена, статуса влиет на работу телеграм бота.
       </vs-alert>
-      <vs-input class="w-full mt-8" label="Токен" v-model="token"/>
+      <vs-input class="w-full mt-8 mb-3" label="Токен" v-model="token"/>
       <div class="con-select-example">
-        <vs-select
+        <label class="mb-1 block">Статус</label>
+        <vs-switch color="success" v-model="isOrganizationActive" :disabled="organization_loading">
+          <span slot="on">Активен</span>
+          <span slot="off">Выключен</span>
+        </vs-switch>
+        <!-- <vs-select
         class="selectExample"
         label="Статус"
         v-model="organizationObj.status"
         >
           <vs-select-item v-for="(item, index) in statuses" :key="index" :value="item.value" :text="item.text" />
-        </vs-select>
+        </vs-select> -->
       </div>
       <div class="flex flex-wrap items-center justify-end">
         <vs-button class="ml-auto mt-2" @click="save" :disabled="!validateForm">Сохранить</vs-button>
@@ -87,16 +92,6 @@ export default {
   data() {
     return {
       token: '',
-      statuses: [
-        {
-          text: 'Активен',
-          value: 10
-        },
-        {
-          text: 'Не активен',
-          value: 11
-        },
-      ]
     };
   },
 
@@ -110,16 +105,29 @@ export default {
   },
 
   computed: {
-    ...mapState(['organization']),
+    ...mapState(['organization', 'organization_loading']),
     ...mapState('organizations', ['organizationObj']),
 
     validateForm () {
       return !this.errors.any()
+    },
+    isOrganizationActive: {
+      get() {
+        return this.organization.bot.status === 10
+      },
+      set (val) {
+        let status = val ? 10 : 11;
+        return this.switchOrganizationStatus({
+          id: this.organization.id,
+          status
+        });
+      }
     }
   },
 
   methods: {
     ...mapActions('organizations', ['getOrganization', 'updateOrganization', 'deleteOrganization']),
+    ...mapActions(['switchOrganizationStatus']),
     async save() {
       await this.$validator.validateAll();
       if (this.errors.any()) {

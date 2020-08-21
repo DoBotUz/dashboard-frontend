@@ -119,7 +119,20 @@ const mutations = {
   SET_ORGANIZATION(state, payload) {
     state.organization = payload;
   },
+
+  SET_ORGANIZATION_STATUS(state, status) {
+    state.organization = {
+      ...state.organization,
+      bot: {
+        ...state.organization.bot,
+        status: status
+      }
+    }
+  },
+
+  SET_ORG_LOADING(state, flag) {
+    state.organization_loading = flag;
+  }
 }
 
 export default mutations
-
