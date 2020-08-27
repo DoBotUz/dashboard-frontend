@@ -27,7 +27,7 @@
         <div class="relative inline-flex mx-auto mb-5 mt-6">
           <vs-avatar
             class="m-0 border-white border-2 border-solid shadow-md"
-            :src="chatUser.photoURL"
+            :text="chatUser.bio"
             size="70px"
           />
           <div
@@ -36,13 +36,21 @@
           ></div>
         </div>
 
-        <h4 class="mr-2 self-center">{{ chatUser.displayName }}</h4>
+        <h4 class="mr-2 self-center">{{ chatUser.bio }}</h4>
       </div>
 
       <component :is="scrollbarTag" class="scroll-area" :settings="settings" :key="$vs.rtl">
         <div class="p-8">
-          <h6 class="mb-2" :class="{'ml-4': isLoggedInUser}">About</h6>
-          <p>{{ chatUser.about }}</p>
+          <h6 class="mb-2" :class="{'ml-4': isLoggedInUser}">Имя</h6>
+          <p class="mb-4">{{ chatUser.bio }}</p>
+          <h6 class="mb-2" :class="{'ml-4': isLoggedInUser}">Номер телефона</h6>
+          <p class="mb-4">{{ chatUser.phone_number }}</p>
+          <h6 class="mb-2" :class="{'ml-4': isLoggedInUser}">Язык</h6>
+          <p class="mb-4">{{ chatUser.language == 'uz' ? 'Узбекский' : chatUser.language == 'en' ? 'Английский' : 'Узбекский' }}</p>
+          <h6 class="mb-2" :class="{'ml-4': isLoggedInUser}">Username</h6>
+          <p class="mb-4">@{{ chatUser.username }}</p>
+          <h6 class="mb-2" :class="{'ml-4': isLoggedInUser}">Дата регистрации</h6>
+          <p class="mb-4">{{ chatUser.created_at }}</p>
         </div>
       </component>
     </vs-sidebar>

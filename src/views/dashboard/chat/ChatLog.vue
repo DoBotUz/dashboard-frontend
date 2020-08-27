@@ -8,29 +8,29 @@
 ========================================================================================== -->
 
 <template>
-  <div id="component-chat-log" class="m-8" v-if="chatData">
-    <div v-for="(msg, index) in chatData.msg" class="msg-grp-container" :key="index">
+  <div id="component-chat-log" class="m-8" v-if="chatData.length">
+    <div v-for="(msg, index) in chatData" class="msg-grp-container" :key="index">
       <!-- If previous msg is older than current time -->
-      <template v-if="chatData.msg[index-1]">
-        <vs-divider v-if="!isSameDay(msg.time, chatData.msg[index-1].time)" class="msg-time">
-          <span>{{ toDate(msg.time) }}</span>
+      <template v-if="chatData[index-1]">
+        <vs-divider v-if="!isSameDay(msg.created_at, chatData[index-1].created_at)" class="msg-time">
+          <span>{{ toDate(msg.created_at) }}</span>
         </vs-divider>
         <div
           class="spacer mt-8"
-          v-if="!hasSentPreviousMsg(chatData.msg[index-1].isSent, msg.isSent)"
+          v-if="!hasSentPreviousMsg(chatData[index-1].sent_by_operator, msg.sent_by_operator)"
         ></div>
       </template>
 
-      <div class="flex items-start" :class="[{'flex-row-reverse' : msg.isSent}]">
-        <template v-if="chatData.msg[index-1]">
+      <div class="flex items-start" :class="[{'flex-row-reverse' : msg.sent_by_operator}]">
+        <template v-if="chatData[index-1]">
           <template
-            v-if="(!hasSentPreviousMsg(chatData.msg[index-1].isSent, msg.isSent) || !isSameDay(msg.time, chatData.msg[index-1].time))"
+            v-if="(!hasSentPreviousMsg(chatData[index-1].sent_by_operator, msg.sent_by_operator) || !isSameDay(msg.created_at, chatData[index-1].created_at))"
           >
             <vs-avatar
               size="40px"
               class="border-2 shadow border-solid border-white m-0 flex-shrink-0"
-              :class="msg.isSent ? 'sm:ml-5 ml-3' : 'sm:mr-5 mr-3'"
-              :src="senderImg(msg.isSent)"
+              :class="msg.sent_by_operator ? 'sm:ml-5 ml-3' : 'sm:mr-5 mr-3'"
+              :src="senderImg(msg.sent_by_operator)"
             ></vs-avatar>
           </template>
         </template>
@@ -39,30 +39,31 @@
           <vs-avatar
             size="40px"
             class="border-2 shadow border-solid border-white m-0 flex-shrink-0"
-            :class="msg.isSent ? 'sm:ml-5 ml-3' : 'sm:mr-5 mr-3'"
-            :src="senderImg(msg.isSent)"
+            :class="msg.sent_by_operator ? 'sm:ml-5 ml-3' : 'sm:mr-5 mr-3'"
+            :src="senderImg(msg.sent_by_operator)"
           ></vs-avatar>
         </template>
 
-        <template v-if="chatData.msg[index-1]">
+        <template v-if="chatData[index-1]">
           <div
             class="mr-16"
-            v-if="!(!hasSentPreviousMsg(chatData.msg[index-1].isSent, msg.isSent) || !isSameDay(msg.time, chatData.msg[index-1].time))"
+            v-if="!(!hasSentPreviousMsg(chatData[index-1].sent_by_operator, msg.sent_by_operator) || !isSameDay(msg.created_at, chatData[index-1].created_at))"
           ></div>
         </template>
 
         <div
           class="msg break-words relative shadow-md rounded py-3 px-4 mb-2 rounded-lg max-w-sm"
-          :class="{'bg-primary-gradient text-white': msg.isSent, 'border border-solid border-transparent bg-white': !msg.isSent}"
+          :class="{'bg-primary-gradient text-white': msg.sent_by_operator, 'border border-solid border-transparent bg-white': !msg.sent_by_operator}"
         >
-          <span>{{ msg.textContent }}</span>
+          <span>{{ msg.text }}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   props: {
     userId: {
@@ -72,7 +73,7 @@ export default {
   },
   computed: {
     chatData() {
-      return this.$store.getters["chat/chatDataOfUser"](this.userId);
+      return this.$store.getters["chat/messages"](this.userId);
     },
     activeUserImg() {
       return this.$store.state.AppActiveUser.photoURL;
@@ -80,7 +81,7 @@ export default {
     senderImg() {
       return (isSentByActiveUser) => {
         if (isSentByActiveUser) return this.$store.state.AppActiveUser.photoURL;
-        else return this.$store.getters["chat/contact"](this.userId).photoURL;
+        else return this.$store.getters["chat/chatUser"](this.userId).photoURL;
       };
     },
     hasSentPreviousMsg() {
@@ -116,6 +117,7 @@ export default {
   },
   mounted() {
     this.scrollToBottom();
+    this.$store.dispatch('chat/fetchMessages', this.userId);
   },
 };
 </script>

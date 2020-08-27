@@ -94,8 +94,8 @@ import TheFooter           from '@/layouts/components/TheFooter.vue'
 import themeConfig         from '@/../themeConfig.js'
 import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
 import VxBreadcrumb        from '@/layouts/components/VxBreadcrumb.vue'
-import io from 'socket.io-client';
 import { mapState } from 'vuex'
+import clientSocket from '@/socket';
 
 export default {
   props: {
@@ -196,16 +196,10 @@ export default {
     this.setNavMenuVisibility(this.$store.state.mainLayoutType)
     await this.$store.dispatch('fetchOrganization', this.id);
 
-    const clientSocket = io(`${process.env.VUE_APP_WS_URL}/frontend`, {
-      query: {
-        authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        organizationId: this.id
-      },
-    });
-    clientSocket.on('connect', function() {
+    clientSocket(this.id).on('connect', function() {
       console.log('WS connected');
     });
-    clientSocket.on('newNotification', (data) => {
+    clientSocket(this.id).on('newNotification', (data) => {
       this.$store.dispatch('handleNewNotification', data);
     });
   }

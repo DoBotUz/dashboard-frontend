@@ -62,14 +62,14 @@
               class="cursor-pointer"
               v-for="(contact, index) in chatContacts"
               :key="index"
-              @click="updateActiveChatUser(contact.uid)"
+              @click="updateActiveChatUser(contact.id)"
             >
               <chat-contact
                 showLastMsg
                 :contact="contact"
-                :lastMessaged="chatLastMessaged(contact.uid).time"
-                :unseenMsg="chatUnseenMessages(contact.uid)"
-                :isActiveChatUser="isActiveChatUser(contact.uid)"
+                :lastMessaged="chatLastMessaged(contact.id).created_at"
+                :unseenMsg="chatUnseenMessages(contact.id)"
+                :isActiveChatUser="isActiveChatUser(contact.id)"
               ></chat-contact>
             </li>
           </ul>
@@ -152,7 +152,8 @@ import ChatLog from "./ChatLog.vue";
 import ChatNavbar from "./ChatNavbar.vue";
 import UserProfile from "./UserProfile.vue";
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
-// import moduleChat from "@/store/chat/moduleChat.js";
+import { mapActions, mapGetters } from 'vuex';
+import clientSocket from '@/socket'; 
 
 export default {
   data() {
@@ -210,7 +211,7 @@ export default {
       };
     },
     chatContacts() {
-      return this.$store.getters["chat/chatContacts"];
+      return this.$store.getters["chat/chats"];
     },
     contacts() {
       return this.$store.getters["chat/contacts"];
@@ -245,14 +246,9 @@ export default {
     },
     updateActiveChatUser(contactId) {
       this.activeChatUser = contactId;
-      if (this.$store.getters["chat/chatDataOfUser"](this.activeChatUser)) {
+      if (this.$store.getters["chat/chatUnseenMessages"](this.activeChatUser)) {
         this.$store.dispatch("chat/markSeenAllMessages", contactId);
       }
-      const chatData = this.$store.getters["chat/chatDataOfUser"](
-        this.activeChatUser
-      );
-      if (chatData) this.isChatPinned = chatData.isPinned;
-      else this.isChatPinned = false;
       this.toggleChatSidebar();
       this.typedMessage = "";
     },
@@ -264,14 +260,10 @@ export default {
     sendMsg() {
       if (!this.typedMessage) return;
       const payload = {
-        isPinned: this.isChatPinned,
-        msg: {
-          textContent: this.typedMessage,
-          time: String(new Date()),
-          isSent: true,
-          isSeen: false,
-        },
-        id: this.activeChatUser,
+        text: this.typedMessage,
+        type: 0,
+        sent_by_operator: true,
+        recipient: this.activeChatUser
       };
       this.$store.dispatch("chat/sendChatMessage", payload);
       this.typedMessage = "";
@@ -302,17 +294,22 @@ export default {
     ChatLog,
   },
   created() {
-    // this.$store.registerModule("chat", moduleChat);
-    this.$store.dispatch("chat/fetchContacts");
-    this.$store.dispatch("chat/fetchChatContacts");
-    this.$store.dispatch("chat/fetchChats");
+    this.$store.dispatch('chat/fetchChats');
     this.setSidebarWidth();
   },
-  beforeDestroy() {
-    this.$store.unregisterModule("chat");
-  },
   mounted() {
-    this.$store.dispatch("chat/setChatSearchQuery", "");
+    // this.$store.dispatch("chat/setChatSearchQuery", "");
+    clientSocket(this.$store.state.organization.id).on('newChatMessage', (data) => {
+      let message = JSON.parse(data);
+      if (message.author == this.activeChatUser || message.recipient == this.activeChatUser) {
+        this.$store.dispatch('chat/addNewMessage', {
+          botUserId: this.activeChatUser,
+          message
+        });
+      } else {
+        this.$store.dispatch('chat/fetchChats');
+      }
+    });
   },
 };
 </script>
