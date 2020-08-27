@@ -5,4 +5,5 @@ export default () => ({
   messages: (organizationId, botUserId) => axios.get(`/${organizationId}/chat/messages/${botUserId}`),
   readMessages: (organizationId, botUserId) => axios.get(`/${organizationId}/chat/messages/read/${botUserId}`),
   sendMessage: (organizationId, body) => axios.post(`/${organizationId}/chat/messages`, body),
+  search: (organizationId, query) => axios.get(`/${organizationId}/chat/messages/search/?q=${query}`),
 });

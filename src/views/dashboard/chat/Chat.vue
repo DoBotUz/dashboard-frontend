@@ -172,7 +172,7 @@ export default {
       },
       clickNotClose: true,
       isChatSidebarActive: true,
-      isLoggedInUserProfileView: false,
+      isLoggedInUserProfileView: false
     };
   },
   watch: {
@@ -218,10 +218,10 @@ export default {
     },
     searchQuery: {
       get() {
-        return this.$store.state.chat.chatSearchQuery;
+        return this.$store.getters['chat/chatSearchQuery'];
       },
       set(val) {
-        this.$store.dispatch("chat/setChatSearchQuery", val);
+        this.$store.dispatch("chat/setChatSearchQuery", val)
       },
     },
     scrollbarTag() {

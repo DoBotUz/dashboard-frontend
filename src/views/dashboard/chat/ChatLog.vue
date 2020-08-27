@@ -119,5 +119,10 @@ export default {
     this.scrollToBottom();
     this.$store.dispatch('chat/fetchMessages', this.userId);
   },
+  watch: {
+    userId: function(newVal, oldVal) {
+      this.$store.dispatch('chat/fetchMessages', newVal);
+    }
+  }
 };
 </script>

@@ -1,28 +1,32 @@
 import Vue from 'vue';
 import api from '@/api/chat';
+import _ from 'lodash'
 
 export const state = {
   chats: [],
+  searchChats: [],
   search: [],
   loading: false,
   messages: {},
+  chatSearchQuery: '',
 }
 
 export const getters = {
-  chats: (state) => state.chats,
-  chatUser: (state) => (userId) => state.chats.find(chat => chat.id == userId) || {},
-  chatLastMessaged: (state) => (userId) => {
-    const chat = state.chats.find(chat => chat.id == userId);
-    return chat ? chat.lastMessage : {};
+  chats: (state) => state.chatSearchQuery.length > 3 ? state.searchChats : state.chats,
+  chatUser: (state, getters) => (userId) => getters.chats.find(chat => chat.id == userId) || {},
+  chatLastMessaged: (state, getters) => (userId) => {
+    const chat = getters.chats.find(chat => chat.id == userId);
+    return chat.lastMessage ? chat.lastMessage : {};
   },
-  chatUnseenMessages: (state) => (userId) => {
-    const chat = state.chats.find(chat => chat.id == userId);
+  chatUnseenMessages: (state, getters) => (userId) => {
+    const chat = getters.chats.find(chat => chat.id == userId);
     return chat ? chat.unreadCount : 0;
   },
   messages: (state) => (chatId) => {
     const msgs = state.messages[chatId];
     return msgs || [];
   },
+  chatSearchQuery: (state) => state.chatSearchQuery,
 }
 
 export const mutations = {
@@ -45,6 +49,9 @@ export const mutations = {
   },
   ADD_NEW_MESSAGE(state, payload) {
     let messages = state.messages[payload.botUserId];
+    if (!messages) {
+      messages = [];
+    }
     messages.push(payload.message);
     Vue.set(state.messages, payload.botUserId, messages);
     state.chats = state.chats.map(chat => {
@@ -56,6 +63,12 @@ export const mutations = {
       }
       return chat;
     })
+  },
+  SET_SEARCH_QUERY(state, payload) {
+    state.chatSearchQuery = payload;
+  },
+  SET_SEARCH_QUERY_RESULT(state, payload) {
+    state.searchChats = payload;
   }
 }
 
@@ -129,7 +142,6 @@ export const actions = {
         .sendMessage(rootState.organization.id, body)
         .then(({ data }) => {
           if (data.status === 'Success') {
-            console.log(data);
             resolve(data);
           } else {
             reject(data);
@@ -141,7 +153,30 @@ export const actions = {
   },
   addNewMessage({ commit, rootState }, payload) {
     commit('ADD_NEW_MESSAGE', payload);
-  }
+  },
+  setChatSearchQuery({ commit, rootState, dispatch }, payload) {
+    commit('SET_SEARCH_QUERY', payload);
+    if (payload.length > 3) {
+      dispatch('search', payload);
+    }
+  },
+  search: _.throttle(({ commit, rootState }, payload) => {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', true);
+      return api()
+        .search(rootState.organization.id, payload)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            commit('SET_SEARCH_QUERY_RESULT', data.data);
+            resolve(data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject)
+        .finally(() => commit('SET_LOADING', false))
+    });
+  }, 3000)
 }
 
 export const namespaced = true;
