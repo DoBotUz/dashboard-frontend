@@ -1,6 +1,6 @@
 <template>
   <div class="bot-users">
-    <vs-table ref="table" v-model="selected" search :data="botUsers">
+    <vs-table ref="table" v-model="selected" search :data="botUsers" :max-items="15" pagination>
       <template slot="thead">
         <vs-th sort-key="id">ID</vs-th>
         <vs-th>Аватар</vs-th>

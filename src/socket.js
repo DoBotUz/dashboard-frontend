@@ -4,7 +4,6 @@ let socketOrganizationId = null;
 let clientSocket = null;
 
 export default (organizationId) => {
-  console.log(organizationId, socketOrganizationId);
   if (organizationId != socketOrganizationId) {
     clientSocket = io(`${process.env.VUE_APP_WS_URL}/frontend`, {
       query: {

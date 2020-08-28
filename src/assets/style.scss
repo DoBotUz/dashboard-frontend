@@ -4,3 +4,9 @@
 .con-vs-popup.fullscreen .vs-popup {
   width: 75% !important;
 }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

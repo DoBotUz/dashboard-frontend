@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vs-table ref="table" search :data="orders" @selected="onSelected" class="vs-con-loading__container">
+    <vs-table ref="table" search :data="orders" @selected="onSelected" class="vs-con-loading__container" :max-items="15" pagination>
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <div class="flex flex-wrap-reverse items-center data-list-btn-container">
           <!-- ADD NEW -->

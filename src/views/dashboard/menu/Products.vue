@@ -1,6 +1,6 @@
 <template>
   <div class="menu vs-con-loading__container">
-    <vs-table search :data="tableData" @selected="onSelected">
+    <vs-table search :data="tableData" @selected="onSelected" :max-items="15" pagination>
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
         <div class="flex flex-wrap-reverse items-center">
           <div

@@ -385,7 +385,6 @@ export default {
     },
     async addOrUpdateCategory() {
       await this.$validator.validateAll('category');
-      console.log(this.errors);
       if (this.errors.any()) {
           this.$vs.notify({
             title: "Неверный ввод",
@@ -454,7 +453,6 @@ export default {
 
     async addOrUpdateProduct() {
       await this.$validator.validateAll('product');
-      console.log(this.errors);
       if (this.errors.any()) {
           this.$vs.notify({
             title: "Неверный ввод",

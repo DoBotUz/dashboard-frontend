@@ -1,6 +1,6 @@
 <template>
   <div class="feedbacks">
-    <vs-table ref="table" search :data="feedbacks">
+    <vs-table ref="table" search :data="feedbacks" :max-items="15" pagination>
       <template slot="thead">
         <vs-th sort-key="created_at">Дата</vs-th>
         <vs-th sort-key="rate">Оценка</vs-th>

@@ -157,7 +157,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.$store.state.AppActiveUser);
+    // console.log(this.$store.state.AppActiveUser);
     if(this.$store.state.AppActiveUser){
       this.email = this.$store.state.AppActiveUser.email;
       this.first_name = this.$store.state.AppActiveUser.first_name;
