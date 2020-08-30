@@ -20,6 +20,10 @@ Vue.use(Vuesax)
 Vue.use(Clipboard)
 
 
+import VueQrcode from '@chenfengyuan/vue-qrcode';
+Vue.component(VueQrcode.name, VueQrcode);
+
+
 
 // axios
 import axios from "./axios.js"
