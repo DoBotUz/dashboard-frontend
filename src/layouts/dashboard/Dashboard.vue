@@ -11,6 +11,8 @@
 <template>
   <div class="layout--main" :class="[layoutTypeClass, navbarClasses, footerClasses, {'no-scroll': isAppPage}]">
 
+    <emoji-selector />
+
     <v-nav-menu
       :navMenuItems = "navMenuItems"
       title         = "Vuexy"
@@ -94,6 +96,7 @@ import TheFooter           from '@/layouts/components/TheFooter.vue'
 import themeConfig         from '@/../themeConfig.js'
 import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
 import VxBreadcrumb        from '@/layouts/components/VxBreadcrumb.vue'
+import EmojiSelector       from '@/layouts/components/EmojiSelector.vue'
 import { mapState } from 'vuex'
 import clientSocket from '@/socket';
 
@@ -109,6 +112,7 @@ export default {
     TheNavbarVertical,
     VNavMenu,
     VxBreadcrumb,
+    EmojiSelector
   },
   data() {
     return {
