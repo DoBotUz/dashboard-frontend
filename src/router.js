@@ -8,13 +8,15 @@
 ==========================================================================================*/
 
 
-import Vue from 'vue'
-import Router from 'vue-router'
-import store from './store/store'
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from './store/store';
+
 
 Vue.use(Router)
 
-const defaultRole = 'editor';
+const defaultRole = 'isPublic';
+
 
 const router = new Router({
     mode: 'history',
@@ -36,7 +38,7 @@ const router = new Router({
                 component: () => import('./views/organizations/Organizations.vue'),
                 meta: {
                   authRequired: true,
-                  rule: defaultRole,
+                  rule: 'isAdmin',
                 },
               },
               {
@@ -45,7 +47,7 @@ const router = new Router({
                 component: () => import('./views/support/Support.vue'),
                 meta: {
                   authRequired: true,
-                  rule: defaultRole,
+                  rule: 'isAdmin',
                 },
               },
               {
@@ -54,7 +56,7 @@ const router = new Router({
                 component: () => import('./views/settings/Settings.vue'),
                 meta: {
                   authRequired: true,
-                  rule: defaultRole,
+                  rule: 'isAdmin',
                 },
               },
               {
@@ -63,7 +65,7 @@ const router = new Router({
                 component: () => import('./views/profile/Profile.vue'),
                 meta: {
                   authRequired: true,
-                  rule: defaultRole,
+                  rule: 'isAdmin',
                 },
               },
             ],
@@ -80,6 +82,10 @@ const router = new Router({
           redirect: {
             name: 'DashboardMenu',
           },
+          meta: {
+            authRequired: true,
+            rule: 'isManager',
+          },
           children: [
             {
               path: 'menu/:parent?',
@@ -90,7 +96,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isManager',
                 pageTitle: 'Категории',
               },
               props: (route) => ({
@@ -106,7 +112,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isManager',
                 pageTitle: 'Продукты',
               },
             },
@@ -119,14 +125,17 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isOperator',
                 pageTitle: 'Подписчики',
               },
             },
             {
               path: 'mailing',
               redirect: 'mailing/drafts',
-              name: 'DashBoardMailing'
+              name: 'DashBoardMailing',
+              meta: {
+                rule: 'isManager',
+              },
             },
             {
               path: 'mailing/:filter',
@@ -139,7 +148,7 @@ const router = new Router({
                 ],
                 parent: 'DashBoardMailing',
                 no_scroll: true,
-                rule: defaultRole,
+                rule: 'isManager',
                 pageTitle: 'Рассылки',
               },
             },
@@ -152,7 +161,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isManager',
                 pageTitle: 'Филиалы',
               },
             },
@@ -165,7 +174,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isOwner',
                 pageTitle: 'Настройки',
               },
             },
@@ -178,7 +187,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isOperator',
                 pageTitle: 'Заказы'
               }
             },
@@ -191,7 +200,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isOperator',
               },
               props: (route) => ({
                 order_id: Number(route.params.order_id) || null
@@ -206,7 +215,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
-                rule: defaultRole,
+                rule: 'isOperator',
                 pageTitle: 'Отзывы'
               },
             },
@@ -215,15 +224,11 @@ const router = new Router({
               component: () => import('./views/dashboard/chat/Chat.vue'),
               name: 'DashboardChat',
               meta: {
-                rule: defaultRole,
+                rule: 'isOperator',
               },
               pageTitle: 'Чат'
             }
           ],
-          meta: {
-            authRequired: true,
-            rule: defaultRole,
-          },
         },
     // =============================================================================
     // FULL PAGE LAYOUTS
