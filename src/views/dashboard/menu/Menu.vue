@@ -255,9 +255,12 @@
 <script>
 import { mapGetters, mapActions, createNamespacedHelpers } from "vuex";
 import { loaderMixin } from '@/mixins';
+import { Picker } from 'emoji-mart-vue'
+
 
 export default {
   mixins: [loaderMixin],
+
   beforeRouteUpdate(to, from, next) {
     const parentId = to.params.parent;
     if (parentId === undefined) {
@@ -295,6 +298,11 @@ export default {
     ];
     next();
   },
+
+  components: {
+    Picker,
+  },
+
   props: {
     parent: Number,
   },

@@ -13,9 +13,12 @@ import App from './App.vue'
 
 // Vuesax Component Framework
 import Vuesax from 'vuesax'
+import Clipboard from 'v-clipboard'
 import 'material-icons/iconfont/material-icons.css' //Material Icons
 import 'vuesax/dist/vuesax.css'; // Vuesax
 Vue.use(Vuesax)
+Vue.use(Clipboard)
+
 
 
 // axios
@@ -96,6 +99,30 @@ const i18n = new VueI18n({
 Vue.prototype.$url = process.env.VUE_APP_BASE_URL;
 Vue.config.productionTip = false
 
+Vue.mixin({
+  methods: {
+    getEmojiI18N() {
+      return {
+        search: 'Поиск',
+        notfound: 'Эмоджи не найден',
+        categories: {
+          search: 'Результат поиска',
+          recent: 'Часто используемые',
+          people: 'Улыбки и Люди',
+          nature: 'Животные и Природа',
+          foods: 'Еда и Напитки',
+          activity: 'Занятия',
+          places: 'Путешествия',
+          objects: 'Объекты',
+          symbols: 'Символы',
+          flags: 'Флаги',
+          custom: 'Общее',
+        }
+      };
+    }
+  }
+});
+
 global.vm = new Vue({
     router,
     store,
@@ -105,7 +132,7 @@ global.vm = new Vue({
     mounted(){
       let that = this;
       axios.interceptors.response.use(undefined, function (err) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
           if (err.message && err.message === 'Network Error') {
             global.vm.$vs.notify({
               title: 'Проблемы с сетью',
