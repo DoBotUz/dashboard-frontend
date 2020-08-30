@@ -51,18 +51,18 @@ const router = new Router({
                 },
               },
               {
-                path: '/settings',
-                name: 'settings',
-                component: () => import('./views/settings/Settings.vue'),
+                path: '/profile',
+                name: 'profile',
+                component: () => import('./views/profile/Profile.vue'),
                 meta: {
                   authRequired: true,
                   rule: 'isAdmin',
                 },
               },
               {
-                path: '/profile',
-                name: 'profile',
-                component: () => import('./views/profile/Profile.vue'),
+                path: '/settings',
+                name: 'settings',
+                component: () => import('./views/settings/Settings.vue'),
                 meta: {
                   authRequired: true,
                   rule: 'isAdmin',
@@ -79,6 +79,7 @@ const router = new Router({
           props: (route) => ({
             id: Number(route.params.id)
           }),
+          name: 'ShopHome',
           redirect: {
             name: 'DashboardMenu',
           },
@@ -88,6 +89,15 @@ const router = new Router({
           },
           children: [
             {
+              path: 'profile',
+              name: 'ProfileInShop',
+              component: () => import('./views/profile/Profile.vue'),
+              meta: {
+                authRequired: true,
+                rule: 'isOperator',
+              },
+            },
+            {
               path: 'menu/:parent?',
               component: () => import('./views/dashboard/menu/Menu.vue'),
               name: 'DashboardMenu',
@@ -96,6 +106,7 @@ const router = new Router({
                   { title: 'Заведения', url: '/', slug: 'home' },
                   { title: '', slug: 'organization-name', active: true },
                 ],
+                parent: 'ShopHome',
                 rule: 'isManager',
                 pageTitle: 'Категории',
               },
@@ -229,6 +240,7 @@ const router = new Router({
               pageTitle: 'Чат'
             }
           ],
+
         },
     // =============================================================================
     // FULL PAGE LAYOUTS
@@ -272,12 +284,45 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+
+
   if(store.getters.isAuthenticated && (to.name === 'page-login' || to.name === 'page-complete-registration')){
     next('/');
   }
 
-  if (!to.meta.authRequired || (to.meta.authRequired && store.getters.isAuthenticated)) {
+  if(to.path === '/') {
+    if (store.getters.isAuthenticated) {
+      const profile = store.getters.profile ? store.getters.profile : {};
+      if (profile.role === 'operator') {
+        return next({
+          name: 'DashboardOrders',
+          params: {
+            id: profile.organizationId
+          }
+        });
+      } else if(profile.role === 'manager' || profile.role === 'owner') {
+        return next({
+          name: 'DashboardMenu',
+          params: {
+            id: profile.organizationId
+          }
+        });
+      }
+    } else {
+      return next('/pages/login');
+    }
+  }
 
+  if (!to.meta.authRequired || (to.meta.authRequired && store.getters.isAuthenticated)) {
+    if(store.getters.isAuthenticated){
+      const profile = store.getters.profile ? store.getters.profile : {};
+      if(to.name === 'DashboardMenu' && profile.role === 'operator'){
+        return next({
+          name: 'DashboardOrders',
+          params: to.params
+        });
+      }
+    }
     return next();
   }
   next('/pages/login');

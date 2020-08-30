@@ -16,9 +16,7 @@
 
           <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2" @click="$router.push({
-              name: 'profile'
-            })">Мой профиль</span>
+            <span class="ml-2" @click="goToProfile">Мой профиль</span>
           </li>
           <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="HomeIcon" svgClasses="w-4 h-4" />
@@ -40,6 +38,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -47,6 +46,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['profile']),
     activeUserInfo() {
       return this.$store.state.AppActiveUser
     }
@@ -61,6 +61,15 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout').then(() => { this.$router.push('/pages/login'); });
+    },
+    goToProfile() {
+      if(this.profile && this.profile.id){
+        if (this.profile.role === 'admin') {
+          this.$router.push({ name: 'profile' }).catch((e) => {});
+        } else {
+          this.$router.push({ name: 'ProfileInShop', params: { id: this.profile.organizationId } }).catch((e) => {});
+        }
+      }
     },
   }
 }
