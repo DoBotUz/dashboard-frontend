@@ -23,7 +23,7 @@ export default new AclCreate({
   acceptLocalRules : true,
   globalRules: {
     admin  : new AclRule('admin').generate(),
-    operator : new AclRule('operator').or('admin').generate()
+    operator : new AclRule('operator').or('admin').generate(),
     isAdmin: new AclRule(AppRoles.admin).generate(),
     isOwner: new AclRule(AppRoles.owner).or(AppRoles.admin).generate(),
     isManager: new AclRule(AppRoles.manager).or(AppRoles.admin).or(AppRoles.owner).generate(),
