@@ -14,7 +14,7 @@ import store from './store/store'
 
 Vue.use(Router)
 
-const defaultRole = 'editor';
+const defaultRole = 'operator';
 
 const router = new Router({
     mode: 'history',
@@ -54,7 +54,7 @@ const router = new Router({
                 component: () => import('./views/settings/Settings.vue'),
                 meta: {
                   authRequired: true,
-                  rule: defaultRole,
+                  rule: 'admin',
                 },
               },
               {
@@ -218,7 +218,17 @@ const router = new Router({
                 rule: defaultRole,
               },
               pageTitle: 'Чат'
-            }
+            },
+            {
+              path: 'employees',
+              component: () => import('./views/dashboard/employees/Employees.vue'),
+              name: 'DashboardEmployees',
+              meta: {
+                rule: defaultRole,
+              },
+              pageTitle: 'Сотрудники'
+            },
+
           ],
           meta: {
             authRequired: true,
