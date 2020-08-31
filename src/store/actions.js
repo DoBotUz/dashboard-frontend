@@ -53,6 +53,7 @@ const actions = {
     },
 
     fetchOrganization({ commit }, organizationId) {
+      commit('SET_ORGANIZATION', {});
       return new Promise((resolve, reject) => {
         organizationsApi()
         .get(organizationId)

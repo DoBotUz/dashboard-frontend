@@ -23,6 +23,7 @@ import * as moduleAuth from './modules/auth';
 import * as moduleOrganizations from './modules/organizations';
 import * as moduleBranches from './modules/branches';
 import * as moduleMenu from './modules/menu';
+import * as moduleAnalytics from './modules/analytics';
 import * as moduleBotUsers from './modules/botUsers';
 import * as moduleMassNotifs from './modules/massNotifs';
 import * as moduleOrders from './modules/orders';
@@ -41,6 +42,7 @@ export default new Vuex.Store({
       organizations: moduleOrganizations,
       branches: moduleBranches,
       menu: moduleMenu,
+      analytics: moduleAnalytics,
       botUsers: moduleBotUsers,
       massNotifs: moduleMassNotifs,
       orders: moduleOrders,

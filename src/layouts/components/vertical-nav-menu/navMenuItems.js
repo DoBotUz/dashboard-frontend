@@ -11,6 +11,14 @@
 export default [
   {
     url: {
+      name: 'DashboardAnalytics'
+    },
+    name: "Аналитика",
+    slug: "analytics",
+    icon: "PieChartIcon",
+  },
+  {
+    url: {
       name: 'DashboardMenu'
     },
     name: "Категории",

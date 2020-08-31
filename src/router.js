@@ -81,7 +81,7 @@ const router = new Router({
           }),
           name: 'ShopHome',
           redirect: {
-            name: 'DashboardMenu',
+            name: 'DashboardAnalytics',
           },
           meta: {
             authRequired: true,
@@ -95,6 +95,19 @@ const router = new Router({
               meta: {
                 authRequired: true,
                 rule: 'isOperator',
+              },
+            },
+            {
+              path: 'analytics',
+              name: 'DashboardAnalytics',
+              component: () => import('./views/dashboard/analytics/Analytics.vue'),
+              meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
+                authRequired: true,
+                rule: 'isManager',
               },
             },
             {
@@ -302,7 +315,7 @@ router.beforeEach((to, from, next) => {
         });
       } else if(profile.role === 'manager' || profile.role === 'owner') {
         return next({
-          name: 'DashboardMenu',
+          name: 'DashboardAnalytics',
           params: {
             id: profile.organizationId
           }
