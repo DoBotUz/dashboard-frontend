@@ -17,7 +17,6 @@ Vue.use(Router)
 
 const defaultRole = 'isPublic';
 
-
 const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
@@ -238,7 +237,17 @@ const router = new Router({
                 rule: 'isOperator',
               },
               pageTitle: 'Чат'
-            }
+            },
+            {
+              path: 'employees',
+              component: () => import('./views/dashboard/employees/Employees.vue'),
+              name: 'DashboardEmployees',
+              meta: {
+                rule: defaultRole,
+              },
+              pageTitle: 'Сотрудники'
+            },
+
           ],
 
         },

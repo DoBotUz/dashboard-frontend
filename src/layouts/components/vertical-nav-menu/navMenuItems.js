@@ -88,20 +88,20 @@ export default [
     items: [
       {
         url: {
+          name: 'DashboardEmployees',
+        },
+        name: "Сотрудники",
+        slug: "employees",
+        icon: "UsersIcon",
+      },
+      {
+        url: {
           name: 'DashboardBranches'
         },
         name: "Филиалы",
         slug: "page2",
         icon: "HomeIcon",
       },
-      // {
-      //   url: {
-      //     name: 'DashboardDelivery',
-      //   },
-      //   name: "Доставка",
-      //   slug: "page2",
-      //   icon: "TruckIcon",
-      // },
       // {
       //   url: {
       //     name: 'DashboardPaymentTypes',
