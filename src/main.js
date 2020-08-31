@@ -24,6 +24,17 @@ import VueQrcode from '@chenfengyuan/vue-qrcode';
 Vue.component(VueQrcode.name, VueQrcode);
 
 
+import VueApexCharts from 'vue-apexcharts';
+
+Vue.use(VueApexCharts);
+
+import ru from "apexcharts/dist/locales/ru.json";
+window.Apex.chart = {
+  locales: [ru],
+  defaultLocale: "ru"
+};
+
+
 
 // axios
 import axios from "./axios.js"
@@ -126,6 +137,7 @@ Vue.mixin({
     }
   }
 });
+
 
 global.vm = new Vue({
     router,
