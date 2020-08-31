@@ -1,5 +1,10 @@
 <template>
   <div>
+    <vs-button color="primary" type="filled" icon="link" @click="qrPopup = true">QR код бота</vs-button>
+    <vs-popup class="holamundo"  title="Сохраните его как картинку" :active.sync="qrPopup" style="text-align: center;">
+      <qrcode :value="tgBotUrl" :options="{ width: 250 }" v-if="tgBotUrl"></qrcode>
+    </vs-popup>
+
     <div>
       <vs-input
         class="w-full mt-8"
@@ -85,6 +90,8 @@ export default {
   data() {
     return {
       token: '',
+      qrPopup: false,
+      tgBotUrl: '',
     };
   },
 
@@ -104,6 +111,7 @@ export default {
     validateForm () {
       return !this.errors.any()
     },
+
     isOrganizationActive: {
       get() {
         return this.organization.bot.status === 10
@@ -115,7 +123,7 @@ export default {
           status
         });
       }
-    }
+    },
   },
 
   methods: {
@@ -198,7 +206,13 @@ export default {
 
   async mounted() {
     await this.getOrganization(this.organization.id);
-    this.token = this.organization.bot.token;
+    const token = this.organizationObj.bot.token ? this.organizationObj.bot.token : '';
+    telegramApi.getMe(token).then(({ data }) => {
+      if (data.ok) {
+       this.tgBotUrl = `https://t.me/${data.result.username}`;
+      }
+    });
+    this.token = token;
   }
 };
 </script>

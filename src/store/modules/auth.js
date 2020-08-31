@@ -11,7 +11,10 @@ export const getters = {
   },
   isAuthenticated(state) {
     return !!state.token;
-  }
+  },
+  profile: () => {
+    return localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : {};
+  },
 }
 
 export const mutations = {
