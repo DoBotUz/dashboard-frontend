@@ -16,6 +16,12 @@
                 </vx-card>
             </div>
             <div id="charts-data" class="vx-row vs-con-loading__container">
+              <div class="vx-coll w-full mb-base">
+                <vx-card title="Карта заказов">
+                  <yandex-map :coords="mapCoords" :zoom="11" v-on:map-was-initialized="mapLoaded">
+                  </yandex-map>
+                </vx-card>
+              </div>
               <div class="vx-col md:w-1/2 w-full mb-base">
                   <vx-card title="Новые подписчики">
                       <vue-apex-charts type="line" height="350" :options="botUsersChartOptions" :series="botUsersData.series" v-if="botUsersData.series"></vue-apex-charts>
@@ -43,6 +49,8 @@ import * as lang from 'vuejs-datepicker/src/locale';
 
 
 import { mapActions, mapState } from 'vuex';
+import { loadYmap } from 'vue-yandex-maps';
+
 
 export default {
   name: 'Analytics',
@@ -52,6 +60,7 @@ export default {
   },
   data() {
     return {
+      mapCoords: [41.311151, 69.279737],
       startDate: null,
       endDate: null,
       languages: lang,
@@ -89,7 +98,7 @@ export default {
               curve: 'stepline',
           },
           xaxis: {
-            type: 'datetime',
+            type: this.endDate ? 'datetime' : '',
             labels: {
               formatter(value) {
                 if (that.endDate)
@@ -120,7 +129,7 @@ export default {
           },
 
           xaxis: {
-            type: 'datetime',
+            type: this.endDate ? 'datetime' : '',
             labels: {
               formatter(value) {
                 if (that.endDate)
@@ -144,7 +153,25 @@ export default {
     }
   },
   methods: {
-    ...mapActions('analytics', ['fetchOrdersData', 'fetchBotUsersData', 'fetchCategoryOrdersData', 'fetchForPeriod']),
+    ...mapActions('analytics', ['fetchOrdersData', 'fetchBotUsersData', 'fetchCategoryOrdersData', 'fetchForPeriod', 'fetchGeoOrders']),
+
+    async mapLoaded(map) {
+
+      let heatmapScript = document.createElement('script')
+      heatmapScript.setAttribute('src', 'https://yastatic.net/s3/mapsapi-jslibs/heatmap/0.0.1/heatmap.min.js')
+      heatmapScript.onload = () => {
+        ymaps.modules.require(['Heatmap'], async (Heatmap) => {
+          const data = await this.fetchGeoOrders();
+          const heatmap = new Heatmap(data);
+          heatmap.setMap(map);
+        });
+      }
+      document.head.appendChild(heatmapScript);
+
+
+
+
+    },
 
     periodChanged(){
       this.$vs.loading({
@@ -163,10 +190,17 @@ export default {
 
     }
   },
-  mounted() {
+  async mounted() {
     this.fetchOrdersData();
     this.fetchBotUsersData();
     this.fetchCategoryOrdersData();
   },
 }
 </script>
+
+<style lang="scss">
+  .ymap-container{
+    width: 100%;
+    height: 450px;
+  }
+</style>

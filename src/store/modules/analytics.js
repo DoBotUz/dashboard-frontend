@@ -85,6 +85,20 @@ export const actions = {
         .catch(reject);
     });
   },
+  fetchGeoOrders( {rootState }, params = {}) {
+    return new Promise((resolve, reject) => {
+      api()
+        .geoOrders(rootState.organization.id, params)
+        .then(({ data }) => {
+          if (data.status === 'Success') {
+            resolve(data.data);
+          } else {
+            reject(data);
+          }
+        })
+        .catch(reject);
+    });
+  }
 }
 
 export const namespaced = true
