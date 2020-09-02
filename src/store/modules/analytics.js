@@ -4,6 +4,11 @@ export const state = {
   ordersData: {},
   botUsersData: {},
   categoryOrdersData: {},
+  metaData: {
+    bot_users_num: 0,
+    orders_num: 0,
+    feedbacks_num: 0,
+  },
 }
 
 export const getters = {
@@ -19,55 +24,13 @@ export const mutations = {
   },
   SET_CATEGORY_ORDERS_DATA(state, data){
     state.categoryOrdersData = data;
+  },
+  SET_META_DATA(state, data) {
+    state.metaData = data;
   }
 }
 
 export const actions = {
-  fetchOrdersData({ commit, rootState }) {
-    return new Promise((resolve, reject) => {
-      api()
-        .ordersMonthly(rootState.organization.id)
-        .then(({ data }) => {
-          if (data.status === 'Success') {
-            commit('SET_ORDERS_DATA', data.data);
-            resolve(data);
-          } else {
-            reject(data);
-          }
-        })
-        .catch(reject);
-    });
-  },
-  fetchBotUsersData({ commit, rootState }) {
-    return new Promise((resolve, reject) => {
-      api()
-        .botUsersMonthly(rootState.organization.id)
-        .then(({ data }) => {
-          if (data.status === 'Success') {
-            commit('SET_BOT_USERS_DATA', data.data);
-            resolve(data);
-          } else {
-            reject(data);
-          }
-        })
-        .catch(reject);
-    });
-  },
-  fetchCategoryOrdersData({ commit, rootState }) {
-    return new Promise((resolve, reject) => {
-      api()
-        .categoryOrders(rootState.organization.id)
-        .then(({ data }) => {
-          if (data.status === 'Success') {
-            commit('SET_CATEGORY_ORDERS_DATA', data.data);
-            resolve(data);
-          } else {
-            reject(data);
-          }
-        })
-        .catch(reject);
-    });
-  },
   fetchForPeriod({ commit, rootState }, params) {
     return new Promise((resolve, reject) => {
       api()
@@ -77,6 +40,7 @@ export const actions = {
             commit('SET_ORDERS_DATA', data.data.orders);
             commit('SET_BOT_USERS_DATA', data.data.bot_users);
             commit('SET_CATEGORY_ORDERS_DATA', data.data.category_orders);
+            commit('SET_META_DATA', data.data.metaData);
             resolve(data);
           } else {
             reject(data);
@@ -85,7 +49,7 @@ export const actions = {
         .catch(reject);
     });
   },
-  fetchGeoOrders( {rootState }, params = {}) {
+  fetchGeoOrders( { rootState }, params) {
     return new Promise((resolve, reject) => {
       api()
         .geoOrders(rootState.organization.id, params)
