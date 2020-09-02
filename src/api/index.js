@@ -5,7 +5,7 @@ export const TOKEN = 'access_token';
 const noCrudUrls = ['auth/login'];
 
 axios.interceptors.request.use((config) => {
-  if (config.method === 'get' && config.params) {
+  if (config.method === 'get' && config.params && Object.keys.length !== 0) {
     const params = {};
     Object.keys(config.params).forEach((key) => {
       if (config.params[key]) params[key] = config.params[key];
