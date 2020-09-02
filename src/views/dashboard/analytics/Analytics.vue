@@ -78,6 +78,11 @@
           <vue-apex-charts type="pie" height="350" :options="categoryOrdersOptions" :series="categoryOrdersData.series" :labels="categoryOrdersData.labels" v-if="categoryOrdersData.series"></vue-apex-charts>
         </vx-card>
       </div>
+      <div class="vx-col md:w-1/2 w-full">
+        <vx-card title="Заказы по продуктам" class="mb-base">
+          <vue-apex-charts type="pie" height="350" :options="productOrdersOptions" :series="productOrdersData.series" :labels="productOrdersData.labels" v-if="productOrdersData.series"></vue-apex-charts>
+        </vx-card>
+      </div>
     </div>
   </div>
 </template>
@@ -110,7 +115,7 @@ export default {
   },
   computed: {
     ...mapState(['organization']),
-    ...mapState('analytics', ['ordersData', 'botUsersData','categoryOrdersData', 'metaData']),
+    ...mapState('analytics', ['ordersData', 'botUsersData','categoryOrdersData', 'productOrdersData', 'metaData']),
 
     dateFormat() {
       if (this.periodType === 'month') {
@@ -200,6 +205,15 @@ export default {
       if (this.categoryOrdersData.series) {
         return {
           labels: this.categoryOrdersData.labels,
+        }
+      }
+      return {};
+    },
+
+    productOrdersOptions() {
+      if (this.productOrdersData.series) {
+        return {
+          labels: this.productOrdersData.labels,
         }
       }
       return {};
