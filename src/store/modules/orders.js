@@ -50,6 +50,19 @@ export const mutations = {
 }
 
 export const actions = {
+  fetchCrudOrders({ rootState }, queryString) {
+    return new Promise((resolve, reject) => {
+      api().ordersByRequestBuilder(rootState.organization.id, queryString).then(({ data }) => {
+        if (data.status === 'Success') {
+          resolve(data.data);
+        } else {
+          reject(data);
+        }
+      })
+      .catch(reject);
+    });
+  },
+
   fetchOrders({ commit, rootState }) {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING', true)
@@ -58,7 +71,7 @@ export const actions = {
         .then(({ data }) => {
           if (data.status === 'Success') {
             commit('SET_ORDERS', data.data);
-            resolve(data);
+            resolve(data.data);
           } else {
             reject(data);
           }

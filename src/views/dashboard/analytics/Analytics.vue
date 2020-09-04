@@ -156,10 +156,10 @@ export default {
               curve: 'stepline',
           },
           xaxis: {
-            type: this.endDate ? 'datetime' : '',
+            type: (this.periodType === 'day') ? 'datetime' : '',
             labels: {
               formatter(value) {
-                if (that.endDate)
+                if (that.periodType === 'day')
                   return new Date(value).toLocaleString('ru', { month: 'short', day: 'numeric' });
                 return new Date(value).toLocaleString('ru', { month: 'short' })
               }
@@ -187,10 +187,10 @@ export default {
           },
 
           xaxis: {
-            type: this.endDate ? 'datetime' : '',
+            type: (this.periodType === 'day') ? 'datetime' : '',
             labels: {
               formatter(value) {
-                if (that.endDate)
+                if (that.periodType === 'day')
                   return new Date(value).toLocaleString('ru', { month: 'short', day: 'numeric' });
                 return new Date(value).toLocaleString('ru', { month: 'short' })
               }

@@ -156,8 +156,9 @@ global.vm = new Vue({
               iconPack: 'feather',
               icon: 'icon-alert-circle',
             });
-            throw err;
-            // that.$store.dispatch('logout').then(() => { that.$router.push('/pages/login'); })
+            that.$router.push({
+              name: 'page-error-500'
+            });
           } else {
             if (err.response.status === 401) {
               that.$store.dispatch('logout').then(() => { that.$router.push('/pages/login'); })

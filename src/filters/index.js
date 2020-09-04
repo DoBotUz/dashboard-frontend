@@ -49,6 +49,16 @@ Vue.filter('time', function (value, is24HrFormat = false) {
 
 Vue.filter('date', function (value) {
   if (!value) return '';
+  console.log(value);
+  return new Date(value).toLocaleString([], {
+    year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+})
+
+
+Vue.filter('DATA_GRID_date', function (params) {
+  const value = params.value;
+  if (!value) return '';
   return new Date(value).toLocaleString([], {
     year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit',
   });

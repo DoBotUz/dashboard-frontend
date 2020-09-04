@@ -256,7 +256,7 @@
 import { mapGetters, mapActions, createNamespacedHelpers } from "vuex";
 import { loaderMixin } from '@/mixins';
 import { Picker } from 'emoji-mart-vue'
-
+import DataGrid from '@/components/DataGrid/DataGrid.vue';
 
 export default {
   mixins: [loaderMixin],
