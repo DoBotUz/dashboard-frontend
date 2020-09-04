@@ -9,6 +9,11 @@
         <vs-th>Медиа</vs-th>
       </template>
 
+      <template slot="no-data">
+        <v-alert :value="true" color="error" icon="warning">
+          Sorry, nothing to display here :(
+        </v-alert>
+      </template>
       <template slot-scope="{data}">
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
@@ -22,7 +27,7 @@
                  :inline="true"
                  :star-size="20"
                  :read-only="true"
-                 :show-rating="false" 
+                 :show-rating="false"
                 ></star-rating>
               </p>
             </vs-td>

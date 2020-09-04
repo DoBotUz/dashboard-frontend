@@ -136,7 +136,7 @@ export default {
     endDisabledDates() {
       return {
         to: this.startDate,
-        from: new Date(),
+        // from: new Date(),
       }
     },
 

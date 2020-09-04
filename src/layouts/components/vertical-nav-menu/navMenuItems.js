@@ -44,10 +44,12 @@ export default [
     tagGetter: 'orderNotificationsCount',
   },
   {
-    url: "/page2",
+    url: {
+      name: 'DashboardPromocodes',
+    },
     name: "Промокоды",
     slug: "page2",
-    icon: "FileIcon",
+    icon: "GiftIcon",
   },
   {
     // url: null,

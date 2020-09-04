@@ -140,6 +140,19 @@ const router = new Router({
               },
             },
             {
+              path: 'promocodes',
+              component: () => import('./views/dashboard/promocodes/Promocodes.vue'),
+              name: 'DashboardPromocodes',
+              meta: {
+                breadcrumb: [
+                  { title: 'Заведения', url: '/', slug: 'home' },
+                  { title: '', slug: 'organization-name', active: true },
+                ],
+                rule: 'isOwner',
+                pageTitle: 'Промокоды',
+              },
+            },
+            {
               path: 'bot-users',
               component: () => import('./views/dashboard/bot-users/BotUsers.vue'),
               name: 'DashBoardBotUsers',
