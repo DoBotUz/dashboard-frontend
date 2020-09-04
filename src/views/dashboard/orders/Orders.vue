@@ -1,76 +1,20 @@
 <template>
   <div>
-    <vs-table ref="table" search :data="orders" @selected="onSelected" class="vs-con-loading__container" :max-items="15" pagination>
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
-        <div class="flex flex-wrap-reverse items-center data-list-btn-container">
-          <!-- ADD NEW -->
-          <div
-            class="btn-add-new p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-center text-lg font-medium text-base text-primary border border-solid border-primary"
-            @click="addOrder"
-          >
-            <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Создать заказ</span>
-          </div>
-        </div>
-      </div>
-
-      <template slot="thead">
-        <vs-th sort-key="id">ID</vs-th>
-        <vs-th sort-key="branch_id">Филиал</vs-th>
-        <vs-th sort-key="status">Статус</vs-th>
-        <vs-th sort-key="phone">Клиент</vs-th>
-        <vs-th sort-key="payment_type">Способ оплаты</vs-th>
-        <vs-th sort-key="id">Промокод</vs-th>
-        <vs-th sort-key="total_charge">Сумма</vs-th>
-        <vs-th sort-key="total_charge">Оплачен</vs-th>
-        <vs-th sort-key="created_at">Дата</vs-th>
-      </template>
-
-      <template slot-scope="{data}">
-        <tbody>
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-            <vs-td>
-              <p>{{ tr.id }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.branch.ru_title }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ order_statuses[tr.status] }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.phone }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ payment_types[tr.payment_type] }}</p>
-            </vs-td>
-            <vs-td>
-              <p>----</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.total_charge }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.is_paid ? 'Да' : 'Нет' }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.created_at | date }}</p>
-            </vs-td>
-          </vs-tr>
-        </tbody>
-      </template>
-    </vs-table>
+    <data-grid :columnDefs="columnDefs" :fetchData="fetchCrudOrders"></data-grid>
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-const orders = require('./mock');
-import { loaderMixin } from '@/mixins';
+import DataGrid from '@/components/DataGrid/DataGrid.vue';
 
 export default {
-  mixins: [loaderMixin],
+  components: {
+    DataGrid
+  },
   data() {
-    return {}
+    return {
+
+    }
   },
   computed: {
     ...mapGetters('orders', {
@@ -79,12 +23,205 @@ export default {
       'payment_types': 'payment_types',
       'loading': 'loading',
     }),
+
+    columnDefs() {
+      let that = this;
+      return [
+        {
+            field: '-', // Hack for using search at top of page!
+            noSearch: true, // attribute for not including in search
+            hide: true,
+            lockVisible: true,
+            filter: "agTextColumnFilter",
+            filterParams: {
+              newRowsAction: "keep"
+            }
+        },
+        {
+          headerName: 'ID',
+          field: 'id',
+        },
+        {
+          headerName: 'Филиал',
+          field: 'branch.ru_title',
+          width: 250,
+        },
+        {
+          headerName: 'Статус',
+          field: 'status',
+          noSearch: true,
+          width: 200,
+          valueFormatter: this.statusFormatter,
+          filter: true,
+          floatingFilterComponent: 'dropdownFilter',
+          floatingFilterComponentParams: this.statusFilterParams
+        },
+        {
+          headerName: 'Номер телефона',
+          field: 'phone',
+          filter: true,
+        },
+        {
+          headerName: 'Способ оплаты',
+          field: 'payment_type',
+          noSearch: true,
+          valueFormatter: this.paymentTypeFormatter,
+          filter: true,
+          floatingFilterComponent: 'dropdownFilter',
+          floatingFilterComponentParams: this.paymentFilterParams
+        },
+        {
+          headerName: 'Сумма',
+          field: 'total_charge',
+          noSearch: true,
+          filter: 'agNumberColumnFilter',
+          floatingFilterComponentParams: {
+            suppressFilterButton: false,
+          },
+          filterParams: {
+            filterOptions: ['equals', 'lessThan', 'greaterThanOrEqual', 'inRange'],
+            suppressAndOrCondition: true,
+            debounceMs: 500,
+          },
+        },
+        {
+          headerName: 'Оплачено',
+          field: 'is_paid',
+          noSearch: true,
+          filter: true,
+          valueFormatter: (params) => {
+            return params.value ? 'Да' : 'Нет';
+          },
+          floatingFilterComponent: 'dropdownFilter',
+          floatingFilterComponentParams: this.isPaidFilterParams
+        },
+        {
+          headerName: 'Ко времени',
+          field: 'for_datetime',
+          noSearch: true,
+          filter: 'agDateColumnFilter',
+          width: 250,
+          valueFormatter: this.$options.filters.DATA_GRID_date,
+          floatingFilterComponentParams: {
+            suppressFilterButton: false,
+          },
+          filterParams: {
+            filterOptions: ['inRange'],
+            suppressAndOrCondition: true,
+            debounceMs: 500,
+          },
+        },
+        {
+          headerName: 'Дата создания',
+          field: 'created_at',
+          noSearch: true,
+          filter: 'agDateColumnFilter',
+          width: 250,
+          valueFormatter: this.$options.filters.DATA_GRID_date,
+          floatingFilterComponentParams: {
+            suppressFilterButton: false,
+          },
+          filterParams: {
+            filterOptions: ['inRange'],
+            suppressAndOrCondition: true,
+            debounceMs: 500,
+          },
+        },
+        {
+          headerName: "Действия",
+          field: "Действия",
+          pinned: 'right',
+          width: 120,
+          filter: false,
+          sortable: false,
+          cellRenderer: 'actionsRenderer',
+          cellRendererParams: {
+            showEdit: true,
+            clicked(id) {
+              that.$router.push({
+                name: "DashboardOrder",
+                params: {
+                  order_id: id,
+                },
+              });
+            }
+          },
+        }
+      ];
+    },
+
+    isPaidFilterParams() {
+      return {
+        suppressFilterButton: true,
+        optionsLabel: 'Выберите',
+        options: [
+          {
+            value: 1,
+            label: 'Да'
+          },
+          {
+            value: 0,
+            label: 'Нет'
+          }
+        ]
+      };
+    },
+
+    statusFilterParams() {
+      return {
+        suppressFilterButton: true,
+        optionsLabel: 'Выберите',
+        options: this.statusesOptions
+      };
+    },
+
+    statusesOptions(){
+      let out = [];
+
+      for(let key in this.order_statuses){
+        out.push({
+          value: key,
+          label: this.order_statuses[key]
+        })
+      }
+      return out;
+    },
+
+    paymentFilterParams() {
+      return {
+        suppressFilterButton: true,
+        optionsLabel: 'Выберите',
+        options: this.paymentTypeOptions
+      };
+    },
+
+    paymentTypeOptions() {
+      let out = [];
+      for(let key in this.payment_types){
+        out.push({
+          value: key,
+          label: this.payment_types[key]
+        })
+      }
+      return out;
+    },
+
   },
   methods: {
-    ...mapActions('orders', ['fetchOrders']),
-    addOrder() {
-      
+    ...mapActions('orders', ['fetchOrders', 'fetchCrudOrders']),
+
+    statusFormatter(params) {
+      return this.order_statuses[params.value];
     },
+
+    paymentTypeFormatter(params) {
+      return this.payment_types[params.value];
+    },
+
+    addOrder() {
+
+    },
+
     onSelected(tr) {
       this.$router.push({
         name: "DashboardOrder",
@@ -92,10 +229,12 @@ export default {
           order_id: tr.id,
         },
       });
-    }
+    },
   },
+
+
   mounted() {
-    this.fetchOrders()
+
   }
 };
 </script>

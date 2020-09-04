@@ -1,6 +1,6 @@
 <!-- =========================================================================================
-    File Name: Error404.vue
-    Description: 404 Page
+    File Name: Error500.vue
+    Description: 500 Page
     ----------------------------------------------------------------------------------------
     Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
       Author: Pixinvent
@@ -11,21 +11,10 @@
 <template>
     <div class="h-screen flex w-full bg-img">
         <div class="vx-col flex items-center justify-center flex-col sm:w-1/2 md:w-3/5 lg:w-3/4 xl:w-1/2 mx-auto text-center">
-            <img src="@/assets/images/pages/404.png" alt="graphic-404" class="mx-auto mb-4 max-w-full">
-            <h1 class="sm:mx-0 mx-4 mb-12 text-5xl d-theme-heading-color">404 - Страница не найдена!</h1>
-            <p class="sm:mx-0 mx-4 mb-4 sm:mb-16 d-theme-text-inverse">Страница не найдена</p>
-            <vs-button size="large" to="/">Назад в главное меню</vs-button>
+            <img src="@/assets/images/pages/500.png" alt="graphic-500" class="mx-auto mb-4">
+            <h1 class="sm:mx-0 mx-4 mb-4 sm:mb-12 text-5xl d-theme-heading-color">Внутренняя ошибка сервера!</h1>
+            <p class="sm:mx-0 mx-4 mb-4 sm:mb-16 d-theme-text-inverse">Произошла ошибка. Попробуйте позже</p>
+            <vs-button size="large" to="/">На главную</vs-button>
         </div>
     </div>
 </template>
-<script>
-export default {
-  head: {
-    title() {
-      return {
-        inner: "Страница не найдена"
-      }
-    },
-  },
-}
-</script>

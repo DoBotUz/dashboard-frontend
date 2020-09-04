@@ -288,6 +288,14 @@ const router = new Router({
                 },
               },
               {
+                path: '/pages/error-500',
+                name: 'page-error-500',
+                component: () => import('@/views/pages/Error500.vue'),
+                meta: {
+                  rule: defaultRole,
+                },
+              },
+              {
                 path: '/pages/complete-registration',
                 name: 'page-complete-registration',
                 component: () => import('@/views/pages/CompleteRegistration.vue'),
