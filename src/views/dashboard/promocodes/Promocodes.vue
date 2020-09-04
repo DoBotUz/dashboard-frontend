@@ -64,7 +64,6 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-const orders = require('./mock');
 import { loaderMixin } from '@/mixins';
 
 export default {
@@ -83,7 +82,7 @@ export default {
   methods: {
     ...mapActions('orders', ['fetchOrders']),
     addOrder() {
-      
+
     },
     onSelected(tr) {
       this.$router.push({
