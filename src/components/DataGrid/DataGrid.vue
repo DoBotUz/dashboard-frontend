@@ -30,8 +30,8 @@
 
       <!-- TABLE ACTION COL-2: SEARCH & EXPORT AS CSV -->
       <div class="flex flex-wrap items-center justify-between ag-grid-table-actions-right">
-        <vs-input class="mb-4 md:mb-0 mr-4" v-model="searchQuery" @input="updateSearchQuery" placeholder="Поиск..." />
-        <vs-button class="mb-4 md:mb-0" @click="gridApi.exportDataAsCsv()">Экспорт в CSV</vs-button>
+        <vs-input class="mb-4 md:mb-0 mr-4" v-model="searchQuery" @input="updateSearchQuery" placeholder="Поиск..." v-if="showSearch" />
+        <vs-button class="mb-4 md:mb-0" @click="gridApi.exportDataAsCsv()" v-if="showExportCSV">Экспорт в CSV</vs-button>
       </div>
     </div>
     <ag-grid-vue
@@ -79,6 +79,14 @@ export default {
       type: Function,
       requred: true,
     },
+    showExportCSV: {
+      type: Boolean,
+      default: true,
+    },
+    showSearch: {
+      type: Boolean,
+      default: true,
+    }
   },
   components: {
     AgGridVue
@@ -230,7 +238,6 @@ export default {
           this.applySortings(qb, params.sortModel);
 
           const queryString = qb.query();
-          console.log(queryString);
           that.$vs.loading({
             container: `#overlayLoadingCon`,
             type: 'default',
