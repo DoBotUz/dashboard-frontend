@@ -33,6 +33,7 @@ import { mapActions, mapGetters } from 'vuex';
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import DataGrid from '@/components/DataGrid/DataGrid.vue';
 import PromocodeForm from './components/_form';
+import { loaderMixin } from '@/mixins';
 
 export default {
   components: {
