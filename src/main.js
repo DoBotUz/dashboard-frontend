@@ -34,7 +34,9 @@ window.Apex.chart = {
   defaultLocale: "ru"
 };
 
-
+import flatpickr from "flatpickr";
+import { Russian } from "flatpickr/dist/l10n/ru.js"
+flatpickr.localize(Russian); // default locale is now Russian
 
 // axios
 import axios from "./axios.js"

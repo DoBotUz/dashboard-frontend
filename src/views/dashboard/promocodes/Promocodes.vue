@@ -1,89 +1,216 @@
 <template>
   <div>
-    <vs-table ref="table" search :data="orders" @selected="onSelected" class="vs-con-loading__container">
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
-        <div class="flex flex-wrap-reverse items-center data-list-btn-container">
-          <!-- ADD NEW -->
-          <div
-            class="btn-add-new p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-center text-lg font-medium text-base text-primary border border-solid border-primary"
-            @click="addOrder"
-          >
-            <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Создать заказ</span>
-          </div>
+    <div class="flex flex-wrap-reverse items-center flex-grow justify-between">
+      <div class="flex flex-wrap-reverse items-center">
+        <div
+          class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-success border border-solid border-success"
+          @click="showAddPromocodePopup()"
+        >
+          <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
+          <span class="ml-2 text-base text-success">Добавить промокод</span>
         </div>
       </div>
+    </div>
 
-      <template slot="thead">
-        <vs-th sort-key="id">ID</vs-th>
-        <vs-th sort-key="branch_id">Филиал</vs-th>
-        <vs-th sort-key="status">Статус</vs-th>
-        <vs-th sort-key="phone">Клиент</vs-th>
-        <vs-th sort-key="payment_type">Способ оплаты</vs-th>
-        <vs-th sort-key="id">Промокод</vs-th>
-        <vs-th sort-key="total_charge">Сумма</vs-th>
-        <vs-th sort-key="total_charge">Оплачен</vs-th>
-        <vs-th sort-key="created_at">Дата</vs-th>
-      </template>
+    <data-grid :columnDefs="columnDefs" :fetchData="fetchCrudPromocodes" :showExportCSV="false"></data-grid>
 
-      <template slot-scope="{data}">
-        <tbody>
-          <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
-            <vs-td>
-              <p>{{ tr.id }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.branch.title }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ order_statuses[tr.status] }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.phone }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ payment_types[tr.payment_type] }}</p>
-            </vs-td>
-            <vs-td>
-              <p>----</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.total_charge }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.is_paid ? 'Да' : 'Нет' }}</p>
-            </vs-td>
-            <vs-td>
-              <p>{{ tr.created_at | date }}</p>
-            </vs-td>
-          </vs-tr>
-        </tbody>
-      </template>
-    </vs-table>
+    <vs-popup
+      title="Новый промокод"
+      @close="clearErrors"
+      :active.sync="activePrompt"
+      fullscreen
+    >
+      <component :is="scrollbarTag" class="scroll-area p-4" :settings="settings">
+        <promocode-form
+          ref="promocode-form"
+        />
+      </component>
+    </vs-popup>
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import VuePerfectScrollbar from "vue-perfect-scrollbar";
+import DataGrid from '@/components/DataGrid/DataGrid.vue';
+import PromocodeForm from './components/_form';
 import { loaderMixin } from '@/mixins';
 
 export default {
-  mixins: [loaderMixin],
+  components: {
+    VuePerfectScrollbar,
+    DataGrid,
+    PromocodeForm
+  },
   data() {
-    return {}
+    return {
+      activePrompt: false,
+      settings: {
+        maxScrollbarLength: 60,
+        wheelSpeed: 0.3,
+      },
+    }
   },
   computed: {
-    ...mapGetters('orders', {
-      'orders': 'orders',
-      'order_statuses': 'order_statuses',
-      'payment_types': 'payment_types',
-      'loading': 'loading',
+    ...mapGetters('promocodes', {
+      'promocode_statuses': 'promocode_statuses',
+      'promocode_types': 'promocode_types',
+      'statusOptions': 'statusOptions',
+      'typeOptions': 'typeOptions'
     }),
+
+    ...mapGetters(['scrollbarTag']),
+
+    columnDefs() {
+      let that = this;
+      return [
+        {
+            field: '-', // Hack for using search at top of page!
+            noSearch: true, // attribute for not including in search
+            hide: true,
+            lockVisible: true,
+            filter: "agTextColumnFilter",
+            filterParams: {
+              newRowsAction: "keep"
+            }
+        },
+        {
+          headerName: 'ID',
+          field: 'id',
+        },
+        {
+          headerName: 'Промокод',
+          field: 'slug',
+          width: 250,
+        },
+        {
+          headerName: 'Тип',
+          field: 'type',
+          noSearch: true,
+          width: 250,
+          valueFormatter: this.typeFormatter,
+          filter: true,
+          floatingFilterComponent: 'dropdownFilter',
+          floatingFilterComponentParams: this.typeFilterParams
+        },
+        {
+          headerName: 'Статус',
+          field: 'status',
+          noSearch: true,
+          width: 200,
+          valueFormatter: this.statusFormatter,
+          filter: true,
+          floatingFilterComponent: 'dropdownFilter',
+          floatingFilterComponentParams: this.statusFilterParams
+        },
+        {
+          headerName: 'Осталось',
+          field: 'left',
+          noSearch: true,
+          filter: 'agNumberColumnFilter',
+          floatingFilterComponentParams: {
+            suppressFilterButton: false,
+          },
+          filterParams: {
+            filterOptions: ['equals', 'lessThan', 'greaterThanOrEqual', 'inRange'],
+            suppressAndOrCondition: true,
+            debounceMs: 500,
+          },
+        },
+        {
+          headerName: 'Действует с',
+          field: 'start_datetime',
+          noSearch: true,
+          filter: 'agDateColumnFilter',
+          width: 250,
+          valueFormatter: this.$options.filters.DATA_GRID_datet,
+          floatingFilterComponentParams: {
+            suppressFilterButton: false,
+          },
+          filterParams: {
+            filterOptions: ['inRange'],
+            suppressAndOrCondition: true,
+            debounceMs: 500,
+          },
+        },
+        {
+          headerName: 'Действует с',
+          field: 'end_datetime',
+          noSearch: true,
+          filter: 'agDateColumnFilter',
+          width: 250,
+          valueFormatter: this.$options.filters.DATA_GRID_date,
+          floatingFilterComponentParams: {
+            suppressFilterButton: false,
+          },
+          filterParams: {
+            filterOptions: ['inRange'],
+            suppressAndOrCondition: true,
+            debounceMs: 500,
+          },
+        },
+        {
+          headerName: "Действия",
+          field: "Действия",
+          pinned: 'right',
+          width: 120,
+          filter: false,
+          sortable: false,
+          cellRenderer: 'actionsRenderer',
+          cellRendererParams: {
+            showEdit: true,
+            clicked(id) {
+              that.$router.push({
+                name: "DashboardOrder",
+                params: {
+                  order_id: id,
+                },
+              });
+            }
+          },
+        }
+      ];
+    },
+
+    statusFilterParams() {
+      return {
+        suppressFilterButton: true,
+        optionsLabel: 'Выберите',
+        options: this.statusOptions
+      };
+    },
+
+    typeFilterParams() {
+      return {
+        suppressFilterButton: true,
+        optionsLabel: 'Выберите',
+        options: this.typeOptions
+      };
+    },
+
   },
   methods: {
-    ...mapActions('orders', ['fetchOrders']),
+    ...mapActions('promocodes', ['fetchCrudPromocodes']),
+
+    clearErrors() {
+
+    },
+
+    showAddPromocodePopup(id = null) {
+      this.activePrompt = true;
+    },
+
+    statusFormatter(params) {
+      return this.promocode_statuses[params.value];
+    },
+
+    typeFormatter(params) {
+      return this.promocode_types[params.value];
+    },
+
     addOrder() {
 
     },
+
     onSelected(tr) {
       this.$router.push({
         name: "DashboardOrder",
@@ -91,10 +218,12 @@ export default {
           order_id: tr.id,
         },
       });
-    }
+    },
   },
+
+
   mounted() {
-    this.fetchOrders()
+
   }
 };
 </script>

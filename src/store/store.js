@@ -27,6 +27,7 @@ import * as moduleAnalytics from './modules/analytics';
 import * as moduleBotUsers from './modules/botUsers';
 import * as moduleMassNotifs from './modules/massNotifs';
 import * as moduleOrders from './modules/orders';
+import * as modulePromocodes from './modules/promocodes';
 import * as moduleFeedbacks from './modules/feedbacks';
 import * as moduleNotifications from './modules/notifications';
 import * as moduleMailing from './modules/mailing';
@@ -47,6 +48,7 @@ export default new Vuex.Store({
       botUsers: moduleBotUsers,
       massNotifs: moduleMassNotifs,
       orders: moduleOrders,
+      promocodes: modulePromocodes,
       feedbacks: moduleFeedbacks,
       notifications: moduleNotifications,
       mailing: moduleMailing,
